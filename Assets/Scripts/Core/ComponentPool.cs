@@ -23,7 +23,7 @@ public class ComponentPool<T> where T : Component
         root = new GameObject(rootName ?? $"[Pool] {prefab.name}").transform;
         pool = new ObjectPool<T>(
             Create,
-            item => item.gameObject.SetActive(true),
+            null, // ativa no Get, depois de posicionar
             item => item.gameObject.SetActive(false),
             item => { if (item != null) Object.Destroy(item.gameObject); },
             collectionCheck: Application.isEditor, // acusa Release duplo no editor
@@ -41,11 +41,26 @@ public class ComponentPool<T> where T : Component
     T Create()
     {
         var item = Object.Instantiate(prefab, root);
+        item.gameObject.SetActive(false); // fica guardado até alguém pegar já posicionado
         item.name = prefab.name;
         return item;
     }
 
-    public T Get() => pool.Get();
+    public T Get()
+    {
+        var item = pool.Get();
+        item.gameObject.SetActive(true);
+        return item;
+    }
+
+    /// <summary>Posiciona antes de ativar (NavMeshAgent, trail e OnEnable já nascem no lugar certo).</summary>
+    public T Get(Vector3 position, Quaternion rotation)
+    {
+        var item = pool.Get();
+        item.transform.SetPositionAndRotation(position, rotation);
+        item.gameObject.SetActive(true);
+        return item;
+    }
 
     public void Release(T item)
     {

@@ -1,0 +1,193 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+/// <summary>
+/// "Diretor" de spawn no estilo Risk of Rain: ganha créditos com o tempo (mais rápido
+/// quanto maior a dificuldade) e gasta comprando grupos de inimigos perto do player.
+/// Inimigos vêm de pools e já nascem escalados pela dificuldade.
+/// </summary>
+public class EnemySpawner : MonoBehaviour
+{
+    [Serializable]
+    public class SpawnEntry
+    {
+        public EnemyBase prefab;
+        [Tooltip("Créditos que custa um desses.")]
+        [Min(0.1f)] public float cost = 8f;
+        [Tooltip("Chance relativa de ser escolhido.")]
+        [Min(0f)] public float weight = 1f;
+        [Tooltip("Só aparece a partir desse coeficiente de dificuldade.")]
+        [Min(1f)] public float minDifficulty = 1f;
+        [Min(0)] public int poolPrewarm = 10;
+        [NonSerialized] public ComponentPool<EnemyBase> pool;
+    }
+
+    [SerializeField] List<SpawnEntry> enemies = new();
+
+    [Header("Créditos")]
+    [SerializeField, Min(0f)] float startingCredits = 24f;
+    [Tooltip("Créditos por segundo com dificuldade 1 (multiplica pelo coeficiente).")]
+    [SerializeField, Min(0f)] float creditsPerSecond = 1.2f;
+    [Tooltip("Limite de créditos guardados (evita uma onda gigante depois de bater o máximo de vivos).")]
+    [SerializeField, Min(1f)] float maxBankedCredits = 80f;
+
+    [Header("Ondas")]
+    [SerializeField, Min(0.5f)] float waveIntervalMin = 4f;
+    [SerializeField, Min(0.5f)] float waveIntervalMax = 7f;
+    [Tooltip("Inimigos por onda com dificuldade 1; cresce com o coeficiente.")]
+    [SerializeField, Min(1)] int baseGroupSize = 3;
+    [SerializeField, Min(1)] int maxAlive = 30;
+
+    [Header("Onde nascer")]
+    [SerializeField, Min(0f)] float minDistance = 18f;
+    [SerializeField, Min(0f)] float maxDistance = 35f;
+    [Tooltip("Espalhamento dos inimigos de um mesmo grupo.")]
+    [SerializeField, Min(0f)] float groupSpread = 3f;
+
+    /// <summary>Disparado para cada inimigo que nasce (já posicionado e escalado).</summary>
+    public event Action<EnemyBase> OnEnemySpawned;
+
+    public int AliveCount => alive.Count;
+    public int TotalSpawned { get; private set; }
+    public float Credits => credits;
+    public int PooledObjectCount { get { int n = 0; foreach (var e in enemies) if (e.pool != null) n += e.pool.CountAll; return n; } }
+
+    readonly HashSet<EnemyBase> alive = new();
+    readonly Dictionary<EnemyBase, SpawnEntry> owners = new();
+    readonly List<SpawnEntry> candidates = new();
+    float credits;
+    float nextWaveTime;
+    Transform player;
+    NavMeshPath path;
+
+    void Awake()
+    {
+        path = new NavMeshPath();
+        credits = startingCredits;
+        foreach (var e in enemies)
+        {
+            if (e.prefab == null) continue;
+            e.pool = new ComponentPool<EnemyBase>(e.prefab, e.poolPrewarm, maxSize: maxAlive * 2, rootName: $"[Pool] {e.prefab.name}");
+        }
+    }
+
+    void Start()
+    {
+        var p = GameObject.FindGameObjectWithTag("Player");
+        if (p != null) player = p.transform;
+        nextWaveTime = Time.time + 2f; // primeira onda logo no começo
+    }
+
+    float Difficulty => DifficultyManager.Instance != null ? DifficultyManager.Instance.Coefficient : 1f;
+
+    void Update()
+    {
+        if (player == null || (RunManager.Instance != null && RunManager.Instance.IsRunOver)) return;
+
+        float coeff = Difficulty;
+        credits = Mathf.Min(credits + creditsPerSecond * coeff * Time.deltaTime, maxBankedCredits);
+
+        if (Time.time < nextWaveTime) return;
+        // Ondas um pouco mais frequentes com a dificuldade
+        float interval = UnityEngine.Random.Range(waveIntervalMin, waveIntervalMax) / (1f + 0.15f * (coeff - 1f));
+        nextWaveTime = Time.time + interval;
+        SpawnWave(coeff);
+    }
+
+    void SpawnWave(float coeff)
+    {
+        var entry = PickEntry(coeff);
+        if (entry == null) return;
+
+        int groupMax = baseGroupSize + Mathf.FloorToInt(coeff - 1f);
+        int count = Mathf.Min(Mathf.FloorToInt(credits / entry.cost), groupMax, maxAlive - alive.Count);
+        if (count <= 0) return;
+        if (!TryFindSpawnPoint(out Vector3 center)) return;
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 pos = center;
+            if (i > 0)
+            {
+                Vector2 r = UnityEngine.Random.insideUnitCircle * groupSpread;
+                if (NavMesh.SamplePosition(center + new Vector3(r.x, 0f, r.y), out var hit, groupSpread, NavMesh.AllAreas)) pos = hit.position;
+            }
+            Spawn(entry, pos, coeff);
+            credits -= entry.cost;
+        }
+    }
+
+    SpawnEntry PickEntry(float coeff)
+    {
+        candidates.Clear();
+        float total = 0f;
+        foreach (var e in enemies)
+        {
+            if (e.pool == null || e.weight <= 0f || e.cost > credits || coeff < e.minDifficulty) continue;
+            candidates.Add(e);
+            total += e.weight;
+        }
+        if (candidates.Count == 0) return null;
+        float roll = UnityEngine.Random.value * total;
+        foreach (var e in candidates)
+        {
+            roll -= e.weight;
+            if (roll <= 0f) return e;
+        }
+        return candidates[^1];
+    }
+
+    /// <summary>Ponto no NavMesh, longe o bastante do player e com caminho até ele (não em cima de caixa isolada).</summary>
+    bool TryFindSpawnPoint(out Vector3 point)
+    {
+        for (int attempt = 0; attempt < 12; attempt++)
+        {
+            Vector2 dir = UnityEngine.Random.insideUnitCircle.normalized;
+            float dist = UnityEngine.Random.Range(minDistance, maxDistance);
+            Vector3 candidate = player.position + new Vector3(dir.x, 0f, dir.y) * dist;
+            if (!NavMesh.SamplePosition(candidate, out var hit, 4f, NavMesh.AllAreas)) continue;
+            if ((hit.position - player.position).sqrMagnitude < minDistance * minDistance * 0.8f) continue;
+            if (!NavMesh.CalculatePath(hit.position, player.position, NavMesh.AllAreas, path) || path.status != NavMeshPathStatus.PathComplete) continue;
+            point = hit.position;
+            return true;
+        }
+        point = default;
+        return false;
+    }
+
+    void Spawn(SpawnEntry entry, Vector3 position, float coeff)
+    {
+        Vector3 look = player.position - position;
+        look.y = 0f;
+        var rot = look.sqrMagnitude > 0.01f ? Quaternion.LookRotation(look) : Quaternion.identity;
+        var enemy = entry.pool.Get(position, rot);
+
+        var dm = DifficultyManager.Instance;
+        if (dm != null) enemy.ApplyScaling(dm.EnemyHealthMultiplier, dm.EnemyDamageMultiplier);
+
+        alive.Add(enemy);
+        owners[enemy] = entry;
+        enemy.OnDespawn += HandleDespawn;
+        TotalSpawned++;
+        OnEnemySpawned?.Invoke(enemy);
+    }
+
+    void HandleDespawn(EnemyBase enemy)
+    {
+        enemy.OnDespawn -= HandleDespawn;
+        alive.Remove(enemy);
+        if (owners.Remove(enemy, out var entry)) entry.pool.Release(enemy);
+        else Destroy(enemy.gameObject);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (player == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(player.position, minDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(player.position, maxDistance);
+    }
+}

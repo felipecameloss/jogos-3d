@@ -38,6 +38,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected Health TargetHealth { get; private set; }
 
     Vector3 initialScale;
+    float baseMaxHealth;
     Coroutine despawnRoutine;
 
     protected virtual void Awake()
@@ -45,7 +46,16 @@ public abstract class EnemyBase : MonoBehaviour
         Health = GetComponent<Health>();
         Agent = GetComponent<NavMeshAgent>();
         initialScale = transform.localScale;
+        baseMaxHealth = Health.Max;
         Health.OnDeath += HandleDeath;
+    }
+
+    /// <summary>Escala de dificuldade: aplicada pelo spawner logo depois de nascer. Volta com vida cheia.</summary>
+    public void ApplyScaling(float healthMultiplier, float damageMultiplier)
+    {
+        Health.SetMaxHealth(baseMaxHealth * Mathf.Max(0.01f, healthMultiplier), keepRatio: false);
+        Health.ResetHealth();
+        DamageMultiplier = Mathf.Max(0f, damageMultiplier);
     }
 
     protected virtual void OnEnable()
