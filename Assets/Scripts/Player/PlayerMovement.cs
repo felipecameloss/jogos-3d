@@ -47,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float SpeedMultiplier = 1f;
     [HideInInspector] public float JumpHeightMultiplier = 1f;
     [HideInInspector] public int ExtraJumps = 0;
+    /// <summary>Desligado = ignora o input mas a gravidade continua (morte, cutscene, menu).</summary>
+    [HideInInspector] public bool InputEnabled = true;
 
     public bool IsGrounded { get; private set; }
     public bool IsSprinting { get; private set; }
@@ -82,9 +84,9 @@ public class PlayerMovement : MonoBehaviour
         UpdateGrounded();
 
         // ---------- Input ----------
-        Vector2 input = moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
+        Vector2 input = InputEnabled && moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
         input = Vector2.ClampMagnitude(input, 1f);
-        if (jumpAction != null && jumpAction.action.WasPressedThisFrame()) lastJumpPressedTime = Time.time;
+        if (InputEnabled && jumpAction != null && jumpAction.action.WasPressedThisFrame()) lastJumpPressedTime = Time.time;
 
         // ---------- Direção relativa à câmera ----------
         Vector3 camForward = Vector3.forward, camRight = Vector3.right;
@@ -96,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDir = camForward * input.y + camRight * input.x;
 
         // ---------- Velocidade horizontal ----------
-        IsSprinting = sprintAction != null && sprintAction.action.IsPressed() && input.sqrMagnitude > 0.01f;
+        IsSprinting = InputEnabled && sprintAction != null && sprintAction.action.IsPressed() && input.sqrMagnitude > 0.01f;
         float speed = (IsSprinting ? sprintSpeed : walkSpeed) * SpeedMultiplier;
         Vector3 targetVelocity = moveDir * speed;
         float accel = acceleration * (IsGrounded ? 1f : airControl);

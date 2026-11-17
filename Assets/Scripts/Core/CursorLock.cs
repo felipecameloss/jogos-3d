@@ -14,8 +14,12 @@ public class CursorLock : MonoBehaviour
         if (lockOnStart) SetLocked(true);
     }
 
+    // Depois que a run acaba o cursor fica solto para usar a tela de fim de run
+    static bool RunOver => RunManager.Instance != null && RunManager.Instance.IsRunOver;
+
     void Update()
     {
+        if (RunOver) return;
         var keyboard = Keyboard.current;
         var mouse = Mouse.current;
         if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame) SetLocked(false);
@@ -24,7 +28,7 @@ public class CursorLock : MonoBehaviour
 
     void OnApplicationFocus(bool hasFocus)
     {
-        if (hasFocus && lockOnStart) SetLocked(true);
+        if (hasFocus && lockOnStart && !RunOver) SetLocked(true);
     }
 
     public static void SetLocked(bool locked)
