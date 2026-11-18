@@ -8,12 +8,12 @@
 }
 
 .menu-bg {
-    background-color: rgb(22, 34, 20);
+    background-color: rgb(16, 26, 15);
     background-image: none;
 }
 
 .overlay {
-    background-color: rgba(8, 12, 6, 0.72);
+    background-color: rgba(6, 10, 5, 0.78);
 }
 
 .hidden {
@@ -21,35 +21,38 @@
 }
 
 .panel {
-    background-color: rgba(26, 30, 22, 0.96);
-    border-radius: 20px;
+    background-color: rgba(20, 25, 17, 0.96);
+    border-radius: 22px;
     border-width: 2px;
-    border-color: rgb(118, 148, 66);
-    padding: 26px 52px 22px 52px;
-    min-width: 440px;
+    border-color: rgb(138, 174, 76);
+    padding: 28px 54px 24px 54px;
+    min-width: 450px;
     align-items: stretch;
 }
 
 .title {
-    font-size: 60px;
-    color: rgb(244, 226, 166);
+    font-size: 62px;
+    color: rgb(248, 228, 162);
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.75);
+    letter-spacing: 3px;
     margin-bottom: 2px;
 }
 
 .subtitle {
-    font-size: 21px;
-    color: rgb(176, 198, 142);
+    font-size: 20px;
+    color: rgb(176, 204, 142);
     -unity-text-align: middle-center;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .heading {
     font-size: 46px;
-    color: rgb(244, 226, 166);
+    color: rgb(248, 228, 162);
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    text-shadow: 0px 3px 8px rgba(0, 0, 0, 0.75);
     margin-bottom: 22px;
 }
 
@@ -63,15 +66,18 @@
     font-size: 23px;
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
-    background-color: rgb(92, 124, 50);
-    border-width: 0;
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.55);
+    background-color: rgb(94, 134, 48);
+    border-width: 1px;
+    border-color: rgba(188, 226, 120, 0.45);
     border-radius: 12px;
-    transition-property: background-color, scale;
+    transition-property: background-color, border-color, scale;
     transition-duration: 0.08s;
 }
 
 .btn:hover {
-    background-color: rgb(120, 158, 64);
+    background-color: rgb(118, 164, 62);
+    border-color: rgb(244, 226, 166);
     scale: 1.03 1.03;
 }
 
@@ -86,11 +92,13 @@
 }
 
 .btn--secondary {
-    background-color: rgb(58, 64, 50);
+    background-color: rgb(48, 56, 42);
+    border-color: rgba(150, 170, 130, 0.28);
 }
 
 .btn--secondary:hover {
-    background-color: rgb(80, 88, 68);
+    background-color: rgb(70, 80, 60);
+    border-color: rgb(190, 214, 156);
 }
 
 .stats {

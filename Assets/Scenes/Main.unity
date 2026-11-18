@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.74, g: 0.8, b: 0.84, a: 1}
+  m_FogColor: {r: 0.72, g: 0.85, b: 0.93, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.011
+  m_FogDensity: 0.008
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -16379,9 +16379,9 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
-  m_StopNaN: 0
+  m_StopNaN: 1
   m_Dithering: 0
   m_ClearDepth: 1
   m_AllowXRRendering: 1
@@ -53329,6 +53329,7 @@ GameObject:
   - component: {fileID: 1034868337}
   - component: {fileID: 1034868336}
   - component: {fileID: 1034868338}
+  - component: {fileID: 1034868339}
   m_Layer: 0
   m_Name: _Systems
   m_TagString: Untagged
@@ -53604,6 +53605,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SettingsApplier
   lookInput: {fileID: 2021240373}
   playerCamera: {fileID: 2021240377}
+--- !u!114 &1034868339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034868326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660fd76b8d7246f2b11a3a94d6104706, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackyardAtmosphere
+  groundRenderer: {fileID: 490617382}
+  groundTiling: 45
+  moteMaterial: {fileID: 2100000, guid: ce621026335644d45988e9e9a2c7743e, type: 2}
+  pollenRate: 18
+  fireflyRate: 16
 --- !u!1 &1037242472
 GameObject:
   m_ObjectHideFlags: 0
