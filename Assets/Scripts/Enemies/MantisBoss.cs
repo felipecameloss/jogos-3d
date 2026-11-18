@@ -76,7 +76,8 @@ public class MantisBoss : EnemyBase
 
     static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");
-    static readonly Color TelegraphRed = new(1f, 0.15f, 0.05f, 0.45f);
+    // Opaco o bastante para ler como vermelho sobre a grama (com 0.45 virava marrom-alaranjado)
+    static readonly Color TelegraphRed = new(1f, 0.15f, 0.05f, 0.8f);
 
     Coroutine attacking;
     float nextSlash, nextDash, nextLeap;
