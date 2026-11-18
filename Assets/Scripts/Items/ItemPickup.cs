@@ -24,6 +24,25 @@ public class ItemPickup : MonoBehaviour
     Inventory inventory;
     Vector3 basePos;
     float age;
+    // Lançamento em arco (saindo do baú)
+    bool launching;
+    Vector3 launchFrom, launchTo;
+    float launchTime, launchDuration;
+
+    public bool IsLaunching => launching;
+
+    /// <summary>Salta em arco da posição atual até `to` (pode pegar só depois de cair).</summary>
+    public void Launch(Vector3 to, float duration = 0.6f, float arcHeight = 1.8f)
+    {
+        launchFrom = transform.position;
+        launchTo = to;
+        launchDuration = Mathf.Max(0.05f, duration);
+        launchTime = 0f;
+        launchArc = arcHeight;
+        launching = true;
+        age = 0f;
+    }
+    float launchArc;
 
     public static ItemPickup Spawn(ItemPickup prefab, ItemData item, Vector3 position)
     {
@@ -64,8 +83,18 @@ public class ItemPickup : MonoBehaviour
 
     void Update()
     {
-        age += Time.deltaTime;
         transform.Rotate(0f, spinSpeed * Time.deltaTime, 0f, Space.World);
+        if (launching)
+        {
+            launchTime += Time.deltaTime;
+            float k = Mathf.Clamp01(launchTime / launchDuration);
+            transform.position = Vector3.Lerp(launchFrom, launchTo, k) + Vector3.up * (Mathf.Sin(k * Mathf.PI) * launchArc);
+            if (k < 1f) return;
+            launching = false;
+            basePos = launchTo;
+            age = 0f;
+        }
+        age += Time.deltaTime;
         transform.position = basePos + Vector3.up * (Mathf.Sin(age * 2.5f) * bobHeight);
 
         if (item == null || inventory == null || age < pickupDelay) return;

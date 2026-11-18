@@ -2119,6 +2119,62 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffffi
+--- !u!1 &830687284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 830687286}
+  - component: {fileID: 830687285}
+  m_Layer: 0
+  m_Name: Chests
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &830687285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830687284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1df930ff9034b34ea09a623fc5e3915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChestSpawner
+  chests:
+  - prefab: {fileID: 2809062624048896195, guid: e0df3c07ab0634946ac58142b85f3071, type: 3}
+    weight: 0.85
+  - prefab: {fileID: 5447374671635073593, guid: 3fba05346b430c845b1f89cb92365646, type: 3}
+    weight: 0.15
+  initialCount: 10
+  extraEvery: 90
+  maxClosed: 12
+  areaCenter: {x: 0, y: 0, z: 0}
+  areaSize: {x: 90, y: 90}
+  minSpacing: 8
+  minDistanceFromPlayer: 6
+--- !u!4 &830687286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830687284}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3469,6 +3525,7 @@ GameObject:
   - component: {fileID: 1325326863}
   - component: {fileID: 1325326865}
   - component: {fileID: 1325326866}
+  - component: {fileID: 1325326867}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3639,6 +3696,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7858b98229b0893409e27a3ae553e20b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  debugGui: 1
+--- !u!114 &1325326867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325326858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74749ec7815e15843808f4849e0ec1d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactor
+  interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  range: 2.8
   debugGui: 1
 --- !u!1001 &1342770076
 PrefabInstance:
@@ -4077,7 +4149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1637951001
 Transform:
   m_ObjectHideFlags: 0
@@ -5414,3 +5486,4 @@ SceneRoots:
   - {fileID: 1757519837}
   - {fileID: 450356459}
   - {fileID: 1637951001}
+  - {fileID: 830687286}
