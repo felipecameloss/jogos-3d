@@ -142,7 +142,7 @@ public class EnemyElite : MonoBehaviour
         zone.DamagePerSecond = 12f * (enemy != null ? enemy.DamageMultiplier : 1f);
         zone.Owner = enemy != null ? enemy.gameObject : null;
 
-        patch.AddComponent<EliteFirePatch>().Begin(lifetime: 3.4f, radius: 1.25f);
+        patch.AddComponent<EliteFirePatch>().Begin(3.4f, 1.25f);
     }
 
     static void ApplyMaterialColor(Material mat, Color color, float emissionIntensity)
