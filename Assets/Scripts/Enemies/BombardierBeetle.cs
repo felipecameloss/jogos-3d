@@ -9,17 +9,17 @@ public class BombardierBeetle : EnemyBase
 {
     [Header("Distância")]
     [Tooltip("Faixa em que ele gosta de ficar do player.")]
-    [SerializeField] Vector2 preferredRange = new(8f, 16f);
+    [SerializeField] Vector2 preferredRange = new(7f, 15f);
 
     [Header("Ácido")]
     [SerializeField] AcidBlob blobPrefab;
     [SerializeField] AcidPool poolPrefab;
     [SerializeField, Min(0f)] float impactDamage = 10f;
     [SerializeField, Min(0f)] float poolDamagePerSecond = 8f;
-    [SerializeField, Min(0.1f)] float windUpTime = 0.7f;
-    [SerializeField, Min(0.1f)] float shotCooldown = 2.8f;
+    [SerializeField, Min(0.1f)] float windUpTime = 0.42f;
+    [SerializeField, Min(0.1f)] float shotCooldown = 1.5f;
     [Tooltip("Antecipa o movimento do player por esse tempo.")]
-    [SerializeField, Min(0f)] float leadTime = 0.3f;
+    [SerializeField, Min(0f)] float leadTime = 0.42f;
     [Tooltip("Ponta do abdômen: de onde sai o ácido e o que brilha no aviso.")]
     [SerializeField] Transform nozzle;
     [SerializeField] Renderer nozzleRenderer;
@@ -41,7 +41,7 @@ public class BombardierBeetle : EnemyBase
     {
         base.OnEnable();
         IsWindingUp = false;
-        nextShot = Time.time + Random.Range(1f, 2f);
+        nextShot = Time.time + Random.Range(0.4f, 1f);
         Glow(0f);
     }
 
@@ -100,7 +100,7 @@ public class BombardierBeetle : EnemyBase
         Vector3 target = Target.position;
         if (Target.TryGetComponent(out PlayerMovement pm)) { var v = pm.Velocity; v.y = 0f; target += v * leadTime; }
         float dist = Vector3.Distance(from, target);
-        float flight = Mathf.Clamp(dist / 14f, 0.6f, 1.4f);
+        float flight = Mathf.Clamp(dist / 19f, 0.45f, 1.05f);
         var blob = Instantiate(blobPrefab, from, Quaternion.identity);
         blob.Launch(from, target, flight, gameObject, poolPrefab, impactDamage * DamageMultiplier, poolDamagePerSecond * DamageMultiplier);
     }

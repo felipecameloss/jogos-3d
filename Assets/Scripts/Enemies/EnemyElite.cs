@@ -58,9 +58,11 @@ public class EnemyElite : MonoBehaviour
         float hpBonus = variant == Variant.Giant ? 2.5f : 1.85f;
         float dmgBonus = variant == Variant.Giant ? 1.5f : 1.3f;
         float scaleBonus = variant == Variant.Giant ? 1.45f : 1.15f;
+        float speedBonus = variant == Variant.Blazing ? 1.2f : 1.1f;
 
         target.transform.localScale = baseScale * scaleBonus;
         target.ApplyScaling(baseHealthMult * hpBonus, baseDamageMult * dmgBonus);
+        target.SpeedMultiplier *= speedBonus;
 
         EnsureAura();
         Color auraColor = variant == Variant.Giant
@@ -111,7 +113,7 @@ public class EnemyElite : MonoBehaviour
         Vector3 pos = transform.position;
         if ((pos - lastTrailPos).sqrMagnitude < 0.7f * 0.7f) return;
 
-        fireTimer = 0.85f;
+        fireTimer = 0.55f;
         lastTrailPos = pos;
         SpawnFirePatch(pos);
     }

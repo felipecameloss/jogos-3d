@@ -1045,10 +1045,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 4.5
-  m_Acceleration: 25
+  m_Speed: 7.2
+  m_Acceleration: 45
   avoidancePriority: 50
-  m_AngularSpeed: 540
+  m_AngularSpeed: 720
   m_StoppingDistance: 1.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1086,16 +1086,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274a57b9b013e774c86c0d68d475fc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkerAnt
-  moveSpeed: 4.5
-  turnSpeed: 540
+  moveSpeed: 7.2
+  turnSpeed: 720
   despawnDelay: 1.2
   DamageMultiplier: 1
   SpeedMultiplier: 1
   damage: 8
-  attackRange: 1.9
-  hitRangeBonus: 0.5
-  windUpTime: 0.45
-  recoverTime: 0.8
+  attackRange: 2.2
+  hitRangeBonus: 0.65
+  windUpTime: 0.28
+  recoverTime: 0.35
   body: {fileID: 8086911338938969025}
 --- !u!1 &7871357148197284463
 GameObject:

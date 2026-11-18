@@ -8,8 +8,8 @@ using UnityEngine;
 public class DashAbility : PlayerAbility
 {
     [Header("Dash")]
-    [SerializeField, Min(0f)] float distance = 9f;
-    [SerializeField, Min(0.01f)] float duration = 0.2f;
+    [SerializeField, Min(0f)] float distance = 11.5f;
+    [SerializeField, Min(0.01f)] float duration = 0.18f;
     [Tooltip("Rastro ligado só durante o dash (opcional).")]
     [SerializeField] TrailRenderer trail;
 

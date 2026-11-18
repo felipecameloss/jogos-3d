@@ -18,31 +18,31 @@ public class MantisBoss : EnemyBase
     [SerializeField] float slashDamage = 25f;
     [SerializeField] float slashRange = 5.5f;
     [SerializeField, Range(10f, 180f)] float slashAngle = 110f;
-    [SerializeField] float slashWindUp = 0.7f;
-    [SerializeField] float slashCooldown = 1.6f;
+    [SerializeField] float slashWindUp = 0.42f;
+    [SerializeField] float slashCooldown = 0.85f;
 
     [Header("Investida")]
     [SerializeField] float dashDamage = 30f;
     [SerializeField] Vector2 dashRange = new(8f, 26f);
-    [SerializeField] float dashWindUp = 0.9f;
+    [SerializeField] float dashWindUp = 0.52f;
     [SerializeField] float dashDistance = 22f;
-    [SerializeField] float dashSpeed = 30f;
-    [SerializeField] float dashCooldown = 6f;
+    [SerializeField] float dashSpeed = 44f;
+    [SerializeField] float dashCooldown = 3.5f;
     [SerializeField] float dashHitRadius = 2.6f;
 
     [Header("Pulo esmagador")]
     [SerializeField] float leapDamage = 35f;
     [SerializeField] Vector2 leapRange = new(6f, 30f);
-    [SerializeField] float leapWindUp = 0.6f;
-    [SerializeField] float leapAirTime = 0.7f;
+    [SerializeField] float leapWindUp = 0.38f;
+    [SerializeField] float leapAirTime = 0.5f;
     [SerializeField] float leapRadius = 5f;
-    [SerializeField] float leapCooldown = 9f;
+    [SerializeField] float leapCooldown = 5.2f;
 
     [Header("Geral")]
-    [SerializeField] float recoverTime = 0.9f;
+    [SerializeField] float recoverTime = 0.4f;
     [SerializeField, Range(0f, 1f)] float enrageAt = 0.5f;
     [Tooltip("Na fúria: tempos x isso, velocidade / isso.")]
-    [SerializeField, Range(0.3f, 1f)] float enrageTimeScale = 0.7f;
+    [SerializeField, Range(0.3f, 1f)] float enrageTimeScale = 0.62f;
     [SerializeField] Vector2 knockback = new(10f, 5f);
 
     [Header("Visual")]
@@ -101,8 +101,8 @@ public class MantisBoss : EnemyBase
     {
         base.OnEnable();
         Current = this;
-        nextDash = Time.time + 3f;
-        nextLeap = Time.time + 6f;
+        nextDash = Time.time + 1.5f;
+        nextLeap = Time.time + 3f;
     }
 
     protected override void OnDisable()

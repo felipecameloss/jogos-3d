@@ -10,7 +10,7 @@ public class DifficultyManager : MonoBehaviour
     public static DifficultyManager Instance { get; private set; }
 
     [Tooltip("Quanto o coeficiente sobe por minuto de run.")]
-    [SerializeField, Min(0f)] float scalingPerMinute = 0.35f;
+    [SerializeField, Min(0f)] float scalingPerMinute = 0.45f;
     [Tooltip("De quanto em quanto de coeficiente muda o nível (o nome que aparece na HUD).")]
     [SerializeField, Min(0.05f)] float coefficientPerLevel = 0.75f;
 

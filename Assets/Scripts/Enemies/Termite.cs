@@ -7,7 +7,7 @@ using UnityEngine;
 public class Termite : WorkerAnt
 {
     [Header("Cupim - Saindo do chão")]
-    [SerializeField, Min(0.1f)] float emergeDuration = 0.85f;
+    [SerializeField, Min(0.1f)] float emergeDuration = 0.45f;
     [SerializeField, Min(0f)] float emergeDepth = 1.1f;
     [Tooltip("Oscilação lateral do corpo enquanto cava para fora.")]
     [SerializeField] float emergeWiggleAngle = 14f;

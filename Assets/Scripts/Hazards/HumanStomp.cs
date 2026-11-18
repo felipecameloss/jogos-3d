@@ -24,10 +24,10 @@ public class HumanStomp : MonoBehaviour
     [SerializeField, Min(0.5f)] float hitHeight = 3f;
 
     [Header("Tempo")]
-    [SerializeField, Min(0.1f)] float warningTime = 2.2f;
-    [SerializeField, Min(0.05f)] float dropTime = 0.25f;
-    [SerializeField, Min(0f)] float holdTime = 0.6f;
-    [SerializeField, Min(0.05f)] float liftTime = 0.7f;
+    [SerializeField, Min(0.1f)] float warningTime = 1.45f;
+    [SerializeField, Min(0.05f)] float dropTime = 0.18f;
+    [SerializeField, Min(0f)] float holdTime = 0.4f;
+    [SerializeField, Min(0.05f)] float liftTime = 0.45f;
     [Tooltip("Altura do pé no começo do aviso e no começo da descida.")]
     [SerializeField] Vector2 hoverHeights = new(45f, 22f);
 

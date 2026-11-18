@@ -37,18 +37,18 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField, Range(0f, 1f)] float maxEliteChance = 0.45f;
 
     [Header("Créditos")]
-    [SerializeField, Min(0f)] float startingCredits = 24f;
+    [SerializeField, Min(0f)] float startingCredits = 36f;
     [Tooltip("Créditos por segundo com dificuldade 1 (multiplica pelo coeficiente).")]
-    [SerializeField, Min(0f)] float creditsPerSecond = 1.2f;
+    [SerializeField, Min(0f)] float creditsPerSecond = 1.9f;
     [Tooltip("Limite de créditos guardados (evita uma onda gigante depois de bater o máximo de vivos).")]
-    [SerializeField, Min(1f)] float maxBankedCredits = 80f;
+    [SerializeField, Min(1f)] float maxBankedCredits = 110f;
 
     [Header("Ondas")]
-    [SerializeField, Min(0.5f)] float waveIntervalMin = 4f;
-    [SerializeField, Min(0.5f)] float waveIntervalMax = 7f;
+    [SerializeField, Min(0.5f)] float waveIntervalMin = 2.5f;
+    [SerializeField, Min(0.5f)] float waveIntervalMax = 4.2f;
     [Tooltip("Inimigos por onda com dificuldade 1; cresce com o coeficiente.")]
-    [SerializeField, Min(1)] int baseGroupSize = 3;
-    [SerializeField, Min(1)] int maxAlive = 30;
+    [SerializeField, Min(1)] int baseGroupSize = 4;
+    [SerializeField, Min(1)] int maxAlive = 45;
 
     [Header("Onde nascer")]
     [SerializeField, Min(0f)] float minDistance = 18f;
@@ -93,7 +93,7 @@ public class EnemySpawner : MonoBehaviour
     {
         var p = GameObject.FindGameObjectWithTag("Player");
         if (p != null) player = p.transform;
-        nextWaveTime = Time.time + 2f; // primeira onda logo no começo
+        nextWaveTime = Time.time + 1f; // primeira onda logo no começo
     }
 
     float Difficulty => DifficultyManager.Instance != null ? DifficultyManager.Instance.Coefficient : 1f;
@@ -202,6 +202,7 @@ public class EnemySpawner : MonoBehaviour
         float hpMult = dm != null ? dm.EnemyHealthMultiplier : 1f;
         float dmgMult = dm != null ? dm.EnemyDamageMultiplier : 1f;
         if (dm != null) enemy.ApplyScaling(hpMult, dmgMult);
+        enemy.SpeedMultiplier = Mathf.Min(1.35f, 1f + Mathf.Max(0f, coeff - 1f) * 0.08f);
 
         if (!enemy.IsBoss && coeff >= minEliteDifficulty)
         {
