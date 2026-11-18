@@ -64,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
     CharacterController controller;
     Vector3 horizontalVelocity;
     Vector3 knockbackVelocity;
+    Vector3 dashVelocity;
+    float dashUntil;
     float verticalVelocity;
     float lastGroundedTime = float.NegativeInfinity;
     float lastJumpPressedTime = float.NegativeInfinity;
@@ -101,6 +103,17 @@ public class PlayerMovement : MonoBehaviour
             camRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
         }
         Vector3 moveDir = camForward * input.y + camRight * input.x;
+        MoveDirection = moveDir;
+
+        // ---------- Dash: ignora input e gravidade enquanto dura ----------
+        if (IsDashing)
+        {
+            controller.Move(dashVelocity * dt);
+            horizontalVelocity = dashVelocity * 0.3f; // sai do dash com um pouco de embalo
+            verticalVelocity = 0f;
+            FaceCamera(camForward, dt);
+            return;
+        }
 
         // ---------- Velocidade horizontal ----------
         IsSprinting = InputEnabled && sprintAction != null && sprintAction.action.IsPressed() && input.sqrMagnitude > 0.01f;
@@ -142,12 +155,30 @@ public class PlayerMovement : MonoBehaviour
         CollisionFlags flags = controller.Move((horizontalVelocity + knockbackVelocity) * dt + Vector3.up * verticalDelta);
         if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f) verticalVelocity = 0f; // bateu a cabeça
 
-        // ---------- Girar para onde a câmera mira ----------
-        if (camForward.sqrMagnitude > 0.001f)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(camForward, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 1f - Mathf.Exp(-turnSpeed * dt));
-        }
+        FaceCamera(camForward, dt);
+    }
+
+    // Girar para onde a câmera mira
+    void FaceCamera(Vector3 camForward, float dt)
+    {
+        if (camForward.sqrMagnitude <= 0.001f) return;
+        Quaternion targetRot = Quaternion.LookRotation(camForward, Vector3.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 1f - Mathf.Exp(-turnSpeed * dt));
+    }
+
+    /// <summary>Direção de movimento pedida pelo input agora (relativa à câmera; zero se parado).</summary>
+    public Vector3 MoveDirection { get; private set; }
+    public bool IsDashing => Time.time < dashUntil;
+
+    /// <summary>Avança `distance` metros em `duration` segundos na horizontal, sem gravidade.</summary>
+    public void Dash(Vector3 direction, float distance, float duration)
+    {
+        direction.y = 0f;
+        if (direction.sqrMagnitude < 0.0001f) direction = transform.forward;
+        dashVelocity = direction.normalized * (distance / Mathf.Max(0.01f, duration));
+        dashUntil = Time.time + duration;
+        verticalVelocity = 0f;
+        knockbackVelocity = Vector3.zero;
     }
 
     /// <summary>Empurra o player (golpe forte, explosão). A parte vertical tira ele do chão.</summary>
