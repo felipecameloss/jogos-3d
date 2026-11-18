@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,6 +34,35 @@ public abstract class EnemyBase : MonoBehaviour
     /// <summary>Multiplicadores para a escala de dificuldade (task do spawner).</summary>
     [HideInInspector] public float DamageMultiplier = 1f;
     [HideInInspector] public float SpeedMultiplier = 1f;
+    /// <summary>Lentidão de efeitos de status (chiclete, cola). Controlado por StatusEffects.</summary>
+    [HideInInspector] public float StatusSpeedMultiplier = 1f;
+
+    /// <summary>Inimigos ativos na cena (vivos ou morrendo). Para itens acharem alvos sem FindObjects.</summary>
+    public static readonly List<EnemyBase> Active = new();
+
+    /// <summary>Inimigo vivo mais perto de um ponto (ignora `except`). Null se não houver dentro do raio.</summary>
+    public static EnemyBase Nearest(Vector3 point, float maxDistance, ICollection<EnemyBase> except = null)
+    {
+        EnemyBase best = null;
+        float bestSq = maxDistance * maxDistance;
+        foreach (var e in Active)
+        {
+            if (e == null || !e.IsAlive || (except != null && except.Contains(e))) continue;
+            float sq = (e.transform.position - point).sqrMagnitude;
+            if (sq < bestSq) { bestSq = sq; best = e; }
+        }
+        return best;
+    }
+
+    /// <summary>Centro do corpo (para mirar raios e linhas).</summary>
+    public Vector3 Center
+    {
+        get
+        {
+            var c = GetComponent<Collider>();
+            return c != null && c.enabled ? c.bounds.center : transform.position + Vector3.up * 0.6f;
+        }
+    }
 
     public Health Health { get; private set; }
     public bool IsAlive => Health != null && Health.IsAlive;
@@ -70,15 +100,27 @@ public abstract class EnemyBase : MonoBehaviour
         Health.ResetHealth();
         foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = true;
         Agent.enabled = true;
+        StatusSpeedMultiplier = 1f;
         Agent.speed = moveSpeed * SpeedMultiplier;
+        if (!Active.Contains(this)) Active.Add(this);
         if (Agent.isOnNavMesh) Agent.isStopped = false;
         FindTarget();
+    }
+
+    protected virtual void OnDisable()
+    {
+        Active.Remove(this);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        Active.Remove(this);
     }
 
     protected virtual void Update()
     {
         if (!IsAlive) return;
-        Agent.speed = moveSpeed * SpeedMultiplier;
+        Agent.speed = moveSpeed * SpeedMultiplier * StatusSpeedMultiplier;
         if (Target == null) FindTarget();
         if (!HasValidTarget)
         {

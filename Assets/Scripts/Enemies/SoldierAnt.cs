@@ -52,8 +52,9 @@ public class SoldierAnt : WorkerAnt
         }
     }
 
-    void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         SetTelegraph(0f); // volta do pool com a cor normal
     }
 

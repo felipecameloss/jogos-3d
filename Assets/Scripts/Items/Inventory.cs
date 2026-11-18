@@ -201,6 +201,22 @@ public class Inventory : MonoBehaviour
 
     // ---------- Ajudantes para efeitos de item ----------
 
+    readonly Dictionary<ItemData, object> itemStates = new();
+
+    /// <summary>
+    /// Estado da run de um item (cronômetro, contador...). O ItemData é um asset
+    /// compartilhado, então estado fica aqui, um por item, criado na primeira chamada.
+    /// </summary>
+    public T GetState<T>(ItemData item) where T : class, new()
+    {
+        if (!itemStates.TryGetValue(item, out var s) || s is not T typed)
+        {
+            typed = new T();
+            itemStates[item] = typed;
+        }
+        return typed;
+    }
+
     /// <summary>Dano causado por um item: não dispara outros efeitos "ao acertar".</summary>
     public void DealItemDamage(IDamageable target, float amount, Vector3 point, bool ignoreArmor = false)
     {
