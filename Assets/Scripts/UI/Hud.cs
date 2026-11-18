@@ -27,7 +27,7 @@ public class Hud : MonoBehaviour
     PlayerWallet wallet;
     Inventory inventory;
     Interactor interactor;
-    readonly List<(IHudAbility ability, VisualElement overlay, Label text)> abilities = new();
+    readonly List<(IHudAbility ability, VisualElement box, Label name, VisualElement overlay, Label text)> abilities = new();
     float popupUntil;
 
     public bool IsVisible => hud != null && hud.style.display != DisplayStyle.None;
@@ -157,9 +157,12 @@ public class Hud : MonoBehaviour
     {
         popupName.text = item.DisplayName;
         popupName.style.color = item.Color;
-        popupDesc.text = item.Rarity == ItemRarity.Amaldicoado
-            ? $"[Amaldiçoado] {item.Description}"
-            : item.Description;
+        popupDesc.text = item.Rarity switch
+        {
+            ItemRarity.Amaldicoado => $"[Amaldiçoado] {item.Description}",
+            ItemRarity.Equipamento => $"[Equipamento, Q] {item.Description}",
+            _ => item.Description,
+        };
         popup.RemoveFromClassList("popup--hidden");
         popupUntil = Time.unscaledTime + popupDuration;
     }
@@ -278,7 +281,7 @@ public class Hud : MonoBehaviour
             text.AddToClassList("ability-cooldown-text");
             box.Add(name); box.Add(overlay); box.Add(text); box.Add(key);
             abilitiesRow.Add(box);
-            abilities.Add((a, overlay, text));
+            abilities.Add((a, box, name, overlay, text));
         }
     }
 
@@ -286,8 +289,14 @@ public class Hud : MonoBehaviour
 
     void UpdateAbilities()
     {
-        foreach (var (a, overlay, text) in abilities)
+        foreach (var (a, box, name, overlay, text) in abilities)
         {
+            // Nome/cor podem mudar (slot de equipamento troca de item)
+            if (name.text != a.HudName)
+            {
+                name.text = a.HudName;
+                box.style.borderTopColor = box.style.borderBottomColor = box.style.borderLeftColor = box.style.borderRightColor = a.HudColor;
+            }
             bool show = a.CooldownDuration >= 1f && a.CooldownRemaining > 0f;
             overlay.style.height = Length.Percent(show ? a.CooldownRemaining / a.CooldownDuration * 100f : 0f);
             text.text = show ? Mathf.CeilToInt(a.CooldownRemaining).ToString() : "";

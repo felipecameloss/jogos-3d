@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6157b8745a17cab458f606f0ba0888f0, type: 3}
+  m_Name: Lupa
+  m_EditorClassIdentifier: Assembly-CSharp::MagnifierEquipment
+  displayName: Lupa
+  description: 'Q: raio de sol que queima tudo em linha.'
+  rarity: 4
+  icon: {fileID: 0}
+  modifiers: []
+  cooldown: 40
+  duration: 1.6
+  tickInterval: 0.1
+  damagePerTick: 0.5
+  burnDamage: 2
+  burnDuration: 3
+  range: 35
+  beamRadius: 1.1
+  beamColor: {r: 1, g: 0.9, b: 0.35, a: 0.9}
+  coreColor: {r: 1, g: 1, b: 0.85, a: 1}

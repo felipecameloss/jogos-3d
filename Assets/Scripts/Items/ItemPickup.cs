@@ -2,9 +2,11 @@ using UnityEngine;
 
 /// <summary>
 /// Item no chão: gira, flutua, brilha na cor da raridade. O player pega encostando.
+/// Equipamento só é pego encostando se o slot estiver vazio; com o slot ocupado
+/// vira um interagível (E) que troca e dropa o antigo.
 /// Baús e drops criam com ItemPickup.Spawn(prefab, item, posição).
 /// </summary>
-public class ItemPickup : MonoBehaviour
+public class ItemPickup : Interactable
 {
     [SerializeField] ItemData item;
     [Tooltip("Partes que pegam a cor da raridade.")]
@@ -43,6 +45,27 @@ public class ItemPickup : MonoBehaviour
         age = 0f;
     }
     float launchArc;
+
+    EquipmentData Equipment => item as EquipmentData;
+    EquipmentSlot Slot => inventory != null ? inventory.Equipment : null;
+    /// <summary>Equipamento com o slot já ocupado: não pega encostando, só com E.</summary>
+    bool IsSwapOnly => Equipment != null && Slot != null && Slot.HasEquipment;
+
+    public override bool CanInteract(Interactor who) =>
+        IsSwapOnly && !launching && age >= pickupDelay && Slot.Current != item;
+
+    public override string GetPrompt(Interactor who, out bool available)
+    {
+        available = true;
+        return $"Trocar {Slot.Current.DisplayName} por {item.DisplayName}";
+    }
+
+    public override void Interact(Interactor who)
+    {
+        if (!CanInteract(who) || !inventory.Health.IsAlive) return;
+        inventory.Add(item); // equipa e dropa o antigo
+        Destroy(gameObject);
+    }
 
     public static ItemPickup Spawn(ItemPickup prefab, ItemData item, Vector3 position)
     {
@@ -98,6 +121,7 @@ public class ItemPickup : MonoBehaviour
         transform.position = basePos + Vector3.up * (Mathf.Sin(age * 2.5f) * bobHeight);
 
         if (item == null || inventory == null || age < pickupDelay) return;
+        if (IsSwapOnly) return; // espera o E
         Vector3 d = player.position + Vector3.up - transform.position;
         if (d.sqrMagnitude <= pickupRadius * pickupRadius && inventory.Health.IsAlive)
         {

@@ -22,10 +22,12 @@ public class ItemDatabase : ScriptableObject
         return buffer.Count == 0 ? null : buffer[UnityEngine.Random.Range(0, buffer.Count)];
     }
 
-    /// <summary>Sorteia a raridade pelos pesos (comum, incomum, lendário, amaldiçoado) e depois o item.</summary>
-    public ItemData RandomWeighted(float common = 79f, float uncommon = 20f, float legendary = 1f, float cursed = 0f)
+    /// <summary>Sorteia a raridade pelos pesos (comum, incomum, lendário, amaldiçoado, equipamento) e depois o item.</summary>
+    public ItemData RandomWeighted(float common = 79f, float uncommon = 20f, float legendary = 1f, float cursed = 0f, float equipment = 0f)
     {
-        float roll = UnityEngine.Random.value * (common + uncommon + legendary + cursed);
+        float total = common + uncommon + legendary + cursed;
+        float roll = UnityEngine.Random.value * (total + equipment);
+        if (roll >= total && Random(ItemRarity.Equipamento) is { } eq) return eq;
         var rarity = roll < common
             ? ItemRarity.Comum
             : roll < common + uncommon

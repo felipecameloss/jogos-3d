@@ -23,6 +23,7 @@ public class Inventory : MonoBehaviour
     public Health Health { get; private set; }
     public CharacterStats Stats { get; private set; }
     public PlayerMovement Movement { get; private set; }
+    public EquipmentSlot Equipment { get; private set; }
 
     readonly Dictionary<ItemData, int> stacks = new();
     readonly List<ItemData> order = new();
@@ -37,6 +38,7 @@ public class Inventory : MonoBehaviour
         Health = GetComponent<Health>();
         Stats = GetComponent<CharacterStats>();
         Movement = GetComponent<PlayerMovement>();
+        Equipment = GetComponent<EquipmentSlot>();
         if (Health != null)
         {
             baseMaxHealth = Health.Max;
@@ -74,6 +76,15 @@ public class Inventory : MonoBehaviour
     public void Add(ItemData item, int count = 1, bool silent = false)
     {
         if (item == null || count <= 0) return;
+        // Equipamento não empilha: vai para o slot do Q (troca e dropa o antigo)
+        if (item is EquipmentData equipment)
+        {
+            if (Equipment == null) Equipment = GetComponent<EquipmentSlot>();
+            if (Equipment == null) return;
+            Equipment.Equip(equipment);
+            if (!silent) OnItemAdded?.Invoke(item, 1);
+            return;
+        }
         int now = GetCount(item) + count;
         if (!stacks.ContainsKey(item)) order.Add(item);
         stacks[item] = now;
