@@ -9,9 +9,9 @@ public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] Animation anim;
     [Tooltip("Acima dessa velocidade (m/s) usa a corrida em vez da caminhada.")]
-    [SerializeField] float runThreshold = 7f;
+    [SerializeField] float runThreshold = 9.5f;
     [Tooltip("Velocidade (m/s) em que a caminhada/corrida tocam na velocidade normal.")]
-    [SerializeField] float walkReferenceSpeed = 4f, runReferenceSpeed = 9f;
+    [SerializeField] float walkReferenceSpeed = 5.5f, runReferenceSpeed = 11.5f;
     [SerializeField] float fade = 0.15f;
 
     public string CurrentClip { get; private set; } = "";

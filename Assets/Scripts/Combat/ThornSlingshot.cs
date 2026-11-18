@@ -21,8 +21,8 @@ public class ThornSlingshot : MonoBehaviour, IHudAbility
 
     [Header("Tiro")]
     [Tooltip("Tiros por segundo com attack speed 1.")]
-    [SerializeField, Min(0.1f)] float baseShotsPerSecond = 3f;
-    [SerializeField, Min(1f)] float projectileSpeed = 70f;
+    [SerializeField, Min(0.1f)] float baseShotsPerSecond = 4.2f;
+    [SerializeField, Min(1f)] float projectileSpeed = 95f;
     [Tooltip("Multiplica o dano do CharacterStats (estilo Risk of Rain: 100% de dano).")]
     [SerializeField, Min(0f)] float damageCoefficient = 1f;
     [SerializeField] float maxAimDistance = 200f;

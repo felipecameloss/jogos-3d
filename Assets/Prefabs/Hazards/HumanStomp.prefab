@@ -568,10 +568,10 @@ MonoBehaviour:
   foot: {fileID: 4958005653800409330}
   footprint: {x: 3.5, y: 7}
   hitHeight: 3
-  warningTime: 2.2
-  dropTime: 0.25
-  holdTime: 0.6
-  liftTime: 0.7
+  warningTime: 1.45
+  dropTime: 0.18
+  holdTime: 0.4
+  liftTime: 0.45
   hoverHeights: {x: 45, y: 22}
   playerDamageFraction: 0.45
   edgeKnockbackRange: 1.5

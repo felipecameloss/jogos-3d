@@ -12,7 +12,7 @@ using UnityEngine.AI;
 public class AllyAnt : MonoBehaviour
 {
     [SerializeField, Min(0f)] float damageCoefficient = 1.5f;
-    [SerializeField, Min(0.1f)] float biteInterval = 0.8f;
+    [SerializeField, Min(0.1f)] float biteInterval = 0.55f;
     [SerializeField, Min(0.5f)] float biteRange = 2.4f;
     [SerializeField, Min(1f)] float aggroRange = 25f;
     [SerializeField, Min(0.5f)] float followDistance = 4f;

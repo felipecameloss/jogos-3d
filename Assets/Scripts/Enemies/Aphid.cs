@@ -13,7 +13,7 @@ public class Aphid : EnemyBase
     [SerializeField, Min(1f)] float safeDistance = 28f;
     [Tooltip("Passo à frente ao escolher um ponto de fuga no NavMesh.")]
     [SerializeField, Min(1f)] float fleeStepDistance = 8f;
-    [SerializeField, Min(0.05f)] float repathInterval = 0.25f;
+    [SerializeField, Min(0.05f)] float repathInterval = 0.15f;
     [Tooltip("Tempo correndo depois de levar dano, mesmo se o player estiver longe.")]
     [SerializeField, Min(0f)] float panicOnHitDuration = 4f;
 

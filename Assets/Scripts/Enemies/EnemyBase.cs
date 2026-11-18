@@ -13,9 +13,9 @@ using UnityEngine.AI;
 public abstract class EnemyBase : MonoBehaviour
 {
     [Header("Base")]
-    [SerializeField, Min(0f)] protected float moveSpeed = 4.5f;
+    [SerializeField, Min(0f)] protected float moveSpeed = 7.2f;
     [Tooltip("Graus por segundo para virar na direção do alvo quando parado.")]
-    [SerializeField, Min(0f)] protected float turnSpeed = 540f;
+    [SerializeField, Min(0f)] protected float turnSpeed = 720f;
     [Tooltip("Tempo entre morrer e sumir (animação de morte).")]
     [SerializeField, Min(0f)] float despawnDelay = 1.2f;
     [Tooltip("Migalhas que solta ao morrer com dificuldade 1 (cresce com a dificuldade).")]
@@ -103,6 +103,7 @@ public abstract class EnemyBase : MonoBehaviour
         Health.ResetHealth();
         foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = true;
         Agent.enabled = true;
+        SpeedMultiplier = 1f;
         StatusSpeedMultiplier = 1f;
         Agent.speed = moveSpeed * SpeedMultiplier;
         if (!Active.Contains(this)) Active.Add(this);

@@ -12,13 +12,15 @@ public class WorkerAnt : EnemyBase
     [Header("Mordida")]
     [SerializeField, Min(0f)] float damage = 8f;
     [Tooltip("Distância (centro a centro, no plano) para começar a morder.")]
-    [SerializeField, Min(0.1f)] float attackRange = 1.9f;
+    [SerializeField, Min(0.1f)] float attackRange = 2.2f;
     [Tooltip("Folga extra no momento do golpe: andar só um pouco pra trás não salva.")]
-    [SerializeField, Min(0f)] float hitRangeBonus = 0.5f;
+    [SerializeField, Min(0f)] float hitRangeBonus = 0.65f;
     [Tooltip("Aviso antes da mordida.")]
-    [SerializeField, Min(0f)] float windUpTime = 0.45f;
+    [SerializeField, Min(0f)] float windUpTime = 0.28f;
     [Tooltip("Parada depois da mordida (janela para o player bater).")]
-    [SerializeField, Min(0f)] float recoverTime = 0.8f;
+    [SerializeField, Min(0f)] float recoverTime = 0.35f;
+    [Tooltip("Avanço rápido no NavMesh ao fechar a mordida para pressionar o jogador.")]
+    [SerializeField, Min(0f)] float biteStepDistance = 0.45f;
 
     [Header("Visual")]
     [Tooltip("Corpo que inclina no aviso e avança na mordida. Vazio = sem animação.")]
@@ -61,7 +63,7 @@ public class WorkerAnt : EnemyBase
                 if (FlatDistanceToTarget() <= attackRange)
                 {
                     StopMoving();
-                    if (FaceTarget() > 0.8f) SetState(State.WindUp);
+                    if (FaceTarget() > 0.65f) SetState(State.WindUp);
                 }
                 else
                 {
@@ -98,6 +100,8 @@ public class WorkerAnt : EnemyBase
     void Bite()
     {
         OnWindUp(0f);
+        if (biteStepDistance > 0f && Agent != null && Agent.enabled && Agent.isOnNavMesh)
+            Agent.Move(transform.forward * biteStepDistance);
         if (TargetHealth == null || !TargetInFront(attackRange + hitRangeBonus)) return;
         Vector3 dir = (Target.position - transform.position).normalized;
         TargetHealth.TakeDamage(new DamageInfo(damage * DamageMultiplier, gameObject, Target.position + Vector3.up, dir));

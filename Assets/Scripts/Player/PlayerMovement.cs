@@ -19,22 +19,22 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform cameraTransform;
 
     [Header("Movimento")]
-    [SerializeField] float walkSpeed = 6f;
-    [SerializeField] float sprintSpeed = 10f;
+    [SerializeField] float walkSpeed = 8f;
+    [SerializeField] float sprintSpeed = 13.5f;
     [Tooltip("Ligado: corre por padrão e segurar Ctrl/Sprint anda mais devagar.")]
     [SerializeField] bool sprintByDefault = true;
     [Tooltip("Quão rápido a velocidade chega no alvo (maior = mais responsivo).")]
-    [SerializeField] float acceleration = 14f;
+    [SerializeField] float acceleration = 20f;
     [Tooltip("Multiplicador da aceleração no ar.")]
-    [SerializeField, Range(0f, 1f)] float airControl = 0.4f;
+    [SerializeField, Range(0f, 1f)] float airControl = 0.6f;
     [Tooltip("Velocidade com que o player gira para a direção da câmera.")]
-    [SerializeField] float turnSpeed = 20f;
+    [SerializeField] float turnSpeed = 26f;
 
     [Header("Pulo e gravidade")]
-    [SerializeField] float jumpHeight = 1.8f;
-    [SerializeField] float gravity = -30f;
+    [SerializeField] float jumpHeight = 2f;
+    [SerializeField] float gravity = -34f;
     [Tooltip("Gravidade extra ao cair, para o pulo ficar menos 'flutuante'.")]
-    [SerializeField] float fallGravityMultiplier = 1.6f;
+    [SerializeField] float fallGravityMultiplier = 1.75f;
     [SerializeField] float maxFallSpeed = 40f;
     [Tooltip("Tempo depois de sair do chão em que ainda dá para pular.")]
     [SerializeField] float coyoteTime = 0.12f;

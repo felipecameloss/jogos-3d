@@ -11,8 +11,8 @@ public class NeedleThrust : PlayerAbility
     [Header("Estocada")]
     [Tooltip("Dano em múltiplos do dano do player (5 = 500%).")]
     [SerializeField, Min(0f)] float damageCoefficient = 5f;
-    [SerializeField, Min(0f)] float lungeDistance = 3f;
-    [SerializeField, Min(0.01f)] float lungeTime = 0.12f;
+    [SerializeField, Min(0f)] float lungeDistance = 4.2f;
+    [SerializeField, Min(0.01f)] float lungeTime = 0.1f;
     [Tooltip("Área do golpe à frente do player (largura, altura, comprimento).")]
     [SerializeField] Vector3 hitBox = new(2.6f, 2.4f, 4.6f);
     [Tooltip("Agulha que aparece durante o golpe (opcional).")]

@@ -53445,13 +53445,13 @@ MonoBehaviour:
     minGroup: 1
     extraGroupSize: 0
     poolPrewarm: 4
-  startingCredits: 24
-  creditsPerSecond: 1.2
-  maxBankedCredits: 80
-  waveIntervalMin: 4
-  waveIntervalMax: 7
-  baseGroupSize: 3
-  maxAlive: 30
+  startingCredits: 36
+  creditsPerSecond: 1.9
+  maxBankedCredits: 110
+  waveIntervalMin: 2.5
+  waveIntervalMax: 4.2
+  baseGroupSize: 4
+  maxAlive: 45
   minDistance: 18
   maxDistance: 35
   groupSpread: 3
@@ -53468,7 +53468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 149cfdb04c9211249857b5a2cf3bb5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DifficultyManager
-  scalingPerMinute: 0.35
+  scalingPerMinute: 0.45
   coefficientPerLevel: 0.75
   enemyHealthPerPoint: 0.6
   enemyDamagePerPoint: 0.3
@@ -53504,10 +53504,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StompDirector
   stompPrefab: {fileID: 1653759583857852823, guid: fae4a01d70090ef4ea65fc08604e0e75, type: 3}
-  firstStompDelay: 20
-  interval: {x: 18, y: 28}
-  frequencyPerPoint: 0.35
-  minInterval: 5
+  firstStompDelay: 12
+  interval: {x: 11, y: 18}
+  frequencyPerPoint: 0.45
+  minInterval: 3.2
   aimAtPlayerChance: 0.6
   leadTime: 0.6
   randomRadius: 10
@@ -69135,14 +69135,14 @@ MonoBehaviour:
   jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   sprintAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   cameraTransform: {fileID: 0}
-  walkSpeed: 6
-  sprintSpeed: 10
-  acceleration: 14
-  airControl: 0.4
-  turnSpeed: 20
-  jumpHeight: 1.8
-  gravity: -30
-  fallGravityMultiplier: 1.6
+  walkSpeed: 8
+  sprintSpeed: 13.5
+  acceleration: 20
+  airControl: 0.6
+  turnSpeed: 26
+  jumpHeight: 2
+  gravity: -34
+  fallGravityMultiplier: 1.75
   maxFallSpeed: 40
   coyoteTime: 0.12
   jumpBufferTime: 0.12
@@ -69213,8 +69213,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1481444129457657151, guid: 63425a142be4d7d45a3f323f7a0b5847, type: 3}
   muzzle: {fileID: 1024164379}
   aimCamera: {fileID: 0}
-  baseShotsPerSecond: 3
-  projectileSpeed: 70
+  baseShotsPerSecond: 4.2
+  projectileSpeed: 95
   damageCoefficient: 1
   maxAimDistance: 200
   aimMask:
@@ -69289,7 +69289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SummonAllies
   action: {fileID: 4058695131562419284, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  cooldown: 20
+  cooldown: 15
   hudSlot: 3
   hudName: Formigas
   hudKey: R
@@ -69310,13 +69310,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DashAbility
   action: {fileID: 4648313564109867136, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  cooldown: 3
+  cooldown: 2.2
   hudSlot: 2
   hudName: Dash
   hudKey: Shift
   hudColor: {r: 0.55, g: 0.85, b: 1, a: 1}
-  distance: 9
-  duration: 0.2
+  distance: 11.5
+  duration: 0.18
   trail: {fileID: 1325326871}
 --- !u!114 &1325326870
 MonoBehaviour:
@@ -69331,14 +69331,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NeedleThrust
   action: {fileID: 8878295352383115237, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  cooldown: 4
+  cooldown: 3
   hudSlot: 1
   hudName: Agulha
   hudKey: M2
   hudColor: {r: 0.85, g: 0.87, b: 0.9, a: 1}
   damageCoefficient: 5
-  lungeDistance: 3
-  lungeTime: 0.12
+  lungeDistance: 4.2
+  lungeTime: 0.1
   hitBox: {x: 2.6, y: 2.4, z: 4.6}
   needleVisual: {fileID: 962083977}
 --- !u!96 &1325326871
@@ -69473,9 +69473,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   anim: {fileID: 11932246}
-  runThreshold: 7
-  walkReferenceSpeed: 4
-  runReferenceSpeed: 9
+  runThreshold: 9.5
+  walkReferenceSpeed: 5.5
+  runReferenceSpeed: 11.5
   fade: 0.15
 --- !u!1 &1325551039
 GameObject:

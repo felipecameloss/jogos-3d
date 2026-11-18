@@ -11,12 +11,12 @@ public class StompDirector : MonoBehaviour
 
     [Header("Frequência")]
     [Tooltip("Primeiro pisão depois desse tempo de run.")]
-    [SerializeField, Min(0f)] float firstStompDelay = 20f;
+    [SerializeField, Min(0f)] float firstStompDelay = 12f;
     [Tooltip("Intervalo entre pisões (mín, máx) com dificuldade 1.")]
-    [SerializeField] Vector2 interval = new(18f, 28f);
+    [SerializeField] Vector2 interval = new(11f, 18f);
     [Tooltip("Quanto mais frequente fica por ponto de dificuldade acima de 1.")]
-    [SerializeField, Min(0f)] float frequencyPerPoint = 0.35f;
-    [SerializeField, Min(0.5f)] float minInterval = 5f;
+    [SerializeField, Min(0f)] float frequencyPerPoint = 0.45f;
+    [SerializeField, Min(0.5f)] float minInterval = 3.2f;
 
     [Header("Mira")]
     [Tooltip("Chance de mirar no player (senão, ponto aleatório perto dele).")]
