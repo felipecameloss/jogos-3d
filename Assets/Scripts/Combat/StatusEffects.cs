@@ -14,13 +14,15 @@ public class StatusEffects : MonoBehaviour
     static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");
     static readonly Color SlowTint = new(1f, 0.45f, 0.75f);   // rosa chiclete
     static readonly Color BurnGlow = new(1f, 0.45f, 0.08f);
+    static readonly Color PoisonGlow = new(0.28f, 0.95f, 0.25f);
 
-    struct Burn { public float dps; public float until; public GameObject source; }
+    struct Burn { public float dps; public float until; public GameObject source; public bool isPoison; }
 
     public bool IsSlowed => Time.time < slowUntil;
     public float SlowAmount => IsSlowed ? slowAmount : 0f;
-    public bool IsBurning => burns.Count > 0;
-    /// <summary>Dano por segundo somado de todos os fogos ativos.</summary>
+    public bool IsBurning { get { foreach (var b in burns) if (!b.isPoison) return true; return false; } }
+    public bool IsPoisoned { get { foreach (var b in burns) if (b.isPoison) return true; return false; } }
+    /// <summary>Dano por segundo somado de todos os fogos/venenos ativos.</summary>
     public float BurnDps { get { float d = 0f; foreach (var b in burns) d += b.dps; return d; } }
 
     Health health;
@@ -62,13 +64,16 @@ public class StatusEffects : MonoBehaviour
         slowUntil = Mathf.Max(slowUntil, Time.time + duration);
     }
 
-    /// <summary>Fogo: `totalDamage` espalhado em `duration`. Vários fogos somam.</summary>
-    public void ApplyBurn(float totalDamage, float duration, GameObject source)
+    /// <summary>Fogo ou veneno: `totalDamage` espalhado em `duration`. Vários efeitos somam.</summary>
+    public void ApplyBurn(float totalDamage, float duration, GameObject source, bool isPoison = false)
     {
         if (totalDamage <= 0f || duration <= 0f || (health != null && !health.IsAlive)) return;
         if (burns.Count == 0) nextBurnTick = Time.time + BurnTick;
-        burns.Add(new Burn { dps = totalDamage / duration, until = Time.time + duration, source = source });
+        burns.Add(new Burn { dps = totalDamage / duration, until = Time.time + duration, source = source, isPoison = isPoison });
     }
+
+    public void ApplyPoison(float totalDamage, float duration, GameObject source) =>
+        ApplyBurn(totalDamage, duration, source, isPoison: true);
 
     void Update()
     {
@@ -92,18 +97,20 @@ public class StatusEffects : MonoBehaviour
 
     void UpdateTint()
     {
-        bool slowed = IsSlowed, burning = IsBurning;
-        if (!slowed && !burning && !tinted) return;
+        bool slowed = IsSlowed, burning = IsBurning, poisoned = IsPoisoned;
+        bool hasGlow = burning || poisoned;
+        if (!slowed && !hasGlow && !tinted) return;
         float flicker = 0.6f + 0.4f * Mathf.Sin(Time.time * 18f);
+        Color glow = burning && poisoned ? Color.Lerp(BurnGlow, PoisonGlow, 0.5f) : poisoned ? PoisonGlow : BurnGlow;
         for (int i = 0; i < renderers.Length; i++)
         {
             if (renderers[i] == null) continue;
             renderers[i].GetPropertyBlock(block);
             block.SetColor(BaseColorId, slowed ? Color.Lerp(baseColors[i], SlowTint, 0.45f) : baseColors[i]);
-            block.SetColor(EmissionId, burning ? BurnGlow * (1.3f * flicker) : Color.black);
+            block.SetColor(EmissionId, hasGlow ? glow * (1.3f * flicker) : Color.black);
             renderers[i].SetPropertyBlock(block);
         }
-        tinted = slowed || burning;
+        tinted = slowed || hasGlow;
     }
 
     public void ClearAll()

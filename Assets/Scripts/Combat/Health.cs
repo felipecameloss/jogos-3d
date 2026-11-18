@@ -25,9 +25,14 @@ public class Health : MonoBehaviour, IDamageable
     public event Action<float> OnHealed;
     /// <summary>(atual, máxima) sempre que algum dos dois muda. Bom para a HUD.</summary>
     public event Action<float, float> OnHealthChanged;
+    /// <summary>(escudo atual, escudo máximo) sempre que algum dos dois muda.</summary>
+    public event Action<float, float> OnShieldChanged;
 
     public float Current { get; private set; }
     public float Max => maxHealth;
+    public float Shield { get; private set; }
+    public float MaxShield { get; private set; }
+    public float LastDamagedTime { get; private set; } = float.NegativeInfinity;
     public float Normalized => Current / maxHealth;
     public bool IsAlive => Current > 0f;
     public bool IsFullHealth => Current >= maxHealth;
@@ -37,6 +42,7 @@ public class Health : MonoBehaviour, IDamageable
 
     public float Armor { get => armor; set => armor = value; }
     public float RegenPerSecond { get => regenPerSecond; set => regenPerSecond = Mathf.Max(0f, value); }
+    public float FlatDamageReduction { get; set; }
 
     float invulnerableUntil = float.NegativeInfinity;
 
@@ -55,8 +61,23 @@ public class Health : MonoBehaviour, IDamageable
         if (!IsAlive || IsInvulnerable || info.Amount <= 0f) return;
 
         float damage = info.IgnoreArmor ? info.Amount : ApplyArmor(info.Amount, armor);
-        info.Amount = Mathf.Min(damage, Current); // dano que realmente saiu da vida
-        Current -= info.Amount;
+        if (!info.IgnoreArmor && FlatDamageReduction > 0f)
+            damage = Mathf.Max(1f, damage - FlatDamageReduction);
+
+        LastDamagedTime = Time.time;
+
+        float absorbed = Mathf.Min(Shield, damage);
+        if (absorbed > 0f)
+        {
+            Shield -= absorbed;
+            if (Shield < 0.0001f) Shield = 0f;
+            OnShieldChanged?.Invoke(Shield, MaxShield);
+        }
+
+        float remaining = damage - absorbed;
+        float hpDamage = Mathf.Min(remaining, Current); // dano que realmente saiu da vida
+        info.Amount = absorbed + hpDamage;
+        Current -= hpDamage;
         if (Current < 0.0001f) Current = 0f;
         if (invulnerabilityTime > 0f) invulnerableUntil = Time.time + invulnerabilityTime;
 
@@ -106,12 +127,36 @@ public class Health : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(Current, maxHealth);
     }
 
+    /// <summary>Define o escudo máximo. Ganhar escudo também preenche o valor ganho.</summary>
+    public void SetMaxShield(float value, bool fillGain = true)
+    {
+        value = Mathf.Max(0f, value);
+        float oldMax = MaxShield;
+        MaxShield = value;
+        if (fillGain && value > oldMax && IsAlive)
+            Shield = Mathf.Min(MaxShield, Shield + (value - oldMax));
+        else
+            Shield = Mathf.Min(Shield, MaxShield);
+        OnShieldChanged?.Invoke(Shield, MaxShield);
+    }
+
+    /// <summary>Recarrega o escudo até o máximo.</summary>
+    public void RechargeShield(float amount)
+    {
+        if (!IsAlive || amount <= 0f || MaxShield <= 0f || Shield >= MaxShield) return;
+        Shield = Mathf.Min(MaxShield, Shield + amount);
+        OnShieldChanged?.Invoke(Shield, MaxShield);
+    }
+
     /// <summary>Volta à vida cheia (reaproveitar inimigo do pool, reiniciar run).</summary>
     public void ResetHealth()
     {
         Current = maxHealth;
+        Shield = MaxShield;
+        LastDamagedTime = float.NegativeInfinity;
         invulnerableUntil = float.NegativeInfinity;
         OnHealthChanged?.Invoke(Current, maxHealth);
+        OnShieldChanged?.Invoke(Shield, MaxShield);
     }
 
     public static float ApplyArmor(float damage, float armor)

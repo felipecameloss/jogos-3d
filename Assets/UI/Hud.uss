@@ -55,6 +55,16 @@
     background-color: rgb(222, 70, 52);
 }
 
+.shield-fill {
+    position: absolute;
+    left: 0; bottom: 0;
+    height: 6px;
+    width: 0%;
+    background-color: rgb(90, 205, 255);
+    transition-property: width;
+    transition-duration: 0.12s;
+}
+
 .health-text {
     position: absolute;
     left: 0; right: 0; top: 0; bottom: 0;

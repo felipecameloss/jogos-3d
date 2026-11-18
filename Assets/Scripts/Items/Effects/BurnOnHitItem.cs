@@ -9,14 +9,16 @@ public class BurnOnHitItem : ItemData
 {
     [Tooltip("Chance por stack (0.1 = 10%). Stacks somam sem passar de 100%.")]
     [SerializeField, Range(0f, 1f)] float chancePerStack = 0.1f;
-    [Tooltip("Dano total do fogo em múltiplos do dano do player (2 = 200%).")]
+    [Tooltip("Dano total do efeito em múltiplos do dano do player (2 = 200%).")]
     [SerializeField, Min(0f)] float damageCoefficient = 2f;
     [SerializeField, Min(0.1f)] float duration = 3f;
+    [Tooltip("Falso = fogo (laranja); verdadeiro = veneno (verde).")]
+    [SerializeField] bool isPoison = false;
 
     public override void OnHit(Inventory inventory, int stacks, Health target, DamageInfo info)
     {
         if (!Inventory.Roll(chancePerStack, stacks)) return;
         float playerDamage = inventory.Stats != null ? inventory.Stats.Damage : info.Amount;
-        StatusEffects.On(target).ApplyBurn(playerDamage * damageCoefficient, duration, inventory.gameObject);
+        StatusEffects.On(target).ApplyBurn(playerDamage * damageCoefficient, duration, inventory.gameObject, isPoison);
     }
 }

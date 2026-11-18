@@ -12,6 +12,7 @@
         <ui:VisualElement class="top-left" picking-mode="Ignore">
             <ui:VisualElement class="health-bar" picking-mode="Ignore">
                 <ui:VisualElement name="health-fill" class="health-fill" picking-mode="Ignore" />
+                <ui:VisualElement name="shield-fill" class="shield-fill" picking-mode="Ignore" />
                 <ui:Label name="health-text" text="100 / 100" class="health-text" picking-mode="Ignore" />
             </ui:VisualElement>
             <ui:VisualElement class="crumbs" picking-mode="Ignore">

@@ -28,7 +28,7 @@ public class Inventory : MonoBehaviour
     readonly List<ItemData> order = new();
 
     // Valores base (sem itens), lidos no Awake
-    float baseMaxHealth, baseArmor, baseRegen;
+    float baseMaxHealth, baseArmor, baseRegen, baseMaxShield, baseFlatReduction;
     float secondTimer;
     CrumbDropper crumbDropper;
 
@@ -42,6 +42,8 @@ public class Inventory : MonoBehaviour
             baseMaxHealth = Health.Max;
             baseArmor = Health.Armor;
             baseRegen = Health.RegenPerSecond;
+            baseMaxShield = Health.MaxShield;
+            baseFlatReduction = Health.FlatDamageReduction;
         }
     }
 
@@ -141,6 +143,8 @@ public class Inventory : MonoBehaviour
             }
             Health.Armor = baseArmor + Sum(StatType.Armor).flat;
             Health.RegenPerSecond = baseRegen + Sum(StatType.Regen).flat;
+            Health.SetMaxShield(baseMaxShield + Sum(StatType.MaxShield).flat);
+            Health.FlatDamageReduction = baseFlatReduction + Sum(StatType.DamageReduction).flat;
         }
         if (crumbDropper == null) crumbDropper = FindAnyObjectByType<CrumbDropper>();
         if (crumbDropper != null) crumbDropper.AttractRadiusMultiplier = Multiplier(StatType.CrumbAttractRadius);
