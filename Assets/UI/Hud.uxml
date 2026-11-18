@@ -1,6 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="Hud.uss" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+        <!-- Vinheta sutil do modo foco (Ctrl) -->
+        <ui:VisualElement name="focus-vignette" class="focus-vignette" picking-mode="Ignore">
+            <ui:VisualElement class="focus-ring focus-ring--inner" picking-mode="Ignore" />
+        </ui:VisualElement>
+
         <!-- Borda vermelha ao levar dano -->
         <ui:VisualElement name="damage-flash" class="damage-flash" picking-mode="Ignore">
             <ui:VisualElement class="damage-ring damage-ring--2" picking-mode="Ignore">
@@ -52,6 +57,7 @@
             <ui:VisualElement class="cross cross--h-right" picking-mode="Ignore" />
             <ui:VisualElement class="cross cross--v-top" picking-mode="Ignore" />
             <ui:VisualElement class="cross cross--v-bottom" picking-mode="Ignore" />
+            <ui:VisualElement class="cross cross--dot" picking-mode="Ignore" />
         </ui:VisualElement>
 
         <!-- Popup ao pegar item -->

@@ -16,7 +16,7 @@ public class Hud : MonoBehaviour
     [Tooltip("Abaixo dessa fração a barra de vida fica vermelha.")]
     [SerializeField, Range(0f, 1f)] float lowHealth = 0.3f;
 
-    VisualElement hud, healthFill, shieldFill, items, crosshair, popup, abilitiesRow, damageFlash;
+    VisualElement hud, healthFill, shieldFill, items, crosshair, popup, abilitiesRow, damageFlash, focusVignette;
     float flashAmount;
     Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText;
     VisualElement objective, objectiveBar, objectiveFill, boss, bossFill;
@@ -24,6 +24,7 @@ public class Hud : MonoBehaviour
     VisualElement difficultyFill;
 
     Health health;
+    PlayerMovement movement;
     PlayerWallet wallet;
     Inventory inventory;
     Interactor interactor;
@@ -38,6 +39,7 @@ public class Hud : MonoBehaviour
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
         hud = root.Q("hud");
+        focusVignette = root.Q("focus-vignette");
         damageFlash = root.Q("damage-flash");
         healthFill = root.Q("health-fill");
         shieldFill = root.Q("shield-fill");
@@ -69,6 +71,7 @@ public class Hud : MonoBehaviour
         if (player != null)
         {
             health = player.GetComponent<Health>();
+            movement = player.GetComponent<PlayerMovement>();
             wallet = player.GetComponent<PlayerWallet>();
             inventory = player.GetComponent<Inventory>();
             interactor = player.GetComponent<Interactor>();
@@ -139,7 +142,11 @@ public class Hud : MonoBehaviour
             difficultyFill.style.width = Length.Percent(dm.LevelProgress * 100f);
         }
 
-        crosshair.style.display = UnityEngine.Cursor.lockState == CursorLockMode.Locked ? DisplayStyle.Flex : DisplayStyle.None;
+        bool locked = UnityEngine.Cursor.lockState == CursorLockMode.Locked;
+        bool focusing = locked && movement != null && movement.IsSlowWalkHeld && !movement.IsDashing;
+        crosshair.style.display = locked ? DisplayStyle.Flex : DisplayStyle.None;
+        crosshair.EnableInClassList("crosshair--focus", focusing);
+        if (focusVignette != null) focusVignette.EnableInClassList("focus-vignette--active", focusing);
         if (PopupVisible && Time.unscaledTime > popupUntil) popup.AddToClassList("popup--hidden");
         UpdatePrompt();
         UpdateAbilities();
