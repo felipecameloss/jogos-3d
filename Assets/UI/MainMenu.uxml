@@ -13,6 +13,10 @@
                 <ui:VisualElement class="controls-row"><ui:Label text="Espaço" class="key" /><ui:Label text="pular" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Mouse" class="key" /><ui:Label text="mirar" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Botão esquerdo" class="key" /><ui:Label text="atirar (segurar)" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="Botão direito" class="key" /><ui:Label text="agulha" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="Q" class="key" /><ui:Label text="dash" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="R" class="key" /><ui:Label text="formigas aliadas" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="E" class="key" /><ui:Label text="abrir / interagir" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Esc" class="key" /><ui:Label text="pausar" class="action" /></ui:VisualElement>
             </ui:VisualElement>
             <ui:Button name="quit" text="Sair" class="btn btn--secondary" />
