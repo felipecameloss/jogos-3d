@@ -22,7 +22,7 @@ public class WorkerAnt : EnemyBase
 
     [Header("Visual")]
     [Tooltip("Corpo que inclina no aviso e avança na mordida. Vazio = sem animação.")]
-    [SerializeField] Transform body;
+    [SerializeField] protected Transform body;
     [Tooltip("Graus que o corpo empina no aviso.")]
     [SerializeField] float windUpTilt = 20f;
     [Tooltip("Quanto o corpo recua no aviso.")]
@@ -33,8 +33,8 @@ public class WorkerAnt : EnemyBase
     enum State { Chase, WindUp, Recover }
     State state;
     float stateTime;
-    Vector3 bodyRestPos;
-    Quaternion bodyRestRot;
+    protected Vector3 bodyRestPos;
+    protected Quaternion bodyRestRot;
 
     /// <summary>Para testes/debug: quantas mordidas acertaram.</summary>
     public int BitesLanded { get; private set; }

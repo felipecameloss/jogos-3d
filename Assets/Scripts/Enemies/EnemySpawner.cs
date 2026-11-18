@@ -20,6 +20,10 @@ public class EnemySpawner : MonoBehaviour
         [Min(0f)] public float weight = 1f;
         [Tooltip("Só aparece a partir desse coeficiente de dificuldade.")]
         [Min(1f)] public float minDifficulty = 1f;
+        [Tooltip("Tamanho mínimo do grupo ao nascer (0 ou 1 = normal).")]
+        [Min(0)] public int minGroup = 1;
+        [Tooltip("Inimigos extras permitidos no máximo do grupo (bom para enxames como cupins).")]
+        [Min(0)] public int extraGroupSize = 0;
         [Min(0)] public int poolPrewarm = 10;
         [NonSerialized] public ComponentPool<EnemyBase> pool;
     }
@@ -112,14 +116,20 @@ public class EnemySpawner : MonoBehaviour
             pendingEntry = null;
             return;
         }
-        if (entry.cost > credits)
+        int room = maxAlive - alive.Count;
+        if (room <= 0) return;
+
+        int requiredCount = Mathf.Min(Mathf.Max(1, entry.minGroup), room);
+        float requiredCost = entry.cost * requiredCount;
+        if (requiredCost > maxBankedCredits) requiredCost = entry.cost;
+        if (requiredCost > credits)
         {
             pendingEntry = entry; // junta créditos para esse
             return;
         }
 
-        int groupMax = baseGroupSize + Mathf.FloorToInt(coeff - 1f);
-        int count = Mathf.Min(Mathf.FloorToInt(credits / entry.cost), groupMax, maxAlive - alive.Count);
+        int groupMax = Mathf.Max(requiredCount, baseGroupSize + Mathf.Max(0, entry.extraGroupSize) + Mathf.FloorToInt(coeff - 1f));
+        int count = Mathf.Min(Mathf.FloorToInt(credits / entry.cost), groupMax, room);
         if (count <= 0) return;
         if (!TryFindSpawnPoint(out Vector3 center)) return;
         pendingEntry = null;
