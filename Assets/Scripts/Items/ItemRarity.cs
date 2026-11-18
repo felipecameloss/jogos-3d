@@ -7,6 +7,8 @@ public enum ItemRarity
     Lendario,
     /// <summary>Bônus forte com penalidade (café derramado, cola branca).</summary>
     Amaldicoado,
+    /// <summary>Equipamento ativo (lupa, pastilha de menta...): vai para o slot do Q, não empilha.</summary>
+    Equipamento,
 }
 
 public static class ItemRarityExtensions
@@ -18,6 +20,7 @@ public static class ItemRarityExtensions
         ItemRarity.Incomum => new Color(0.45f, 0.86f, 0.35f),
         ItemRarity.Lendario => new Color(0.97f, 0.32f, 0.24f),
         ItemRarity.Amaldicoado => new Color(0.55f, 0.62f, 1f),
+        ItemRarity.Equipamento => new Color(1f, 0.62f, 0.15f),
         _ => UnityEngine.Color.white,
     };
 
@@ -27,6 +30,7 @@ public static class ItemRarityExtensions
         ItemRarity.Incomum => "Incomum",
         ItemRarity.Lendario => "Lendário",
         ItemRarity.Amaldicoado => "Amaldiçoado",
+        ItemRarity.Equipamento => "Equipamento",
         _ => r.ToString(),
     };
 }

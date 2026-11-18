@@ -18,6 +18,8 @@ public class Chest : Interactable
     [SerializeField, Min(0f)] float uncommonWeight = 19f;
     [SerializeField, Min(0f)] float legendaryWeight = 1f;
     [SerializeField, Min(0f)] float cursedWeight = 4f;
+    [Tooltip("Equipamento ativo (lupa...).")]
+    [SerializeField, Min(0f)] float equipmentWeight = 7f;
 
     [Header("Referências")]
     [SerializeField] ItemDatabase database;
@@ -47,6 +49,7 @@ public class Chest : Interactable
     Quaternion lidRestRot;
     Coroutine shake;
     PlayerWallet playerWallet;
+    EquipmentSlot playerEquipment;
 
     void Awake()
     {
@@ -56,7 +59,7 @@ public class Chest : Interactable
     void Start()
     {
         var p = GameObject.FindGameObjectWithTag("Player");
-        if (p != null) playerWallet = p.GetComponent<PlayerWallet>();
+        if (p != null) { playerWallet = p.GetComponent<PlayerWallet>(); playerEquipment = p.GetComponent<EquipmentSlot>(); }
     }
 
     public override bool CanInteract(Interactor who) => !IsOpen;
@@ -79,9 +82,15 @@ public class Chest : Interactable
         Open(who.transform.position);
     }
 
-    /// <summary>Sorteia um item pelos pesos deste baú.</summary>
-    public ItemData RollItem() =>
-        database != null ? database.RandomWeighted(commonWeight, uncommonWeight, legendaryWeight, cursedWeight) : null;
+    /// <summary>Sorteia um item pelos pesos deste baú (nunca o equipamento que o player já tem).</summary>
+    public ItemData RollItem()
+    {
+        if (database == null) return null;
+        var item = database.RandomWeighted(commonWeight, uncommonWeight, legendaryWeight, cursedWeight, equipmentWeight);
+        if (item is EquipmentData && playerEquipment != null && playerEquipment.Current == item)
+            item = database.RandomWeighted(commonWeight, uncommonWeight, legendaryWeight, cursedWeight);
+        return item;
+    }
 
     void Open(Vector3 towards)
     {

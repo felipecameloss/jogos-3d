@@ -334,7 +334,8 @@
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
-    white-space: nowrap;
+    white-space: normal; /* nomes longos de equipamento quebram em 2 linhas */
+    max-width: 66px;
     margin-top: 12px;
 }
 

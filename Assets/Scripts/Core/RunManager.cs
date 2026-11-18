@@ -19,6 +19,8 @@ public class RunManager : MonoBehaviour
         public int kills, stage, crumbs, crumbsTotal;
         public float healthFraction;
         public readonly List<(ItemData item, int count)> items = new();
+        public EquipmentData equipment;
+        public float equipmentCooldown;
     }
     static CarryOver carry;
 
@@ -88,6 +90,11 @@ public class RunManager : MonoBehaviour
         if (carry == null || playerHealth == null) return;
         var inventory = playerHealth.GetComponent<Inventory>();
         if (inventory != null) foreach (var (item, count) in carry.items) inventory.Add(item, count, silent: true);
+        if (carry.equipment != null && playerHealth.TryGetComponent(out EquipmentSlot slot))
+        {
+            slot.Equip(carry.equipment, drop: false);
+            slot.SetCooldownRemaining(carry.equipmentCooldown);
+        }
         var wallet = playerHealth.GetComponent<PlayerWallet>();
         if (wallet != null) wallet.RestoreState(carry.crumbs, carry.crumbsTotal);
         playerHealth.SetCurrent(playerHealth.Max * carry.healthFraction);
@@ -149,6 +156,11 @@ public class RunManager : MonoBehaviour
         if (wallet != null) { c.crumbs = wallet.Crumbs; c.crumbsTotal = wallet.TotalCollected; }
         var inventory = playerHealth != null ? playerHealth.GetComponent<Inventory>() : null;
         if (inventory != null) foreach (var item in inventory.Items) c.items.Add((item, inventory.GetCount(item)));
+        if (playerHealth != null && playerHealth.TryGetComponent(out EquipmentSlot slot))
+        {
+            c.equipment = slot.Current;
+            c.equipmentCooldown = slot.CooldownRemaining;
+        }
         carry = c;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
