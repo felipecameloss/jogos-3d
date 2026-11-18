@@ -108346,6 +108346,7 @@ GameObject:
   - component: {fileID: 2021240374}
   - component: {fileID: 2021240373}
   - component: {fileID: 2021240379}
+  - component: {fileID: 2021240380}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -108618,6 +108619,40 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &2021240380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021240372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4c8e2a17f3d49b6a82d159e30f4c7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicCameraFeel
+  playerCamera: {fileID: 2021240377}
+  orbitalFollow: {fileID: 2021240376}
+  rotationComposer: {fileID: 2021240375}
+  lookInput: {fileID: 2021240373}
+  gameplayDamping: {x: 0.06, y: 0.1, z: 0.06}
+  composerDamping: {x: 0.04, y: 0.05}
+  shoulderOffsetX: 0.09
+  minZoomScale: 0.66
+  maxZoomScale: 1.72
+  scrollStep: 0.08
+  sprintFovBoost: 3.5
+  dashFovBoost: 10.5
+  focusFovOffset: -5
+  shotFovKick: -1.1
+  strafeDutch: 1.5
+  dashDutch: 3.2
+  maxLandingDip: 0.24
+  focusZoomOffset: -0.16
+  focusSensitivityScale: 0.78
+  bossZoomOut: 0.34
+  bossScreenYOffset: -0.05
+  endRunOrbitSpeed: 18
 --- !u!1 &2021907870
 GameObject:
   m_ObjectHideFlags: 0
