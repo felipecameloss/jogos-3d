@@ -24,6 +24,8 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] Gradient sunColor = DefaultSunColor();
     [SerializeField] Color moonColor = new(0.55f, 0.65f, 1f);
     [SerializeField, Range(0f, 1f)] float nightAmbient = 0.35f;
+    [Tooltip("Cor da neblina à noite (de dia usa a cor da cena).")]
+    [SerializeField] Color nightFog = new(0.06f, 0.08f, 0.13f);
 
     public float Phase { get; private set; }
     /// <summary>Sol abaixo do horizonte (vaga-lume só aparece à noite).</summary>
@@ -33,6 +35,7 @@ public class DayNightCycle : MonoBehaviour
 
     Light sun;
     float dayAmbient;
+    Color dayFog;
 
     static Gradient DefaultSunColor()
     {
@@ -52,6 +55,7 @@ public class DayNightCycle : MonoBehaviour
         sun = GetComponent<Light>();
         if (dayIntensity <= 0f) dayIntensity = sun.intensity;
         dayAmbient = RenderSettings.ambientIntensity;
+        dayFog = RenderSettings.fogColor;
         RenderSettings.sun = sun; // o skybox procedural segue essa luz
     }
 
@@ -85,5 +89,6 @@ public class DayNightCycle : MonoBehaviour
             sun.color = moonColor;
         }
         RenderSettings.ambientIntensity = Mathf.Lerp(dayAmbient * nightAmbient, dayAmbient, Daylight);
+        if (RenderSettings.fog) RenderSettings.fogColor = Color.Lerp(nightFog, dayFog, Daylight);
     }
 }
