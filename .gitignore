@@ -47,3 +47,7 @@ crashlytics-build.properties
 # SO
 .DS_Store
 Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
