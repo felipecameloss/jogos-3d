@@ -69,4 +69,42 @@ public class EquipmentSmokeTest
 
         yield return new ExitPlayMode();
     }
+
+    [UnityTest]
+    public IEnumerator PastilhaCuraENaoGastaComVidaCheia()
+    {
+        LogAssert.ignoreFailingMessages = true;
+        EditorSceneManager.OpenScene("Assets/Scenes/Main.unity");
+        yield return new EnterPlayMode();
+        LogAssert.ignoreFailingMessages = true;
+        for (int i = 0; i < 10; i++) yield return null;
+
+        var mint = AssetDatabase.LoadAssetAtPath<MintEquipment>("Assets/ScriptableObjects/Items/PastilhaDeMenta.asset");
+        Assert.IsNotNull(mint, "asset da pastilha");
+        Assert.IsNotNull(mint.Icon, "ícone da pastilha");
+        var db = AssetDatabase.LoadAssetAtPath<ItemDatabase>("Assets/ScriptableObjects/Items/ItemDatabase.asset");
+        CollectionAssert.Contains(db.Items, mint, "pastilha no banco (sai dos baús)");
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        var slot = player.GetComponent<EquipmentSlot>();
+        var health = player.GetComponent<Health>();
+        player.GetComponent<Inventory>().Add(mint);
+        Assert.AreEqual(mint, slot.Current);
+
+        // vida cheia: não usa e não gasta a recarga
+        Assert.IsTrue(health.IsFullHealth);
+        Assert.IsFalse(slot.TryUse(), "vida cheia: não usa");
+        Assert.AreEqual(0f, slot.CooldownRemaining, "vida cheia: não gasta recarga");
+
+        // ferido: cura 45% da vida máxima na hora
+        health.SetCurrent(health.Max * 0.3f);
+        float before = health.Current;
+        Assert.IsTrue(slot.TryUse(), "ferido: usa");
+        float healed = health.Current - before;
+        Debug.Log($"[Smoke] menta curou {healed:0} de {health.Max:0} (recarga {slot.CooldownRemaining:0}s)");
+        Assert.That(healed, Is.EqualTo(health.Max * 0.45f).Within(0.5f), "cura 45%");
+        Assert.Greater(slot.CooldownRemaining, 40f, "recarga de 45s");
+        Assert.IsFalse(slot.TryUse(), "em recarga");
+        yield return new ExitPlayMode();
+    }
 }

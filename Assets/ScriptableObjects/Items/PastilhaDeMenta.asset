@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e66b709ec4b38449958cbde41c6b2b4, type: 3}
+  m_Name: PastilhaDeMenta
+  m_EditorClassIdentifier: Assembly-CSharp::MintEquipment
+  displayName: Pastilha de menta
+  description: 'Q: cura 45% da vida na hora.'
+  rarity: 4
+  icon: {fileID: 21300000, guid: 6a9bba73bcab66049b95f5e086b96b2d, type: 3}
+  modifiers: []
+  cooldown: 45
+  healFraction: 0.45
+  burstColor: {r: 0.55, g: 1, b: 0.8, a: 0.6}

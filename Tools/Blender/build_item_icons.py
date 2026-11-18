@@ -462,13 +462,39 @@ def tampa_de_caneta():
     obj("TampaDeCaneta", build, m, matrix=tilt(ry=-30, rz=-20))
 
 
+def pastilha_de_menta():
+    m = {"bala": mat("Mint", (0.97, 0.99, 0.97), 0.3), "menta": mat("MintStripe", (0.05, 0.68, 0.38), 0.35),
+         "papel": mat("Wrapper", (0.72, 0.95, 0.88), 0.2)}
+
+    def build(bm, M):
+        # pastilha redonda e abaulada com espiral verde
+        before = set(bm.faces)
+        geom = bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=8, radius=1.0)
+        for v in geom["verts"]:
+            v.co.z *= 0.42
+            v.co *= 0.62
+        bm.normal_update()
+        for f in new_faces(bm, before):
+            c = f.calc_center_median()
+            a = math.atan2(c.y, c.x)
+            r = math.hypot(c.x, c.y)
+            # cata-vento: faixas verdes saindo do centro, levemente torcidas
+            f.material_index = M("menta") if math.sin(a * 4 + r * 2.5) > 0.1 else M("bala")
+        # embrulho torcido nas duas pontas (laços)
+        for sx in (-1, 1):
+            add(bm, M("papel"), cone, (sx * 0.55, 0, 0), (sx * 0.78, 0, 0), 0.18, 0.06, 6)
+            add(bm, M("papel"), cone, (sx * 0.78, 0, 0), (sx * 1.2, 0, 0), 0.06, 0.32, 6)
+
+    obj("PastilhaDeMenta", build, m, matrix=tilt(rx=35, rz=-15))
+
+
 ITEMS = {
     "AsaDeMosca": asa_de_mosca, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
     "CafeDerramado": cafe_derramado, "CascaDeAmendoim": casca_de_amendoim, "CascaDeSemente": casca_de_semente,
     "CascoDeTatuzinho": casco_de_tatuzinho, "ClipeDePapel": clipe_de_papel, "ColaBranca": cola_branca,
     "EspinhoDeRosa": espinho_de_rosa, "FerraoDeAbelha": ferrao_de_abelha, "GotaDeOrvalho": gota_de_orvalho,
     "GotinhaDeMel": gotinha_de_mel, "GrafiteDeLapis": grafite_de_lapis, "GraoDeAcucar": grao_de_acucar,
-    "Lupa": lupa, "PedacoDeChiclete": pedaco_de_chiclete, "PernaDeGafanhoto": perna_de_gafanhoto,
+    "Lupa": lupa, "PastilhaDeMenta": pastilha_de_menta, "PedacoDeChiclete": pedaco_de_chiclete, "PernaDeGafanhoto": perna_de_gafanhoto,
     "SementeDeDenteDeLeao": semente_de_dente_de_leao, "TampaDeCaneta": tampa_de_caneta,
 }
 
