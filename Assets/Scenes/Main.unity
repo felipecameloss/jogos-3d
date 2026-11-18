@@ -53410,6 +53410,11 @@ MonoBehaviour:
     weight: 0.35
     minDifficulty: 1.5
     poolPrewarm: 4
+  - prefab: {fileID: 1676144172450157740, guid: 886480c2174597c47b355b4d5ca2bdf7, type: 3}
+    cost: 14
+    weight: 0.5
+    minDifficulty: 1.3
+    poolPrewarm: 4
   startingCredits: 24
   creditsPerSecond: 1.2
   maxBankedCredits: 80
