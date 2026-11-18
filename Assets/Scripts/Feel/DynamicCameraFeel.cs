@@ -30,7 +30,7 @@ public class DynamicCameraFeel : MonoBehaviour
     [Header("FOV dinâmico")]
     [SerializeField] float sprintFovBoost = 3.5f;
     [SerializeField] float dashFovBoost = 10.5f;
-    [SerializeField] float focusFovOffset = -5f;
+    [SerializeField] float focusFovOffset = -14f;
     [SerializeField] float shotFovKick = -1.1f;
 
     [Header("Dutch Tilt & Pouso")]
@@ -39,11 +39,17 @@ public class DynamicCameraFeel : MonoBehaviour
     [SerializeField] float maxLandingDip = 0.24f;
 
     [Header("Foco (Ctrl) e Chefe")]
-    [SerializeField] float focusZoomOffset = -0.16f;
-    [SerializeField, Range(0.4f, 1f)] float focusSensitivityScale = 0.78f;
+    [SerializeField] float focusZoomOffset = -0.36f;
+    [SerializeField] float focusMaxZoomScale = 0.72f;
+    [SerializeField] float focusExtraShoulder = 0.13f;
+    [SerializeField] float focusScreenYOffset = -0.045f;
+    [SerializeField] float focusTargetLift = 0.22f;
+    [SerializeField, Range(0.3f, 1f)] float focusSensitivityScale = 0.55f;
     [SerializeField] float bossZoomOut = 0.34f;
     [SerializeField] float bossScreenYOffset = -0.05f;
     [SerializeField] float endRunOrbitSpeed = 18f;
+
+    public bool IsFocusing { get; private set; }
 
     PlayerMovement movement;
     ThornSlingshot slingshot;
@@ -67,6 +73,7 @@ public class DynamicCameraFeel : MonoBehaviour
     float currentDutch;
     float landingDip;
     float landingVel;
+    float currentFocusLift;
     bool wasGrounded = true;
     float minVerticalVelInAir;
     float lastBossCheck;
@@ -152,8 +159,8 @@ public class DynamicCameraFeel : MonoBehaviour
 
     void HandleShotFired()
     {
-        shotKickCurrent = shotFovKick;
-        GameFeel.Shake(0.06f);
+        shotKickCurrent = shotFovKick * (IsFocusing ? 0.45f : 1f);
+        GameFeel.Shake(IsFocusing ? 0.03f : 0.06f);
     }
 
     void LateUpdate()
@@ -166,6 +173,7 @@ public class DynamicCameraFeel : MonoBehaviour
         bool runFinished = rm != null && (rm.IsRunOver || rm.IsStageComplete);
         if (runFinished)
         {
+            IsFocusing = false;
             if (orbitalFollow != null)
                 orbitalFollow.HorizontalAxis.Value += endRunOrbitSpeed * Time.unscaledDeltaTime;
             return;
@@ -180,6 +188,7 @@ public class DynamicCameraFeel : MonoBehaviour
         bool dashing = movement != null && movement.IsDashing;
         bool sprinting = movement != null && movement.IsSprinting && !dashing;
         bool focusing = movement != null && movement.IsSlowWalkHeld && !dashing;
+        IsFocusing = focusing;
         bool bossNear = IsBossActive();
 
         // 1. FOV dinâmico + coice elástico de tiro
@@ -189,7 +198,8 @@ public class DynamicCameraFeel : MonoBehaviour
         else if (focusing) targetFovOffset += focusFovOffset;
         else if (sprinting) targetFovOffset += sprintFovBoost;
 
-        currentFovOffset = Mathf.Lerp(currentFovOffset, targetFovOffset, 1f - Mathf.Exp(-10f * dt));
+        float fovSpeed = focusing ? 14f : 10f;
+        currentFovOffset = Mathf.Lerp(currentFovOffset, targetFovOffset, 1f - Mathf.Exp(-fovSpeed * dt));
 
         // 2. Dutch tilt proporcional ao strafe lateral relativo à câmera
         float lateralSpeed = 0f;
@@ -200,21 +210,22 @@ public class DynamicCameraFeel : MonoBehaviour
             float maxRef = dashing ? 25f : 10f;
             lateralSpeed = Mathf.Clamp(Vector3.Dot(vel, transform.right) / maxRef, -1f, 1f);
         }
-        float targetDutch = -lateralSpeed * (dashing ? dashDutch : strafeDutch);
+        float targetDutch = -lateralSpeed * (dashing ? dashDutch : strafeDutch) * (focusing ? 0.4f : 1f);
         currentDutch = Mathf.Lerp(currentDutch, targetDutch, 1f - Mathf.Exp(-11f * dt));
 
         var lens = playerCamera.Lens;
-        lens.FieldOfView = Mathf.Clamp(GameSettings.FieldOfView + currentFovOffset + shotKickCurrent, 38f, 115f);
+        lens.FieldOfView = Mathf.Clamp(GameSettings.FieldOfView + currentFovOffset + shotKickCurrent, 36f, 115f);
         lens.Dutch = currentDutch;
         playerCamera.Lens = lens;
 
         // 3. Zoom suave (Scroll + Dash + Foco Ctrl + Chefe)
         float targetZoom = userZoomScale;
         if (dashing) targetZoom += 0.12f;
-        else if (focusing) targetZoom += focusZoomOffset;
+        else if (focusing) targetZoom = Mathf.Min(targetZoom + focusZoomOffset, focusMaxZoomScale);
         if (bossNear) targetZoom += bossZoomOut;
-        targetZoom = Mathf.Clamp(targetZoom, 0.55f, 2.2f);
-        currentZoomScale = Mathf.Lerp(currentZoomScale, targetZoom, 1f - Mathf.Exp(-8f * dt));
+        targetZoom = Mathf.Clamp(targetZoom, 0.42f, 2.2f);
+        float zoomSpeed = focusing ? 12f : 8f;
+        currentZoomScale = Mathf.Lerp(currentZoomScale, targetZoom, 1f - Mathf.Exp(-zoomSpeed * dt));
 
         if (orbitalFollow != null)
         {
@@ -226,19 +237,21 @@ public class DynamicCameraFeel : MonoBehaviour
             orbitalFollow.Radius = baseRadius * currentZoomScale;
         }
 
-        // 4. Over-the-shoulder & enquadramento do chefe
-        float focusExtraShoulder = focusing ? 0.03f : 0f;
-        float targetShoulderX = (shoulderOffsetX + focusExtraShoulder) * shoulderSign;
-        currentShoulderX = Mathf.Lerp(currentShoulderX, targetShoulderX, 1f - Mathf.Exp(-10f * dt));
+        // 4. Over-the-shoulder & enquadramento do chefe/foco
+        float extraShoulder = focusing ? focusExtraShoulder : 0f;
+        float targetShoulderX = (shoulderOffsetX + extraShoulder) * shoulderSign;
+        float shoulderSpeed = focusing ? 13f : 10f;
+        currentShoulderX = Mathf.Lerp(currentShoulderX, targetShoulderX, 1f - Mathf.Exp(-shoulderSpeed * dt));
         if (rotationComposer != null)
         {
             var comp = rotationComposer.Composition;
-            Vector2 targetScreen = new(currentShoulderX, baseScreenPos.y + (bossNear ? bossScreenYOffset : 0f));
-            comp.ScreenPosition = Vector2.Lerp(comp.ScreenPosition, targetScreen, 1f - Mathf.Exp(-8f * dt));
+            float targetY = baseScreenPos.y + (bossNear ? bossScreenYOffset : 0f) + (focusing ? focusScreenYOffset : 0f);
+            Vector2 targetScreen = new(currentShoulderX, targetY);
+            comp.ScreenPosition = Vector2.Lerp(comp.ScreenPosition, targetScreen, 1f - Mathf.Exp(-10f * dt));
             rotationComposer.Composition = comp;
         }
 
-        // 5. Afundada de pouso elástica no CameraTarget
+        // 5. Afundada de pouso elástica + elevação sutil pro ombro no foco
         if (movement != null && hasTargetBase && cameraTarget != null)
         {
             if (!movement.IsGrounded)
@@ -255,7 +268,8 @@ public class DynamicCameraFeel : MonoBehaviour
             wasGrounded = movement.IsGrounded;
 
             landingDip = Mathf.SmoothDamp(landingDip, 0f, ref landingVel, 0.11f, Mathf.Infinity, dt);
-            cameraTarget.localPosition = baseTargetLocalPos + Vector3.down * landingDip;
+            currentFocusLift = Mathf.Lerp(currentFocusLift, focusing ? focusTargetLift : 0f, 1f - Mathf.Exp(-12f * dt));
+            cameraTarget.localPosition = baseTargetLocalPos + Vector3.up * (currentFocusLift - landingDip);
         }
 
         // 6. Ajuste fino de sensibilidade durante foco com Ctrl

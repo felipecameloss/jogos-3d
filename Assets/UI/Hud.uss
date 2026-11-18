@@ -7,6 +7,31 @@
 
 .hidden { display: none; }
 
+/* Vinheta tática no modo foco (Ctrl): overlay absoluto sem causar relayout */
+.focus-vignette {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    border-width: 34px;
+    border-color: rgba(6, 10, 6, 0.42);
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.14s;
+}
+
+.focus-vignette--active {
+    opacity: 1;
+}
+
+.focus-ring {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    border-width: 34px;
+}
+
+.focus-ring--inner {
+    border-color: rgba(6, 10, 6, 0.18);
+}
+
 /* Três anéis aninhados, cada um mais transparente: imita um degradê das bordas para o centro */
 .damage-flash {
     position: absolute;
@@ -256,12 +281,25 @@
 .cross {
     position: absolute;
     background-color: rgba(255, 255, 255, 0.9);
+    transition-property: left, top, width, height, background-color, opacity;
+    transition-duration: 0.11s;
 }
 
 .cross--h-left  { left: -11px; top: -1px; width: 7px; height: 2px; }
 .cross--h-right { left: 4px;   top: -1px; width: 7px; height: 2px; }
 .cross--v-top    { left: -1px; top: -11px; width: 2px; height: 7px; }
 .cross--v-bottom { left: -1px; top: 4px;   width: 2px; height: 7px; }
+.cross--dot      { left: -1px; top: -1px;  width: 2px; height: 2px; opacity: 0; border-radius: 1px; }
+
+.crosshair--focus .cross {
+    background-color: rgba(255, 226, 128, 0.98);
+}
+
+.crosshair--focus .cross--h-left  { left: -7px; top: -1px; width: 4px; height: 2px; }
+.crosshair--focus .cross--h-right { left: 3px;  top: -1px; width: 4px; height: 2px; }
+.crosshair--focus .cross--v-top    { left: -1px; top: -7px; width: 2px; height: 4px; }
+.crosshair--focus .cross--v-bottom { left: -1px; top: 3px;  width: 2px; height: 4px; }
+.crosshair--focus .cross--dot      { opacity: 1; }
 
 /* ---------- Popup de item ---------- */
 

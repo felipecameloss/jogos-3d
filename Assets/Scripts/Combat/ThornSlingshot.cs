@@ -29,6 +29,12 @@ public class ThornSlingshot : MonoBehaviour, IHudAbility
     [SerializeField] LayerMask aimMask = ~0;
     [SerializeField, Min(0)] int poolPrewarm = 30;
 
+    [Header("Modo Foco (Ctrl)")]
+    [Tooltip("Multiplicador de velocidade do projétil ao segurar Ctrl.")]
+    [SerializeField, Min(1f)] float focusSpeedMultiplier = 1.4f;
+    [Tooltip("Multiplicador de dano em disparos de precisão no modo foco.")]
+    [SerializeField, Min(1f)] float focusDamageMultiplier = 1.25f;
+
     /// <summary>Acertou algo com vida (hook "ao acertar" dos itens: ferrão, fio elétrico...).</summary>
     public event Action<IDamageable, DamageInfo> OnHitTarget;
     /// <summary>Disparou um espinho (som, recuo, partícula).</summary>
@@ -46,6 +52,7 @@ public class ThornSlingshot : MonoBehaviour, IHudAbility
 
     CharacterStats stats;
     Health health;
+    PlayerMovement movement;
     ComponentPool<Projectile> pool;
     float cooldown;
     readonly RaycastHit[] aimHits = new RaycastHit[16];
@@ -54,6 +61,7 @@ public class ThornSlingshot : MonoBehaviour, IHudAbility
     {
         stats = GetComponent<CharacterStats>();
         health = GetComponent<Health>();
+        movement = GetComponent<PlayerMovement>();
         if (aimCamera == null && Camera.main != null) aimCamera = Camera.main.transform;
         if (muzzle == null) muzzle = transform;
         if (projectilePrefab != null) pool = new ComponentPool<Projectile>(projectilePrefab, poolPrewarm, rootName: "[Pool] Thorn");
@@ -94,9 +102,11 @@ public class ThornSlingshot : MonoBehaviour, IHudAbility
         // Mira muito perto/atrás do estilingue (parede colada na câmera): atira pra frente da câmera
         if ((aimPoint - origin).sqrMagnitude < 1f || Vector3.Dot(dir, aimCamera.forward) < 0.2f) dir = aimCamera.forward;
 
-        float damage = (stats != null ? stats.Damage : 12f) * damageCoefficient;
+        bool focused = movement != null && movement.IsSlowWalkHeld && !movement.IsDashing;
+        float speed = projectileSpeed * (focused ? focusSpeedMultiplier : 1f);
+        float damage = (stats != null ? stats.Damage : 12f) * damageCoefficient * (focused ? focusDamageMultiplier : 1f);
         var p = pool.Get();
-        p.Launch(origin, dir * projectileSpeed, damage, gameObject, pool.Release, HandleHit);
+        p.Launch(origin, dir * speed, damage, gameObject, pool.Release, HandleHit);
         OnFired?.Invoke();
     }
 

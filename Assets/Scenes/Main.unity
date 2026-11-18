@@ -108643,13 +108643,13 @@ MonoBehaviour:
   scrollStep: 0.08
   sprintFovBoost: 3.5
   dashFovBoost: 10.5
-  focusFovOffset: -5
+  focusFovOffset: -14
   shotFovKick: -1.1
   strafeDutch: 1.5
   dashDutch: 3.2
   maxLandingDip: 0.24
-  focusZoomOffset: -0.16
-  focusSensitivityScale: 0.78
+  focusZoomOffset: -0.36
+  focusSensitivityScale: 0.55
   bossZoomOut: 0.34
   bossScreenYOffset: -0.05
   endRunOrbitSpeed: 18
