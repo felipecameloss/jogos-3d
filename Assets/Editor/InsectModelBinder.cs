@@ -27,7 +27,10 @@ public static class InsectModelBinder
         ("Aphid", "Aphid"),
         ("BombardierBeetle", "BombardierBeetle"),
         ("MantisBoss", "MantisBoss"),
+        ("Spider", "Spider"),
     };
+
+    const string GlowMaterials = "Assets/Art/Materials/Insects/";
 
     [MenuItem("Jogo/Art/Aplicar modelos FBX dos insetos")]
     public static void Run()
@@ -88,7 +91,7 @@ public static class InsectModelBinder
             var nozzle = FindDeep(model, "Nozzle");
             var so = new SerializedObject(beetle);
             so.FindProperty("nozzle").objectReferenceValue = nozzle;
-            so.FindProperty("nozzleRenderer").objectReferenceValue = nozzle != null ? nozzle.GetComponent<Renderer>() : null;
+            so.FindProperty("nozzleRenderer").objectReferenceValue = nozzle != null ? GlowRenderer(nozzle, "BeetleNozzleGlow") : null;
             so.ApplyModifiedPropertiesWithoutUndo();
             notes.Add($"nozzle={(nozzle != null)}");
         }
@@ -108,6 +111,42 @@ public static class InsectModelBinder
             so.ApplyModifiedPropertiesWithoutUndo();
             notes.Add($"garras={rends.Count}");
         }
+        if (root.TryGetComponent(out Spider spider))
+        {
+            var spinner = FindDeep(model, "Spinner");
+            var so = new SerializedObject(spider);
+            so.FindProperty("spinner").objectReferenceValue = spinner;
+            so.FindProperty("spinnerRenderer").objectReferenceValue = spinner != null ? GlowRenderer(spinner, "SpiderSpinnerGlow") : null;
+            so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha no aviso)
+            so.ApplyModifiedPropertiesWithoutUndo();
+            notes.Add($"fiandeira={(spinner != null)}");
+        }
+    }
+
+    /// <summary>
+    /// Os materiais embutidos no FBX não têm emissão ligada, e o aviso (bocal do besouro,
+    /// fiandeira da aranha) brilha via _EmissionColor. Troca por uma cópia com emissão.
+    /// </summary>
+    static Renderer GlowRenderer(Transform part, string materialName)
+    {
+        var r = part.GetComponent<Renderer>();
+        if (r == null) return null;
+        string path = GlowMaterials + materialName + ".mat";
+        var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+        if (mat == null)
+        {
+            if (!AssetDatabase.IsValidFolder(GlowMaterials.TrimEnd('/')))
+                AssetDatabase.CreateFolder("Assets/Art/Materials", "Insects");
+            mat = new Material(r.sharedMaterial) { name = materialName };
+            mat.EnableKeyword("_EMISSION");
+            mat.SetColor("_EmissionColor", Color.black);
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            AssetDatabase.CreateAsset(mat, path);
+        }
+        var mats = r.sharedMaterials;
+        mats[0] = mat;
+        r.sharedMaterials = mats;
+        return r;
     }
 
     /// <summary>Bounds das malhas de `t` no espaço da raiz do prefab.</summary>

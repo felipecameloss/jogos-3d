@@ -70,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 knockbackVelocity;
     Vector3 dashVelocity;
     float dashUntil;
+    float rootedUntil = float.NegativeInfinity, rootImmuneUntil = float.NegativeInfinity;
     float verticalVelocity;
     float lastGroundedTime = float.NegativeInfinity;
     float lastJumpPressedTime = float.NegativeInfinity;
@@ -123,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
         bool sprintKeyPressed = sprintAction != null && sprintAction.action.IsPressed();
         IsSprinting = InputEnabled && input.sqrMagnitude > 0.01f && (sprintByDefault ? !sprintKeyPressed : sprintKeyPressed);
         float speed = (IsSprinting ? sprintSpeed : walkSpeed) * SpeedMultiplier;
-        Vector3 targetVelocity = moveDir * speed;
+        Vector3 targetVelocity = IsRooted ? Vector3.zero : moveDir * speed;
         float accel = acceleration * (IsGrounded ? 1f : airControl);
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetVelocity, 1f - Mathf.Exp(-accel * dt));
 
@@ -132,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
         bool canGroundJump = Time.time - lastGroundedTime <= coyoteTime && jumpsUsed == 0;
         // Cair de uma borda sem pular gasta o pulo do chão: no ar só sobram os ExtraJumps.
         bool canAirJump = !canGroundJump && Mathf.Max(jumpsUsed, 1) < 1 + ExtraJumps;
-        if (jumpBuffered && (canGroundJump || canAirJump))
+        if (jumpBuffered && !IsRooted && (canGroundJump || canAirJump))
         {
             jumpsUsed = canGroundJump ? 1 : Mathf.Max(jumpsUsed, 1) + 1;
             verticalVelocity = Mathf.Sqrt(2f * jumpHeight * JumpHeightMultiplier * -gravity);
@@ -174,6 +175,23 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>Direção de movimento pedida pelo input agora (relativa à câmera; zero se parado).</summary>
     public Vector3 MoveDirection { get; private set; }
     public bool IsDashing => Time.time < dashUntil;
+
+    /// <summary>Preso (teia da aranha): não anda, não pula nem dá dash. Ainda mira e atira.</summary>
+    public bool IsRooted => Time.time < rootedUntil;
+
+    /// <summary>
+    /// Prende o player por `duration` segundos. Depois de soltar, fica imune por `immunity`
+    /// segundos (várias aranhas não prendem em sequência). Retorna se prendeu.
+    /// </summary>
+    public bool Root(float duration, float immunity = 1.5f)
+    {
+        if (IsRooted || Time.time < rootImmuneUntil || duration <= 0f) return false;
+        rootedUntil = Time.time + duration;
+        rootImmuneUntil = rootedUntil + immunity;
+        horizontalVelocity = Vector3.zero;
+        dashUntil = 0f;
+        return true;
+    }
 
     /// <summary>Avança `distance` metros em `duration` segundos na horizontal, sem gravidade.</summary>
     public void Dash(Vector3 direction, float distance, float duration)

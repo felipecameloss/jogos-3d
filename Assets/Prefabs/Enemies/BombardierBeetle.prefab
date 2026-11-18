@@ -34,7 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2698159217300976216}
+  - {fileID: 5981805816152115884}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &922601938499450437
@@ -126,8 +126,8 @@ MonoBehaviour:
   windUpTime: 0.42
   shotCooldown: 1.5
   leadTime: 0.42
-  nozzle: {fileID: 546920307367991983}
-  nozzleRenderer: {fileID: 8558191035999628621}
+  nozzle: {fileID: 8207071648460481115}
+  nozzleRenderer: {fileID: 51404737811568057}
 --- !u!114 &4834028010721746552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,14 +140,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249a2fe0c64574c4ca83a232d47e8b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InsectAnimator
-  model: {fileID: 2698159217300976216}
+  model: {fileID: 5981805816152115884}
   strideLength: 1.7911673
   fullSpeed: 6
   swingAngle: 24
   liftAngle: 16
   antennaWiggle: 9
   breathAngle: 2.5
---- !u!1001 &2520732653743166899
+--- !u!1001 &6091432746387877191
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -211,23 +211,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: Model
       objectReference: {fileID: 0}
+    - target: {fileID: 6070779288295471358, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31c88c961f7e3d04590c27bfef190763, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
---- !u!4 &546920307367991983 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2696668684105748252, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
-  m_PrefabInstance: {fileID: 2520732653743166899}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2698159217300976216 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
-  m_PrefabInstance: {fileID: 2520732653743166899}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &8558191035999628621 stripped
+--- !u!23 &51404737811568057 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6070779288295471358, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
-  m_PrefabInstance: {fileID: 2520732653743166899}
+  m_PrefabInstance: {fileID: 6091432746387877191}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5981805816152115884 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
+  m_PrefabInstance: {fileID: 6091432746387877191}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8207071648460481115 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2696668684105748252, guid: 60bdd4b7c789b044fbd52fcb94f142dc, type: 3}
+  m_PrefabInstance: {fileID: 6091432746387877191}
   m_PrefabAsset: {fileID: 0}

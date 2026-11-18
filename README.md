@@ -41,7 +41,7 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 
 - **Loop de Run e Dificuldade**: [`RunManager.cs`](Assets/Scripts/Core/RunManager.cs) mantém tempo, kills, fase atual e transição entre fases (levando itens, equipamento, cooldown restante, migalhas e proporção de vida); [`DifficultyManager.cs`](Assets/Scripts/Core/DifficultyManager.cs) escala a dificuldade ao longo do tempo; [`DayNightCycle.cs`](Assets/Scripts/Core/DayNightCycle.cs) alterna iluminação dia/pôr do sol/noite (`AmbientMode.Trilight`).
 - **Inimigos e Chefe**:
-  - Comuns: Formiga Operária (`WorkerAnt`), Formiga Soldado (`SoldierAnt`), Pulgão (`Aphid`), Besouro-Bombardeiro (`BombardierBeetle`, com projétil `AcidBlob` e poça `AcidPool`) e Cupim (`Termite`).
+  - Comuns: Formiga Operária (`WorkerAnt`), Formiga Soldado (`SoldierAnt`), Pulgão (`Aphid`), Besouro-Bombardeiro (`BombardierBeetle`, com projétil `AcidBlob` e poça `AcidPool`), Cupim (`Termite`) e Aranha (`Spider`: pula no player com aviso de círculo vermelho e dano ao pousar; cospe teia `WebShot` que vira `WebPatch` no chão e prende o player por um instante via `PlayerMovement.Root`, sem andar/pular/dash).
   - Variantes Elite: [`EnemyElite.cs`](Assets/Scripts/Enemies/EnemyElite.cs) (Gigante e Flamejante, com bônus de velocidade e recompensa ampliada de migalhas).
   - Chefe: Louva-a-Deus (`MantisBoss`, spawnado por [`BossSpawner.cs`](Assets/Scripts/Enemies/BossSpawner.cs) no evento do cano de saída `ExitPipe`).
 - **Itens, Equipamentos, Economia e Santuários**:
@@ -51,7 +51,7 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 - **Câmera, Ambiente, Perigos e Áudio**:
   - Câmera dinâmica em 3ª pessoa ([`DynamicCameraFeel.cs`](Assets/Scripts/Feel/DynamicCameraFeel.cs)): FOV dinâmico, *Dutch tilt*, ombro alternável, zoom por scroll, modo foco tático com `Ctrl` (zoom over-the-shoulder + retículo de precisão e vinheta no `Hud`), enquadramento no chefe e órbita ao fim da run.
   - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs) (cupim, formiga aliada, baús, santuários, pickups e cenário).
-  - Insetos low-poly (direção de arte no [`CLAUDE.md`](CLAUDE.md)): formiga operária, formiga-soldado, pulgão, besouro-bombardeiro e louva-a-deus usam FBX gerados por `Tools/Blender/build_*.py` (base em [`ant_common.py`](Tools/Blender/ant_common.py); a aranha `Spider.fbx` já existe, ainda sem prefab). Ficam em `Assets/Art/Models/Characters/`, em peças separadas com pivô na articulação, ligados aos prefabs por [`InsectModelBinder.cs`](Assets/Editor/InsectModelBinder.cs) (menu `Jogo/Art/Aplicar modelos FBX dos insetos`) e animados por código por [`InsectAnimator.cs`](Assets/Scripts/Enemies/InsectAnimator.cs) (pernas em tripé, antenas e abdômen). Comparação dos modelos: `Tools/Blender/previews/Lineup.png` (`render_lineup.py`).
+  - Insetos low-poly (direção de arte no [`CLAUDE.md`](CLAUDE.md)): formiga operária, formiga-soldado, pulgão, besouro-bombardeiro, louva-a-deus e aranha usam FBX gerados por `Tools/Blender/build_*.py` (base em [`ant_common.py`](Tools/Blender/ant_common.py)). Ficam em `Assets/Art/Models/Characters/`, em peças separadas com pivô na articulação, ligados aos prefabs por [`InsectModelBinder.cs`](Assets/Editor/InsectModelBinder.cs) (menu `Jogo/Art/Aplicar modelos FBX dos insetos`) e animados por código por [`InsectAnimator.cs`](Assets/Scripts/Enemies/InsectAnimator.cs) (pernas em tripé, antenas e abdômen). Comparação dos modelos: `Tools/Blender/previews/Lineup.png` (`render_lineup.py`).
   - Perigos e feedback: pisão humano (`HumanStomp` / `StompDirector`), sensação de combate (`GameFeel`, `HitFlash`, `HitStop`, `DamageNumbers`) e áudio procedural para música dia/noite e SFX (`GameAudio`).
 
 ---
@@ -61,7 +61,7 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 ```text
 Assets/
 ├── Art/                 # Materiais, modelos 3D (.glb e .fbx dos insetos) e texturas
-├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs)
+├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, SpiderSmokeTest.cs)
 ├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
 ├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
 ├── ScriptableObjects/   # Itens, Lupa.asset e ItemDatabase.asset

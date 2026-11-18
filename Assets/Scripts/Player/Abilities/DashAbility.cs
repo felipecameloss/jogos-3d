@@ -19,6 +19,8 @@ public class DashAbility : PlayerAbility
         if (trail != null) trail.emitting = false;
     }
 
+    protected override bool CanUse => base.CanUse && (Movement == null || !Movement.IsRooted);
+
     protected override bool TryActivate()
     {
         Vector3 dir = Movement != null && Movement.MoveDirection.sqrMagnitude > 0.01f ? Movement.MoveDirection : AimForward;

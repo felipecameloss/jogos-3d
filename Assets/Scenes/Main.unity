@@ -53451,6 +53451,13 @@ MonoBehaviour:
     minGroup: 1
     extraGroupSize: 0
     poolPrewarm: 4
+  - prefab: {fileID: 3684919128909508699, guid: dbe78c888c1be5e44ac63ae6f2cf8de0, type: 3}
+    cost: 16
+    weight: 0.45
+    minDifficulty: 1.6
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 6
   minEliteDifficulty: 1.15
   eliteChanceBase: 0.08
   eliteChancePerDifficulty: 0.06
@@ -69246,6 +69253,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   poolPrewarm: 30
+  focusSpeedMultiplier: 1.4
+  focusDamageMultiplier: 1.25
 --- !u!114 &1325326864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108692,6 +108701,10 @@ MonoBehaviour:
   dashDutch: 3.2
   maxLandingDip: 0.24
   focusZoomOffset: -0.36
+  focusMaxZoomScale: 0.72
+  focusExtraShoulder: 0.13
+  focusScreenYOffset: -0.045
+  focusTargetLift: 0.22
   focusSensitivityScale: 0.55
   bossZoomOut: 0.34
   bossScreenYOffset: -0.05
