@@ -3,13 +3,12 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// No player: acha o interagível mais perto e usa com Interagir (E / botão Norte).
-/// Mostra o aviso na tela até a HUD existir.
+/// A HUD mostra o aviso de Current.
 /// </summary>
 public class Interactor : MonoBehaviour
 {
     [SerializeField] InputActionReference interactAction;
     [SerializeField, Min(0.5f)] float range = 2.8f;
-    [SerializeField] bool debugGui = true;
 
     /// <summary>O interagível em foco agora (null se nenhum).</summary>
     public Interactable Current { get; private set; }
@@ -61,13 +60,4 @@ public class Interactor : MonoBehaviour
         return true;
     }
 
-    void OnGUI()
-    {
-        if (!debugGui || Current == null) return;
-        string text = Current.GetPrompt(this, out bool available);
-        var style = new GUIStyle(GUI.skin.box) { fontSize = 20, alignment = TextAnchor.MiddleCenter };
-        style.normal.textColor = available ? new Color(1f, 0.93f, 0.7f) : new Color(1f, 0.45f, 0.4f);
-        float w = 460f;
-        GUI.Box(new Rect((Screen.width - w) / 2f, Screen.height * 0.78f, w, 40f), $"[E] {text}", style);
-    }
 }

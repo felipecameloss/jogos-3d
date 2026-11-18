@@ -5,9 +5,6 @@ using UnityEngine;
 public class PlayerWallet : MonoBehaviour
 {
     [SerializeField, Min(0)] int startingCrumbs = 0;
-    [Header("Debug")]
-    [Tooltip("Mostra o contador na tela até a HUD existir.")]
-    [SerializeField] bool debugGui = true;
 
     /// <summary>(total, quanto mudou) — positivo ao ganhar, negativo ao gastar.</summary>
     public event Action<int, int> OnCrumbsChanged;
@@ -41,9 +38,4 @@ public class PlayerWallet : MonoBehaviour
         return true;
     }
 
-    void OnGUI()
-    {
-        if (!debugGui) return;
-        GUI.Label(new Rect(10, 50, 300, 25), $"Migalhas: {Crumbs}");
-    }
 }

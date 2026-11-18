@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 /// Segurar o ataque atira sem parar. A mira é o centro da tela: o espinho sai
 /// do estilingue e vai até o ponto que a câmera está mirando.
 /// </summary>
-public class ThornSlingshot : MonoBehaviour
+public class ThornSlingshot : MonoBehaviour, IHudAbility
 {
     [Header("Input")]
     [SerializeField] InputActionReference attackAction;
@@ -29,14 +29,18 @@ public class ThornSlingshot : MonoBehaviour
     [SerializeField] LayerMask aimMask = ~0;
     [SerializeField, Min(0)] int poolPrewarm = 30;
 
-    [Header("Debug")]
-    [Tooltip("Mira simples até a HUD existir.")]
-    [SerializeField] bool drawCrosshair = true;
-
     /// <summary>Acertou algo com vida (hook "ao acertar" dos itens: ferrão, fio elétrico...).</summary>
     public event Action<IDamageable, DamageInfo> OnHitTarget;
     /// <summary>Disparou um espinho (som, recuo, partícula).</summary>
     public event Action OnFired;
+
+    // HUD
+    public int HudSlot => 0;
+    public string HudName => "Estilingue";
+    public string HudKey => "M1";
+    public Color HudColor => new(0.62f, 0.8f, 0.35f);
+    public float CooldownRemaining => Mathf.Max(0f, cooldown);
+    public float CooldownDuration => 1f / ShotsPerSecond;
 
     public float ShotsPerSecond => baseShotsPerSecond * (stats != null ? stats.AttackSpeed : 1f);
 
@@ -112,16 +116,4 @@ public class ThornSlingshot : MonoBehaviour
         return from + dir * best;
     }
 
-    void OnGUI()
-    {
-        if (!drawCrosshair || Cursor.lockState != CursorLockMode.Locked) return;
-        float cx = Screen.width / 2f, cy = Screen.height / 2f;
-        var tex = Texture2D.whiteTexture;
-        GUI.color = new Color(1f, 1f, 1f, 0.85f);
-        GUI.DrawTexture(new Rect(cx - 9, cy - 1, 6, 2), tex);
-        GUI.DrawTexture(new Rect(cx + 3, cy - 1, 6, 2), tex);
-        GUI.DrawTexture(new Rect(cx - 1, cy - 9, 2, 6), tex);
-        GUI.DrawTexture(new Rect(cx - 1, cy + 3, 2, 6), tex);
-        GUI.color = Color.white;
-    }
 }

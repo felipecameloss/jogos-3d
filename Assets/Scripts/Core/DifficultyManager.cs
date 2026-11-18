@@ -18,9 +18,6 @@ public class DifficultyManager : MonoBehaviour
     [SerializeField, Min(0f)] float enemyHealthPerPoint = 0.6f;
     [SerializeField, Min(0f)] float enemyDamagePerPoint = 0.3f;
 
-    [Header("Debug")]
-    [SerializeField] bool debugGui = true;
-
     static readonly string[] LevelNames =
         { "Fácil", "Médio", "Difícil", "Muito difícil", "Insano", "Impossível", "Vou morrer", "HAHAHAHA" };
 
@@ -60,9 +57,4 @@ public class DifficultyManager : MonoBehaviour
         }
     }
 
-    void OnGUI()
-    {
-        if (!debugGui) return;
-        GUI.Label(new Rect(10, 30, 400, 25), $"Dificuldade: {LevelName} (x{Coefficient:F2})");
-    }
 }

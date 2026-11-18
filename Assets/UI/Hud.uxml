@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Hud.uss" />
+    <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+
+        <!-- Canto superior esquerdo: vida, migalhas, itens -->
+        <ui:VisualElement class="top-left" picking-mode="Ignore">
+            <ui:VisualElement class="health-bar" picking-mode="Ignore">
+                <ui:VisualElement name="health-fill" class="health-fill" picking-mode="Ignore" />
+                <ui:Label name="health-text" text="100 / 100" class="health-text" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement class="crumbs" picking-mode="Ignore">
+                <ui:VisualElement class="crumb-icon" picking-mode="Ignore" />
+                <ui:Label name="crumbs" text="0" class="crumbs-text" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="items" class="items" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <!-- Canto superior direito: tempo e dificuldade -->
+        <ui:VisualElement class="top-right" picking-mode="Ignore">
+            <ui:Label name="timer" text="0:00" class="timer" picking-mode="Ignore" />
+            <ui:Label name="difficulty" text="Fácil" class="difficulty" picking-mode="Ignore" />
+            <ui:VisualElement class="difficulty-bar" picking-mode="Ignore">
+                <ui:VisualElement name="difficulty-fill" class="difficulty-fill" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Mira -->
+        <ui:VisualElement name="crosshair" class="crosshair" picking-mode="Ignore">
+            <ui:VisualElement class="cross cross--h-left" picking-mode="Ignore" />
+            <ui:VisualElement class="cross cross--h-right" picking-mode="Ignore" />
+            <ui:VisualElement class="cross cross--v-top" picking-mode="Ignore" />
+            <ui:VisualElement class="cross cross--v-bottom" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <!-- Popup ao pegar item -->
+        <ui:VisualElement name="popup" class="popup popup--hidden" picking-mode="Ignore">
+            <ui:Label name="popup-name" text="Item" class="popup-name" picking-mode="Ignore" />
+            <ui:Label name="popup-desc" text="Descrição" class="popup-desc" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <!-- Embaixo: aviso de interação e habilidades -->
+        <ui:VisualElement class="bottom" picking-mode="Ignore">
+            <ui:Label name="prompt" text="[E] Abrir" class="prompt hidden" picking-mode="Ignore" />
+            <ui:VisualElement name="abilities" class="abilities" picking-mode="Ignore" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

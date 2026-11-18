@@ -11,10 +11,6 @@ using UnityEngine;
 /// </summary>
 public class Inventory : MonoBehaviour
 {
-    [Header("Debug")]
-    [Tooltip("Lista os itens na tela até a HUD existir.")]
-    [SerializeField] bool debugGui = true;
-
     /// <summary>(item, stacks agora) quando ganha um item.</summary>
     public event Action<ItemData, int> OnItemAdded;
     /// <summary>Qualquer mudança (ganhar/perder).</summary>
@@ -36,8 +32,6 @@ public class Inventory : MonoBehaviour
     float baseMaxHealth, baseArmor, baseRegen;
     float secondTimer;
     CrumbDropper crumbDropper;
-    ItemData lastPicked;
-    float lastPickedTime = -10f;
 
     void Awake()
     {
@@ -84,8 +78,6 @@ public class Inventory : MonoBehaviour
         TotalItems += count;
         RecalculateStats();
         item.OnAcquired(this, now);
-        lastPicked = item;
-        lastPickedTime = Time.time;
         OnItemAdded?.Invoke(item, now);
         OnInventoryChanged?.Invoke();
     }
@@ -228,26 +220,4 @@ public class Inventory : MonoBehaviour
     public static bool Roll(float chancePerStack, int stacks) =>
         UnityEngine.Random.value < 1f - Mathf.Pow(1f - Mathf.Clamp01(chancePerStack), stacks);
 
-    void OnGUI()
-    {
-        if (!debugGui) return;
-        float y = 10f;
-        var right = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.UpperRight };
-        foreach (var item in order)
-        {
-            GUI.color = item.Color;
-            GUI.Label(new Rect(Screen.width - 310, y, 300, 22), $"{item.DisplayName} x{GetCount(item)}", right);
-            y += 20f;
-        }
-        GUI.color = Color.white;
-        if (lastPicked != null && Time.time - lastPickedTime < 3f)
-        {
-            var center = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontSize = 22 };
-            GUI.color = lastPicked.Color;
-            GUI.Label(new Rect(0, Screen.height * 0.68f, Screen.width, 30), lastPicked.DisplayName, center);
-            GUI.color = Color.white;
-            center.fontSize = 16;
-            GUI.Label(new Rect(0, Screen.height * 0.68f + 28, Screen.width, 24), lastPicked.Description, center);
-        }
-    }
 }

@@ -14,8 +14,6 @@ public class RunManager : MonoBehaviour
     [SerializeField] Health playerHealth;
     [Tooltip("Abaixo dessa altura o player morre (caiu do mapa).")]
     [SerializeField] float killHeight = -30f;
-    [Tooltip("Mostra vida e tempo na tela até a HUD existir.")]
-    [SerializeField] bool debugGui = true;
 
     /// <summary>Disparado uma vez quando a run acaba (player morreu).</summary>
     public event Action OnRunEnded;
@@ -93,9 +91,4 @@ public class RunManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    void OnGUI()
-    {
-        if (!debugGui || playerHealth == null) return;
-        GUI.Label(new Rect(10, 10, 300, 25), $"Vida: {Mathf.CeilToInt(playerHealth.Current)} / {playerHealth.Max:F0}   Tempo: {RunTime:F0}s");
-    }
 }
