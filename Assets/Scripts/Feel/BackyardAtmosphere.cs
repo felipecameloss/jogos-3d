@@ -33,6 +33,10 @@ public class BackyardAtmosphere : MonoBehaviour
     [SerializeField] GameObject bottleCapPrefab;
     [SerializeField] GameObject grassTuftPrefab;
     [SerializeField] GameObject pebblePrefab;
+    [Tooltip("Folha seca caída (Tools/Blender/build_props.py), espalhada pelo gramado sem colisão.")]
+    [SerializeField] GameObject fallenLeafPrefab;
+    [Tooltip("Pedras (Tools/Blender/build_props.py) espalhadas como decoração, sem colisão.")]
+    [SerializeField] GameObject[] rockDecorPrefabs;
 
     [Header("Opções visuais")]
     [SerializeField] bool enableTiltShiftDof = true;
@@ -433,6 +437,9 @@ public class BackyardAtmosphere : MonoBehaviour
         if (trowelPrefab != null)
             SpawnDecor(trowelPrefab, new Vector3(-52f, -0.35f, 26f), 38f, Vector3.one * 1.15f, castShadows: true);
 
+        // 2b. Folhas secas e pedras dos props do Blender (semente própria: não mexe no resto)
+        ScatterBlenderProps(ValidLawnSpot);
+
         // 3. Contact clutter ao redor de pedras, vaso, latas e cano de saída
         var backyard = GameObject.Find("Backyard");
         if (backyard != null && grassTuftPrefab != null)
@@ -460,6 +467,43 @@ public class BackyardAtmosphere : MonoBehaviour
                     Vector3 mp = new Vector3(tr.position.x + ringRadius * 0.85f, 0f, tr.position.z - ringRadius * 0.65f);
                     SpawnDecor(mushroomPrefab, mp, (float)rng.NextDouble() * 360f, Vector3.one * 1.25f, castShadows: true);
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Folhas caídas e pedras soltas pelo gramado. Sem colisão; não encostam nas peças de jogo
+    /// (rochas, latas, rampas...) para não parecer que atravessam.
+    /// </summary>
+    void ScatterBlenderProps(System.Func<Vector3, float, bool> validSpot)
+    {
+        var rng = new System.Random(4242);
+        bool Clear(Vector3 p, float radius) =>
+            // caixa acima do chão: pega colisores de peças, não o próprio chão
+            !Physics.CheckBox(p + Vector3.up * 2.5f, new Vector3(radius, 2f, radius), Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+
+        if (fallenLeafPrefab != null)
+        {
+            for (int i = 0; i < 46; i++)
+            {
+                Vector3 p = new(Mathf.Lerp(-56f, 56f, (float)rng.NextDouble()), 0.02f, Mathf.Lerp(-56f, 56f, (float)rng.NextDouble()));
+                float sc = Mathf.Lerp(1.1f, 2.1f, (float)rng.NextDouble());
+                if (!validSpot(p, 8f) || !Clear(p, 2.2f * sc)) continue;
+                var go = SpawnDecor(fallenLeafPrefab, p, (float)rng.NextDouble() * 360f, Vector3.one * sc, castShadows: true);
+                // levemente inclinada, como se tivesse caído
+                go.transform.rotation *= Quaternion.Euler(Mathf.Lerp(-4f, 4f, (float)rng.NextDouble()), 0f, Mathf.Lerp(-4f, 4f, (float)rng.NextDouble()));
+            }
+        }
+
+        if (rockDecorPrefabs != null && rockDecorPrefabs.Length > 0)
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                var prefab = rockDecorPrefabs[rng.Next(rockDecorPrefabs.Length)];
+                Vector3 p = new(Mathf.Lerp(-56f, 56f, (float)rng.NextDouble()), -0.05f, Mathf.Lerp(-56f, 56f, (float)rng.NextDouble()));
+                float sc = Mathf.Lerp(0.45f, 0.95f, (float)rng.NextDouble());
+                if (prefab == null || !validSpot(p, 8f) || !Clear(p, 1.6f * sc)) continue;
+                SpawnDecor(prefab, p, (float)rng.NextDouble() * 360f, Vector3.one * sc, castShadows: true);
             }
         }
     }

@@ -27,3 +27,6 @@
 - Insetos são animados por `ProceduralInsectAnimator` (pernas em tripé, bob, antenas, abdômen,
   squash + flash ao levar dano): basta o modelo seguir os nomes acima (Body > Leg_L1.., Antenna_*, Abdomen)
 - Para ligar um FBX novo num prefab: `Jogo/Art/Aplicar modelos FBX dos insetos` (`InsectModelBinder`)
+- Props do quintal (`Tools/Blender/build_props.py`): `Jogo/Art/Aplicar props do quintal` (`PropsBinder`).
+  Na cena, troca só a malha das peças existentes (colisores e NavMesh ficam como estão); a tampinha
+  do baú tem `Lid` com pivô no meio da altura (o `Chest.cs` vira a tampa 180° no pivô)

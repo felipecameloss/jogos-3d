@@ -13,6 +13,7 @@ Gera (cada um com raiz no chão, frente em +Y no Blender / +Z no Unity):
     Assets/Art/Models/Props/FallenLeaf.fbx     folha seca caída, curvada (~3,6 m)
     Assets/Art/Models/Props/GrassStalk.fbx     touceira com 3 talos de grama (~5,5 m)
     Assets/Art/Models/Props/BottleCapChest.fbx tampinha (baú): peças Base + Lid (Chest.lid)
+    Assets/Art/Models/Props/BottleCapChestGold.fbx  a mesma, dourada (baú grande)
     Assets/Art/Models/Props/CrushedCan.fbx     lata de refrigerante amassada, deitada (~6 m)
     Tools/Blender/previews/Props.png           o conjunto + uma operária para escala
 """
@@ -176,12 +177,13 @@ def build_grass(name="GrassStalk"):
 
 
 # ---------------------------------------------------------------- tampinha (baú)
-def build_bottle_cap(name="BottleCapChest", radius=1.2, height=0.62, crimps=21):
+def build_bottle_cap(name="BottleCapChest", radius=1.2, height=0.62, crimps=21,
+                     cap_color=(0.86, 0.05, 0.04), ring_color=(0.98, 0.95, 0.88)):
     """Tampinha apoiada na borda (topo para cima). Lid = a tampinha inteira (o Chest.cs
     levanta e vira); Base = terra afundada embaixo, de onde o item sai."""
     root = new_root(name)
-    m_red = material(f"{name}_Red", (0.86, 0.05, 0.04), 0.35, 0.3)
-    m_white = material(f"{name}_White", (0.98, 0.95, 0.88), 0.4)
+    m_red = material(f"{name}_Cap", cap_color, 0.35, 0.3)
+    m_white = material(f"{name}_Ring", ring_color, 0.4)
     m_inner = material(f"{name}_Inner", (0.75, 0.72, 0.68), 0.5)
     m_dirt = material(f"{name}_Dirt", (0.32, 0.2, 0.11), 0.95)
 
@@ -191,7 +193,9 @@ def build_bottle_cap(name="BottleCapChest", radius=1.2, height=0.62, crimps=21):
 
     part("Base", root, (0, 0, 0), build_base, m_dirt)
 
-    lid_pivot = Vector((0, 0, 0.03))
+    # pivô no meio da altura: o Chest.cs vira a tampa 180° no pivô; com o pivô na base ela
+    # afundaria no chão, assim ela fica apoiada de boca para cima
+    lid_pivot = Vector((0, 0, 0.03 + height / 2))
 
     def build_lid(bm, o):
         n = crimps * 2
@@ -291,10 +295,7 @@ def build_can(name="CrushedCan", length=6.0, radius=1.45, seed=7):
                 f.material_index = 3 if idx == 0 and s_ in (3, 4) else 2
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
 
-    obj = flat_mesh("Mesh", root, (0, 0, 0), build, [m_red, m_white, m_metal, m_hole])
-    obj.rotation_euler = (0, 0, math.radians(20))  # rotação não vai pro FBX: aplica na malha
-    obj.data.transform(Matrix.Rotation(math.radians(20), 4, "Z"))
-    obj.rotation_euler = (0, 0, 0)
+    flat_mesh("Mesh", root, (0, 0, 0), build, [m_red, m_white, m_metal, m_hole])  # deitada ao longo de X
     ground_it(root)
     return root
 
@@ -309,6 +310,9 @@ PROPS = [
     ("FallenLeaf", build_leaf),
     ("GrassStalk", build_grass),
     ("BottleCapChest", build_bottle_cap),
+    # baú grande: tampinha dourada com anel vermelho
+    ("BottleCapChestGold", lambda: build_bottle_cap("BottleCapChestGold", cap_color=(0.95, 0.68, 0.1),
+                                                    ring_color=(0.8, 0.08, 0.05))),
     ("CrushedCan", build_can),
 ]
 
@@ -340,7 +344,7 @@ def render_set():
     ac.RESET_SCENE = False
     layout = {
         "GrassStalk": (-6.2, -2.0), "CrushedCan": (-1.5, -4.2), "RockSlab": (4.8, -2.2),
-        "FallenLeaf": (5.2, 2.2), "BottleCapChest": (0.6, 1.6), "RockMossy": (-4.6, 2.4),
+        "FallenLeaf": (5.2, 2.2), "BottleCapChest": (0.6, 1.6), "BottleCapChestGold": (3.0, 4.6), "RockMossy": (-4.6, 2.4),
         "RockPebble": (-2.4, 3.6),
     }
     for name, builder in PROPS:

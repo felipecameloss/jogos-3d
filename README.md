@@ -50,7 +50,8 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
   - Equipamentos ativos em `Assets/Scripts/Items/Equipment/` (`EquipmentData`, `EquipmentSlot`, `MagnifierEquipment` / [`Lupa.asset`](Assets/ScriptableObjects/Items/Lupa.asset)).
 - **Câmera, Ambiente, Perigos e Áudio**:
   - Câmera dinâmica em 3ª pessoa ([`DynamicCameraFeel.cs`](Assets/Scripts/Feel/DynamicCameraFeel.cs)): FOV dinâmico, *Dutch tilt*, ombro alternável, zoom por scroll, modo foco tático com `Ctrl` (zoom over-the-shoulder + retículo de precisão e vinheta no `Hud`), enquadramento no chefe e órbita ao fim da run.
-  - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs) (cupim, formiga aliada, baús, santuários, pickups e cenário).
+  - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs) (cupim, formiga aliada, santuários, pickups, vaso, tijolo, cerca e lata em pé).
+  - Props do quintal (`Tools/Blender/build_props.py`, FBX em `Assets/Art/Models/Props/`): pedras, folha caída, talo de grama, lata amassada e tampinhas. Ligados por [`PropsBinder.cs`](Assets/Editor/PropsBinder.cs) (menu `Jogo/Art/Aplicar props do quintal`): os baús viram tampinhas (`ChestSmall` vermelha, `ChestLarge` dourada; `Chest.lid` = peça `Lid`), e na cena `Main` rochas, latas deitadas, rampas/pontes de folha, pedrinhas e grama da decoração trocam só a malha (versões normalizadas em `Props/Normalized/`; colisores e NavMesh intactos). O `BackyardAtmosphere` espalha folhas caídas e pedras sem colisão (`fallenLeafPrefab`, `rockDecorPrefabs`).
   - Insetos low-poly (direção de arte no [`CLAUDE.md`](CLAUDE.md)): formiga operária, formiga-soldado, pulgão, besouro-bombardeiro, louva-a-deus e aranha usam FBX gerados por `Tools/Blender/build_*.py` (base em [`ant_common.py`](Tools/Blender/ant_common.py)). Ficam em `Assets/Art/Models/Characters/`, em peças separadas com pivô na articulação, ligados aos prefabs por [`InsectModelBinder.cs`](Assets/Editor/InsectModelBinder.cs) (menu `Jogo/Art/Aplicar modelos FBX dos insetos`) e animados por código por [`ProceduralInsectAnimator.cs`](Assets/Scripts/Enemies/ProceduralInsectAnimator.cs) (pernas em tripé pela velocidade do NavMeshAgent, bob do corpo, antenas, abdômen e squash + flash branco ao levar dano; funciona com qualquer modelo na convenção de nomes do `CLAUDE.md`). Comparação dos modelos: `Tools/Blender/previews/Lineup.png` (`render_lineup.py`).
   - Perigos e feedback: pisão humano (`HumanStomp` / `StompDirector`), sensação de combate (`GameFeel`, `HitFlash`, `HitStop`, `DamageNumbers`) e áudio procedural para música dia/noite e SFX (`GameAudio`).
 
@@ -60,8 +61,8 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 
 ```text
 Assets/
-├── Art/                 # Materiais, modelos 3D (.glb e .fbx dos insetos) e texturas
-├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, SpiderSmokeTest.cs)
+├── Art/                 # Materiais, modelos 3D (.glb, .fbx dos insetos e dos props) e texturas
+├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, SpiderSmokeTest.cs)
 ├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
 ├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
 ├── ScriptableObjects/   # Itens, Lupa.asset e ItemDatabase.asset

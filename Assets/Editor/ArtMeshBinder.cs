@@ -98,8 +98,7 @@ public static class ArtMeshBinder
         updated += ApplyTermite();
 
         // 5. Baús (+ lid)
-        updated += ApplyChest("Assets/Prefabs/Items/ChestSmall.prefab", "Assets/Art/Models/Items/ChestSmall.glb");
-        updated += ApplyChest("Assets/Prefabs/Items/ChestLarge.prefab", "Assets/Art/Models/Items/ChestLarge.glb");
+        // Baús: tampinha de Tools/Blender/build_props.py, ligada pelo PropsBinder (não aplicar .glb).
 
         // 6. Santuários (+ crystal & crystalRenderer)
         updated += ApplyShrine("Assets/Prefabs/Items/ChanceShrine.prefab", "Assets/Art/Models/Items/ChanceShrine.glb");
@@ -362,19 +361,9 @@ public static class ArtMeshBinder
                 if (mf == null) continue;
                 var mr = tr.GetComponent<MeshRenderer>();
 
-                if (n.StartsWith("BigRock", StringComparison.Ordinal) || n == "Rock" || n.StartsWith("Rock ", StringComparison.Ordinal))
-                {
-                    mf.sharedMesh = rockMesh;
-                    if (mr != null) mr.sharedMaterials = rockMats;
-                    changed++;
-                }
-                else if (n.StartsWith("LeafRamp", StringComparison.Ordinal) || n.StartsWith("LeafBridge", StringComparison.Ordinal))
-                {
-                    mf.sharedMesh = leafMesh;
-                    if (mr != null) mr.sharedMaterials = leafMats;
-                    changed++;
-                }
-                else if (n == "FlowerPotFlipped")
+                // Rochas, rampas/pontes de folha, latas deitadas, pedrinhas e grama da decoração usam
+                // os props de Tools/Blender/build_props.py, ligados pelo PropsBinder: não trocar aqui.
+                if (n == "FlowerPotFlipped")
                 {
                     mf.sharedMesh = potMesh;
                     if (mr != null) mr.sharedMaterials = potMats;
@@ -391,7 +380,7 @@ public static class ArtMeshBinder
                     if (mr != null && fenceMats != null && fenceMats.Length > 0) mr.sharedMaterials = fenceMats;
                     changed++;
                 }
-                else if (tr.parent != null && (tr.parent.name == "CanStanding" || tr.parent.name == "CanLying"))
+                else if (tr.parent != null && tr.parent.name == "CanStanding")
                 {
                     if (tr.GetSiblingIndex() == 0)
                     {
@@ -403,16 +392,6 @@ public static class ArtMeshBinder
                     {
                         tr.gameObject.SetActive(false);
                     }
-                }
-                else if (n == "Blade" || n.StartsWith("Blade_", StringComparison.Ordinal) || n.StartsWith("Blade ", StringComparison.Ordinal))
-                {
-                    mf.sharedMesh = grassMesh;
-                    changed++;
-                }
-                else if (n == "Pebble" || n.StartsWith("Pebble_", StringComparison.Ordinal) || n.StartsWith("Pebble ", StringComparison.Ordinal))
-                {
-                    mf.sharedMesh = pebbleMesh;
-                    changed++;
                 }
             }
         }
