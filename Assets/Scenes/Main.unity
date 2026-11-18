@@ -69313,7 +69313,7 @@ MonoBehaviour:
   cooldown: 3
   hudSlot: 2
   hudName: Dash
-  hudKey: Q
+  hudKey: Shift
   hudColor: {r: 0.55, g: 0.85, b: 1, a: 1}
   distance: 9
   duration: 0.2
