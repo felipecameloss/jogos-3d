@@ -21,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movimento")]
     [SerializeField] float walkSpeed = 6f;
     [SerializeField] float sprintSpeed = 10f;
+    [Tooltip("Ligado: corre por padrão e segurar Ctrl/Sprint anda mais devagar.")]
+    [SerializeField] bool sprintByDefault = true;
     [Tooltip("Quão rápido a velocidade chega no alvo (maior = mais responsivo).")]
     [SerializeField] float acceleration = 14f;
     [Tooltip("Multiplicador da aceleração no ar.")]
@@ -116,7 +118,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // ---------- Velocidade horizontal ----------
-        IsSprinting = InputEnabled && sprintAction != null && sprintAction.action.IsPressed() && input.sqrMagnitude > 0.01f;
+        bool sprintKeyPressed = sprintAction != null && sprintAction.action.IsPressed();
+        IsSprinting = InputEnabled && input.sqrMagnitude > 0.01f && (sprintByDefault ? !sprintKeyPressed : sprintKeyPressed);
         float speed = (IsSprinting ? sprintSpeed : walkSpeed) * SpeedMultiplier;
         Vector3 targetVelocity = moveDir * speed;
         float accel = acceleration * (IsGrounded ? 1f : airControl);
