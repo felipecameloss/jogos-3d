@@ -517,6 +517,7 @@ MonoBehaviour:
   moveSpeed: 2.8
   turnSpeed: 300
   despawnDelay: 1.2
+  crumbReward: 10
   DamageMultiplier: 1
   SpeedMultiplier: 1
   damage: 20

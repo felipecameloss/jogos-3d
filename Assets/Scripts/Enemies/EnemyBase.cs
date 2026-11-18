@@ -17,6 +17,10 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField, Min(0f)] protected float turnSpeed = 540f;
     [Tooltip("Tempo entre morrer e sumir (animação de morte).")]
     [SerializeField, Min(0f)] float despawnDelay = 1.2f;
+    [Tooltip("Migalhas que solta ao morrer com dificuldade 1 (cresce com a dificuldade).")]
+    [SerializeField, Min(0)] int crumbReward = 3;
+
+    public int CrumbReward => crumbReward;
 
     /// <summary>Qualquer inimigo morreu (drop de migalhas, itens "ao matar", contador de kills).</summary>
     public static event Action<EnemyBase, DamageInfo> OnAnyEnemyDied;

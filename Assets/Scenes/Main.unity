@@ -2090,6 +2090,7 @@ GameObject:
   - component: {fileID: 1034868329}
   - component: {fileID: 1034868331}
   - component: {fileID: 1034868330}
+  - component: {fileID: 1034868332}
   m_Layer: 0
   m_Name: _Systems
   m_TagString: Untagged
@@ -2190,6 +2191,25 @@ MonoBehaviour:
   enemyHealthPerPoint: 0.6
   enemyDamagePerPoint: 0.3
   debugGui: 1
+--- !u!114 &1034868332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034868326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c8f9f99e2e0bda4bb769a7ad5d28b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CrumbDropper
+  crumbPrefab: {fileID: 4546324377893298162, guid: 443e5a1aceb16cc4c9e63e8b3d3787ae, type: 3}
+  maxPiecesPerDrop: 6
+  attractRadius: 6
+  poolPrewarm: 40
+  launchUp: 6
+  launchSideways: 3
+  AttractRadiusMultiplier: 1
 --- !u!1 &1068892401
 GameObject:
   m_ObjectHideFlags: 0
@@ -2999,6 +3019,7 @@ GameObject:
   - component: {fileID: 1325326862}
   - component: {fileID: 1325326864}
   - component: {fileID: 1325326863}
+  - component: {fileID: 1325326865}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3143,6 +3164,20 @@ MonoBehaviour:
   baseAttackSpeed: 1
   DamageMultiplier: 1
   AttackSpeedMultiplier: 1
+--- !u!114 &1325326865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325326858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a430b210ff433647a4df1b720fbe40d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWallet
+  startingCrumbs: 0
+  debugGui: 1
 --- !u!1 &1382810379
 GameObject:
   m_ObjectHideFlags: 0
