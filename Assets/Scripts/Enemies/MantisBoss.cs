@@ -271,6 +271,7 @@ public class MantisBoss : EnemyBase
         leapTelegraph.gameObject.SetActive(false);
 
         Vector3 d = Target.position - targetPoint; d.y = 0f;
+        GameFeel.Shake(0.9f);
         if (d.magnitude <= leapRadius) { Hit(leapDamage); LeapsLanded++; }
         ResetPose();
         nextLeap = Time.time + T(leapCooldown);

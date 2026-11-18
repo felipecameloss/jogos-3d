@@ -140,6 +140,10 @@ public class HumanStomp : MonoBehaviour
         }
 
         PushPlayerAtEdge(half);
+        // Tremida forte perto, fraca longe
+        var pl = GameObject.FindGameObjectWithTag("Player");
+        float dist = pl != null ? Vector3.Distance(pl.transform.position, transform.position) : 99f;
+        GameFeel.Shake(Mathf.Lerp(1.6f, 0.2f, Mathf.InverseLerp(4f, 35f, dist)));
         OnImpact?.Invoke(this);
     }
 

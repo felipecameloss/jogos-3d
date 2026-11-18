@@ -1,6 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="Hud.uss" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+        <!-- Borda vermelha ao levar dano -->
+        <ui:VisualElement name="damage-flash" class="damage-flash" picking-mode="Ignore">
+            <ui:VisualElement class="damage-ring damage-ring--2" picking-mode="Ignore">
+                <ui:VisualElement class="damage-ring damage-ring--3" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
 
         <!-- Canto superior esquerdo: vida, migalhas, itens -->
         <ui:VisualElement class="top-left" picking-mode="Ignore">

@@ -7,6 +7,24 @@
 
 .hidden { display: none; }
 
+/* Três anéis aninhados, cada um mais transparente: imita um degradê das bordas para o centro */
+.damage-flash {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    border-width: 26px;
+    border-color: rgba(220, 30, 20, 0.75);
+    opacity: 0;
+}
+
+.damage-ring {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    border-width: 26px;
+}
+
+.damage-ring--2 { border-color: rgba(220, 30, 20, 0.4); }
+.damage-ring--3 { border-color: rgba(220, 30, 20, 0.15); }
+
 /* ---------- Canto superior esquerdo ---------- */
 
 .top-left {

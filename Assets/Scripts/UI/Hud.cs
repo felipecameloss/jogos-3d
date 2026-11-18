@@ -16,7 +16,8 @@ public class Hud : MonoBehaviour
     [Tooltip("Abaixo dessa fração a barra de vida fica vermelha.")]
     [SerializeField, Range(0f, 1f)] float lowHealth = 0.3f;
 
-    VisualElement hud, healthFill, items, crosshair, popup, abilitiesRow;
+    VisualElement hud, healthFill, items, crosshair, popup, abilitiesRow, damageFlash;
+    float flashAmount;
     Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText;
     VisualElement objective, objectiveBar, objectiveFill, boss, bossFill;
     Label bossName;
@@ -37,6 +38,7 @@ public class Hud : MonoBehaviour
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
         hud = root.Q("hud");
+        damageFlash = root.Q("damage-flash");
         healthFill = root.Q("health-fill");
         healthText = root.Q<Label>("health-text");
         crumbs = root.Q<Label>("crumbs");
@@ -132,7 +134,13 @@ public class Hud : MonoBehaviour
         if (PopupVisible && Time.unscaledTime > popupUntil) popup.AddToClassList("popup--hidden");
         UpdatePrompt();
         UpdateAbilities();
+        flashAmount = Mathf.MoveTowards(flashAmount, 0f, Time.unscaledDeltaTime * 2.5f);
+        damageFlash.style.opacity = flashAmount;
     }
+
+    /// <summary>Borda vermelha na tela (0..1). Chamado pelo GameFeel quando o player leva dano.</summary>
+    public void FlashDamage(float amount) => flashAmount = Mathf.Max(flashAmount, Mathf.Clamp01(amount));
+    public float DamageFlashAmount => flashAmount;
 
     // ---------- Itens ----------
 
