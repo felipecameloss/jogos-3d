@@ -89,20 +89,13 @@ public static class ArtMeshBinder
 
         int updated = 0;
 
-        // 1. Inimigos & Aliado simples (Body sob Visual)
-        updated += ApplySimpleBug("Assets/Prefabs/Enemies/WorkerAnt.prefab", "Assets/Art/Models/Characters/WorkerAnt.glb");
-        updated += ApplySimpleBug("Assets/Prefabs/Enemies/SoldierAnt.prefab", "Assets/Art/Models/Characters/SoldierAnt.glb");
-        updated += ApplySimpleBug("Assets/Prefabs/Enemies/Aphid.prefab", "Assets/Art/Models/Characters/Aphid.glb");
+        // 1. Aliado (Body sob Visual)
+        // Operária, soldado, pulgão, besouro-bombardeiro e louva-a-deus usam os FBX de
+        // Tools/Blender, ligados pelo InsectModelBinder (já salvos nos prefabs): não aplicar .glb neles.
         updated += ApplySimpleBug("Assets/Prefabs/Player/AllyAnt.prefab", "Assets/Art/Models/Characters/AllyAnt.glb");
 
         // 2. Cupim (+ BurrowMound)
         updated += ApplyTermite();
-
-        // 3. Besouro Bombardeiro (+ Nozzle & nozzleRenderer)
-        updated += ApplyBombardierBeetle();
-
-        // 4. Chefe Louva-a-deus (+ ClawL / ClawR / clawRenderers)
-        updated += ApplyMantisBoss();
 
         // 5. Baús (+ lid)
         updated += ApplyChest("Assets/Prefabs/Items/ChestSmall.prefab", "Assets/Art/Models/Items/ChestSmall.glb");
@@ -174,85 +167,6 @@ public static class ArtMeshBinder
                 if (mound.TryGetComponent<MeshRenderer>(out var mr)) mr.sharedMaterials = mMats;
                 mound.localScale = Vector3.one;
             }
-        }
-        return 1;
-    }
-
-    static int ApplyBombardierBeetle()
-    {
-        const string prefabPath = "Assets/Prefabs/Enemies/BombardierBeetle.prefab";
-        var glb = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Characters/BombardierBeetle.glb");
-        if (glb == null) return 0;
-
-        using var scope = new PrefabUtility.EditPrefabContentsScope(prefabPath);
-        var root = scope.prefabContentsRoot;
-        if (HasMarker(root)) return 0;
-
-        var visual = FindDeep(root.transform, "Visual") ?? root.transform;
-        var oldNozzle = FindDeep(root.transform, "Nozzle");
-        DisablePrimitiveVisualChildren(visual, oldNozzle);
-
-        var inst = (GameObject)PrefabUtility.InstantiatePrefab(glb, visual);
-        inst.name = MarkerName;
-        inst.transform.localPosition = Vector3.zero;
-        inst.transform.localRotation = Quaternion.identity;
-        inst.transform.localScale = CompensateParentScale(root.transform, visual);
-
-        var newNozzle = FindDeep(inst.transform, "Nozzle");
-        if (newNozzle != null && root.TryGetComponent<BombardierBeetle>(out var beetle))
-        {
-            if (oldNozzle != null && oldNozzle != newNozzle) oldNozzle.gameObject.SetActive(false);
-            var so = new SerializedObject(beetle);
-            so.FindProperty("nozzle").objectReferenceValue = newNozzle;
-            so.FindProperty("nozzleRenderer").objectReferenceValue = newNozzle.GetComponentInChildren<Renderer>();
-            so.ApplyModifiedPropertiesWithoutUndo();
-        }
-        return 1;
-    }
-
-    static int ApplyMantisBoss()
-    {
-        const string prefabPath = "Assets/Prefabs/Enemies/MantisBoss.prefab";
-        var glb = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Characters/MantisBoss.glb");
-        if (glb == null) return 0;
-
-        using var scope = new PrefabUtility.EditPrefabContentsScope(prefabPath);
-        var root = scope.prefabContentsRoot;
-        if (HasMarker(root)) return 0;
-
-        var body = FindDeep(root.transform, "Body") ?? root.transform;
-        var oldClawL = FindDeep(root.transform, "ClawL");
-        var oldClawR = FindDeep(root.transform, "ClawR");
-        var leapTel = FindDeep(root.transform, "LeapTelegraph");
-        var dashTel = FindDeep(root.transform, "DashTelegraph");
-
-        DisablePrimitiveVisualChildren(body, leapTel, dashTel);
-
-        var inst = (GameObject)PrefabUtility.InstantiatePrefab(glb, body);
-        inst.name = MarkerName;
-        inst.transform.localPosition = Vector3.zero;
-        inst.transform.localRotation = Quaternion.identity;
-        inst.transform.localScale = CompensateParentScale(root.transform, body);
-
-        var newClawL = FindDeep(inst.transform, "ClawL");
-        var newClawR = FindDeep(inst.transform, "ClawR");
-        if (root.TryGetComponent<MantisBoss>(out var boss))
-        {
-            if (oldClawL != null) oldClawL.gameObject.SetActive(false);
-            if (oldClawR != null) oldClawR.gameObject.SetActive(false);
-
-            var so = new SerializedObject(boss);
-            if (newClawL != null) so.FindProperty("clawLeft").objectReferenceValue = newClawL;
-            if (newClawR != null) so.FindProperty("clawRight").objectReferenceValue = newClawR;
-
-            var rends = new List<Renderer>();
-            if (newClawL != null) rends.AddRange(newClawL.GetComponentsInChildren<Renderer>());
-            if (newClawR != null) rends.AddRange(newClawR.GetComponentsInChildren<Renderer>());
-            var arr = so.FindProperty("clawRenderers");
-            arr.arraySize = rends.Count;
-            for (int i = 0; i < rends.Count; i++)
-                arr.GetArrayElementAtIndex(i).objectReferenceValue = rends[i];
-            so.ApplyModifiedPropertiesWithoutUndo();
         }
         return 1;
     }

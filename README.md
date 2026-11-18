@@ -50,7 +50,8 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
   - Equipamentos ativos em `Assets/Scripts/Items/Equipment/` (`EquipmentData`, `EquipmentSlot`, `MagnifierEquipment` / [`Lupa.asset`](Assets/ScriptableObjects/Items/Lupa.asset)).
 - **Câmera, Ambiente, Perigos e Áudio**:
   - Câmera dinâmica em 3ª pessoa ([`DynamicCameraFeel.cs`](Assets/Scripts/Feel/DynamicCameraFeel.cs)): FOV dinâmico, *Dutch tilt*, ombro alternável, zoom por scroll, modo foco tático com `Ctrl` (zoom over-the-shoulder + retículo de precisão e vinheta no `Hud`), enquadramento no chefe e órbita ao fim da run.
-  - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs).
+  - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs) (cupim, formiga aliada, baús, santuários, pickups e cenário).
+  - Insetos low-poly (direção de arte no [`CLAUDE.md`](CLAUDE.md)): formiga operária, formiga-soldado, pulgão, besouro-bombardeiro e louva-a-deus usam FBX gerados por `Tools/Blender/build_*.py` (base em [`ant_common.py`](Tools/Blender/ant_common.py); a aranha `Spider.fbx` já existe, ainda sem prefab). Ficam em `Assets/Art/Models/Characters/`, em peças separadas com pivô na articulação, ligados aos prefabs por [`InsectModelBinder.cs`](Assets/Editor/InsectModelBinder.cs) (menu `Jogo/Art/Aplicar modelos FBX dos insetos`) e animados por código por [`InsectAnimator.cs`](Assets/Scripts/Enemies/InsectAnimator.cs) (pernas em tripé, antenas e abdômen). Comparação dos modelos: `Tools/Blender/previews/Lineup.png` (`render_lineup.py`).
   - Perigos e feedback: pisão humano (`HumanStomp` / `StompDirector`), sensação de combate (`GameFeel`, `HitFlash`, `HitStop`, `DamageNumbers`) e áudio procedural para música dia/noite e SFX (`GameAudio`).
 
 ---
@@ -59,8 +60,8 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 
 ```text
 Assets/
-├── Art/                 # Materiais, modelos 3D (.glb) e texturas
-├── Editor/              # ArtMeshBinder.cs, BuildWindows.cs e EquipmentSmokeTest.cs
+├── Art/                 # Materiais, modelos 3D (.glb e .fbx dos insetos) e texturas
+├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs)
 ├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
 ├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
 ├── ScriptableObjects/   # Itens, Lupa.asset e ItemDatabase.asset
@@ -77,7 +78,7 @@ Assets/
 │   └── UI/              # HUD, menus de pausa, configurações, vitória e fim de run
 └── UI/                  # UXML/USS de HUD e menus (UI Toolkit)
 Tools/
-└── Blender/             # Scripts procedurais (.py) que geram os modelos .glb em Assets/Art/Models/
+└── Blender/             # Scripts procedurais (.py) que geram os modelos .glb e os .fbx dos insetos (+ previews/)
 ```
 
 ---
@@ -86,7 +87,7 @@ Tools/
 
 1. **Pré-requisitos**:
    - **Unity `6000.6.5f1`**
-   - **Git LFS** habilitado antes de clonar/puxar (`.gitattributes` rastreia modelos `.glb`, imagens e áudios):
+   - **Git LFS** habilitado antes de clonar/puxar (`.gitattributes` rastreia modelos `.glb`/`.fbx`, imagens e áudios):
      ```bash
      git lfs install
      git lfs pull
