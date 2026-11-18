@@ -1,0 +1,149 @@
+/* Estilo compartilhado dos menus (principal, pause, fim de run) */
+
+.screen {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-bg {
+    background-color: rgb(22, 34, 20);
+    background-image: none;
+}
+
+.overlay {
+    background-color: rgba(8, 12, 6, 0.72);
+}
+
+.hidden {
+    display: none;
+}
+
+.panel {
+    background-color: rgba(26, 30, 22, 0.96);
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: rgb(118, 148, 66);
+    padding: 36px 52px 30px 52px;
+    min-width: 440px;
+    align-items: stretch;
+}
+
+.title {
+    font-size: 72px;
+    color: rgb(244, 226, 166);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 2px;
+}
+
+.subtitle {
+    font-size: 21px;
+    color: rgb(176, 198, 142);
+    -unity-text-align: middle-center;
+    margin-bottom: 30px;
+}
+
+.heading {
+    font-size: 46px;
+    color: rgb(244, 226, 166);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 22px;
+}
+
+.heading--death {
+    color: rgb(240, 112, 88);
+}
+
+.btn {
+    height: 56px;
+    margin: 6px 0;
+    font-size: 23px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgb(92, 124, 50);
+    border-width: 0;
+    border-radius: 12px;
+    transition-property: background-color, scale;
+    transition-duration: 0.08s;
+}
+
+.btn:hover {
+    background-color: rgb(120, 158, 64);
+    scale: 1.03 1.03;
+}
+
+.btn:active {
+    background-color: rgb(70, 96, 38);
+    scale: 0.98 0.98;
+}
+
+.btn:focus {
+    border-width: 2px;
+    border-color: rgb(244, 226, 166);
+}
+
+.btn--secondary {
+    background-color: rgb(58, 64, 50);
+}
+
+.btn--secondary:hover {
+    background-color: rgb(80, 88, 68);
+}
+
+.stats {
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+}
+
+.stat-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.stat-label {
+    font-size: 21px;
+    color: rgb(178, 188, 158);
+}
+
+.stat-value {
+    font-size: 21px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.hint {
+    font-size: 15px;
+    color: rgb(146, 158, 126);
+    -unity-text-align: middle-center;
+    margin-top: 16px;
+}
+
+.controls {
+    margin: 4px 0 10px 0;
+    padding: 12px 18px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+}
+
+.controls-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 3px 0;
+}
+
+.key {
+    font-size: 17px;
+    color: rgb(244, 226, 166);
+    -unity-font-style: bold;
+}
+
+.action {
+    font-size: 17px;
+    color: rgb(210, 216, 196);
+}

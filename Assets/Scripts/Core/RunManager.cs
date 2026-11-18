@@ -1,11 +1,10 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Estado da run: tempo, fim da run quando o player morre, reinício.
-/// A tela de fim de run de verdade vem na task "Menus e telas"; por enquanto há um OnGUI de debug.
+/// Estado da run: tempo, kills, fim da run quando o player morre, reinício.
+/// A tela de fim de run (EndRunScreen) escuta OnRunEnded.
 /// </summary>
 public class RunManager : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class RunManager : MonoBehaviour
     [SerializeField] Health playerHealth;
     [Tooltip("Abaixo dessa altura o player morre (caiu do mapa).")]
     [SerializeField] float killHeight = -30f;
-    [Tooltip("Mostra vida e 'você morreu' na tela até a HUD existir.")]
+    [Tooltip("Mostra vida e tempo na tela até a HUD existir.")]
     [SerializeField] bool debugGui = true;
 
     /// <summary>Disparado uma vez quando a run acaba (player morreu).</summary>
@@ -24,6 +23,10 @@ public class RunManager : MonoBehaviour
     public bool IsRunOver { get; private set; }
     public float RunTime { get; private set; }
     public Health PlayerHealth => playerHealth;
+    /// <summary>Inimigos mortos pelo player (tiros, itens dele).</summary>
+    public int Kills { get; private set; }
+    /// <summary>O golpe que matou o player (para o título da tela de fim de run).</summary>
+    public DamageInfo KillingBlow { get; private set; }
 
     PlayerMovement playerMovement;
 
@@ -49,22 +52,25 @@ public class RunManager : MonoBehaviour
         }
         playerMovement = playerHealth.GetComponent<PlayerMovement>();
         playerHealth.OnDeath += HandlePlayerDeath;
+        EnemyBase.OnAnyEnemyDied += HandleEnemyDied;
     }
 
     void OnDestroy()
     {
         if (playerHealth != null) playerHealth.OnDeath -= HandlePlayerDeath;
+        EnemyBase.OnAnyEnemyDied -= HandleEnemyDied;
         if (Instance == this) Instance = null;
+    }
+
+    void HandleEnemyDied(EnemyBase enemy, DamageInfo blow)
+    {
+        if (IsRunOver || playerHealth == null || blow.Source == null) return;
+        if (blow.Source.transform.IsChildOf(playerHealth.transform)) Kills++;
     }
 
     void Update()
     {
-        if (IsRunOver)
-        {
-            var kb = Keyboard.current;
-            if (debugGui && kb != null && kb.rKey.wasPressedThisFrame) RestartRun();
-            return;
-        }
+        if (IsRunOver) return;
 
         RunTime += Time.deltaTime;
         if (playerHealth != null && playerHealth.transform.position.y < killHeight) playerHealth.Kill();
@@ -74,6 +80,7 @@ public class RunManager : MonoBehaviour
     {
         if (IsRunOver) return;
         IsRunOver = true;
+        KillingBlow = killingBlow;
         if (playerMovement != null) playerMovement.InputEnabled = false;
         CursorLock.SetLocked(false);
         Debug.Log($"Run acabou em {RunTime:F1}s (golpe final: {killingBlow.Amount:F0} de {(killingBlow.Source != null ? killingBlow.Source.name : "ambiente")})");
@@ -82,6 +89,7 @@ public class RunManager : MonoBehaviour
 
     public void RestartRun()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -89,10 +97,5 @@ public class RunManager : MonoBehaviour
     {
         if (!debugGui || playerHealth == null) return;
         GUI.Label(new Rect(10, 10, 300, 25), $"Vida: {Mathf.CeilToInt(playerHealth.Current)} / {playerHealth.Max:F0}   Tempo: {RunTime:F0}s");
-        if (IsRunOver)
-        {
-            var style = new GUIStyle(GUI.skin.label) { fontSize = 32, alignment = TextAnchor.MiddleCenter };
-            GUI.Label(new Rect(0, Screen.height / 2f - 40, Screen.width, 80), "Você morreu — R para reiniciar", style);
-        }
     }
 }

@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Menus.uss" />
+    <ui:VisualElement name="root" class="screen overlay hidden">
+        <ui:VisualElement class="panel">
+            <ui:Label text="Pausado" class="heading" />
+            <ui:Button name="resume" text="Continuar" class="btn" />
+            <ui:Button name="restart" text="Reiniciar run" class="btn btn--secondary" />
+            <ui:Button name="main-menu" text="Menu principal" class="btn btn--secondary" />
+            <ui:Button name="quit" text="Sair do jogo" class="btn btn--secondary" />
+            <ui:Label text="Esc para continuar" class="hint" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
