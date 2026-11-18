@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 [InitializeOnLoad]
 public static class ArtMeshBinder
 {
-    const string StampPath = "ProjectSettings/ArtGLBBinder_v1.stamp";
+    const string StampPath = "ProjectSettings/ArtGLBBinder_v2.stamp";
     const string MarkerName = "__ArtGLB_v1";
     const string MainScenePath = "Assets/Scenes/Main.unity";
 
@@ -42,6 +42,14 @@ public static class ArtMeshBinder
         "Assets/Art/Models/Environment/GrassTuft.glb",
         "Assets/Art/Models/Environment/Pebble.glb",
         "Assets/Art/Models/Environment/ToyBrickBase.glb",
+        "Assets/Art/Models/Environment/FencePlank.glb",
+        "Assets/Art/Models/Environment/TreeSilhouette.glb",
+        "Assets/Art/Models/Environment/BushCluster.glb",
+        "Assets/Art/Models/Environment/CloverPatch.glb",
+        "Assets/Art/Models/Environment/DaisyFlower.glb",
+        "Assets/Art/Models/Environment/MushroomCluster.glb",
+        "Assets/Art/Models/Environment/TrowelProp.glb",
+        "Assets/Art/Models/Environment/BottleCapProp.glb",
     };
 
     static ArtMeshBinder()
@@ -389,6 +397,7 @@ public static class ArtMeshBinder
         var grassGlb = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/GrassTuft.glb");
         var pebbleGlb = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/Pebble.glb");
         var brickGlb = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/ToyBrickBase.glb");
+        var fenceGlb = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/FencePlank.glb");
 
         if (!TryGetFirstMesh(rockGlb, out var rockMesh, out var rockMats)) return 0;
         if (!TryGetFirstMesh(leafGlb, out var leafMesh, out var leafMats)) return 0;
@@ -397,6 +406,7 @@ public static class ArtMeshBinder
         if (!TryGetFirstMesh(grassGlb, out var grassMesh, out var _)) return 0;
         if (!TryGetFirstMesh(pebbleGlb, out var pebbleMesh, out var _)) return 0;
         if (!TryGetFirstMesh(brickGlb, out var brickMesh, out var _)) return 0;
+        TryGetFirstMesh(fenceGlb, out var fenceMesh, out var fenceMats);
 
         var activeScene = SceneManager.GetActiveScene();
         string prevPath = activeScene.path;
@@ -414,6 +424,22 @@ public static class ArtMeshBinder
         int changed = 0;
         foreach (var go in targetScene.GetRootGameObjects())
         {
+            if (go.name == "_Systems" && go.TryGetComponent<BackyardAtmosphere>(out var atmo))
+            {
+                var so = new SerializedObject(atmo);
+                so.FindProperty("treePrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/TreeSilhouette.glb");
+                so.FindProperty("bushPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/BushCluster.glb");
+                so.FindProperty("cloverPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/CloverPatch.glb");
+                so.FindProperty("daisyPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/DaisyFlower.glb");
+                so.FindProperty("mushroomPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/MushroomCluster.glb");
+                so.FindProperty("trowelPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/TrowelProp.glb");
+                so.FindProperty("bottleCapPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Models/Environment/BottleCapProp.glb");
+                so.FindProperty("grassTuftPrefab").objectReferenceValue = grassGlb;
+                so.FindProperty("pebblePrefab").objectReferenceValue = pebbleGlb;
+                so.ApplyModifiedPropertiesWithoutUndo();
+                changed++;
+            }
+
             if (go.name != "Backyard") continue;
             foreach (var tr in go.GetComponentsInChildren<Transform>(true))
             {
@@ -443,6 +469,12 @@ public static class ArtMeshBinder
                 else if (n == "ToyBrick")
                 {
                     mf.sharedMesh = brickMesh;
+                    changed++;
+                }
+                else if (n == "Plank" && fenceMesh != null && tr.parent != null && tr.parent.name == "Fence")
+                {
+                    mf.sharedMesh = fenceMesh;
+                    if (mr != null && fenceMats != null && fenceMats.Length > 0) mr.sharedMaterials = fenceMats;
                     changed++;
                 }
                 else if (tr.parent != null && (tr.parent.name == "CanStanding" || tr.parent.name == "CanLying"))
