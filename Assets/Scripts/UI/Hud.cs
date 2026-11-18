@@ -16,7 +16,7 @@ public class Hud : MonoBehaviour
     [Tooltip("Abaixo dessa fração a barra de vida fica vermelha.")]
     [SerializeField, Range(0f, 1f)] float lowHealth = 0.3f;
 
-    VisualElement hud, healthFill, items, crosshair, popup, abilitiesRow, damageFlash;
+    VisualElement hud, healthFill, shieldFill, items, crosshair, popup, abilitiesRow, damageFlash;
     float flashAmount;
     Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText;
     VisualElement objective, objectiveBar, objectiveFill, boss, bossFill;
@@ -40,6 +40,7 @@ public class Hud : MonoBehaviour
         hud = root.Q("hud");
         damageFlash = root.Q("damage-flash");
         healthFill = root.Q("health-fill");
+        shieldFill = root.Q("shield-fill");
         healthText = root.Q<Label>("health-text");
         crumbs = root.Q<Label>("crumbs");
         items = root.Q("items");
@@ -111,7 +112,15 @@ public class Hud : MonoBehaviour
             float frac = Mathf.Clamp01(health.Current / health.Max);
             healthFill.style.width = Length.Percent(frac * 100f);
             healthFill.EnableInClassList("health-fill--low", frac < lowHealth);
-            healthText.text = $"{Mathf.CeilToInt(health.Current)} / {Mathf.RoundToInt(health.Max)}";
+            if (shieldFill != null)
+            {
+                bool hasShield = health.MaxShield > 0f;
+                shieldFill.style.display = hasShield ? DisplayStyle.Flex : DisplayStyle.None;
+                if (hasShield) shieldFill.style.width = Length.Percent(Mathf.Clamp01(health.Shield / health.MaxShield) * 100f);
+            }
+            healthText.text = health.MaxShield > 0f
+                ? $"{Mathf.CeilToInt(health.Current)} / {Mathf.RoundToInt(health.Max)} (+{Mathf.CeilToInt(health.Shield)})"
+                : $"{Mathf.CeilToInt(health.Current)} / {Mathf.RoundToInt(health.Max)}";
         }
         if (wallet != null) crumbs.text = wallet.Crumbs.ToString();
 

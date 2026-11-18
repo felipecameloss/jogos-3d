@@ -22,6 +22,10 @@ public enum StatType
     Regen,
     /// <summary>Raio em que as migalhas voam até o player. Só percentual.</summary>
     CrumbAttractRadius,
+    /// <summary>Escudo máximo (absorve dano antes da vida). Só fixo.</summary>
+    MaxShield,
+    /// <summary>Redução fixa de dano por golpe (mínimo 1). Só fixo.</summary>
+    DamageReduction,
 }
 
 public enum ModifierMode

@@ -87,4 +87,36 @@ public class ItemVfx : MonoBehaviour
         }
         if (tr != null) Destroy(tr.gameObject);
     }
+
+    /// <summary>Esfera que expande e some rápido (explosão ao matar).</summary>
+    public static void Explosion(Vector3 center, float radius, Color color, float duration = 0.28f)
+    {
+        if (Instance == null || Instance.beamMaterial == null) return;
+        var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        go.name = "VFX Explosion";
+        Destroy(go.GetComponent<Collider>());
+        go.transform.position = center;
+        var r = go.GetComponent<MeshRenderer>();
+        r.sharedMaterial = Instance.beamMaterial;
+        r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        Instance.StartCoroutine(FadeExplosion(go.transform, r, color, radius, duration));
+    }
+
+    static IEnumerator FadeExplosion(Transform tr, Renderer r, Color color, float radius, float duration)
+    {
+        var block = new MaterialPropertyBlock();
+        for (float t = 0f; t < duration && tr != null; t += Time.deltaTime)
+        {
+            float k = t / duration;
+            float d = radius * 2f * Mathf.Lerp(0.25f, 1f, 1f - (1f - k) * (1f - k));
+            tr.localScale = Vector3.one * d;
+            var c = color;
+            c.a *= 1f - k;
+            r.GetPropertyBlock(block);
+            block.SetColor(BaseColorId, c);
+            r.SetPropertyBlock(block);
+            yield return null;
+        }
+        if (tr != null) Destroy(tr.gameObject);
+    }
 }
