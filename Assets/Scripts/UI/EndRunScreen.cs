@@ -54,7 +54,8 @@ public class EndRunScreen : MonoBehaviour
         doc.Q<Label>("kills").text = (rm != null ? rm.Kills : 0).ToString();
         var wallet = rm != null && rm.PlayerHealth != null ? rm.PlayerHealth.GetComponent<PlayerWallet>() : null;
         doc.Q<Label>("crumbs").text = (wallet != null ? wallet.TotalCollected : 0).ToString();
-        doc.Q<Label>("items").text = "0"; // TODO: contar do inventário quando o sistema de itens existir (#44)
+        var inventory = rm != null && rm.PlayerHealth != null ? rm.PlayerHealth.GetComponent<Inventory>() : null;
+        doc.Q<Label>("items").text = (inventory != null ? inventory.TotalItems : 0).ToString();
 
         root.RemoveFromClassList("hidden");
         doc.Q<Button>("restart").Focus();

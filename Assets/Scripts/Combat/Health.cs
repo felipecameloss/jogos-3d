@@ -17,6 +17,8 @@ public class Health : MonoBehaviour, IDamageable
 
     /// <summary>Depois do dano aplicado. O DamageInfo traz o dano final em Amount.</summary>
     public event Action<DamageInfo> OnDamaged;
+    /// <summary>Qualquer Health levou dano (quem bateu está em info.Source). Usado pelos itens "ao acertar".</summary>
+    public static event Action<Health, DamageInfo> OnAnyDamaged;
     /// <summary>Uma vez só, quando a vida chega a zero.</summary>
     public event Action<DamageInfo> OnDeath;
     /// <summary>Quanto foi curado de fato.</summary>
@@ -60,6 +62,7 @@ public class Health : MonoBehaviour, IDamageable
 
         OnDamaged?.Invoke(info);
         OnHealthChanged?.Invoke(Current, maxHealth);
+        OnAnyDamaged?.Invoke(this, info);
         if (!IsAlive) OnDeath?.Invoke(info);
     }
 

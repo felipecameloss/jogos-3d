@@ -21,6 +21,11 @@ public struct DamageInfo
     /// <summary>Ignora a armadura (ex.: veneno, pisão humano).</summary>
     public bool IgnoreArmor;
     public bool IsCritical;
+    /// <summary>
+    /// Não dispara efeitos "ao acertar" dos itens. Use em dano causado por item
+    /// (veneno, raio, explosão) para um item não ficar disparando outro em loop.
+    /// </summary>
+    public bool NoProc;
 
     public DamageInfo(float amount, GameObject source = null)
     {
@@ -30,6 +35,7 @@ public struct DamageInfo
         Direction = Vector3.zero;
         IgnoreArmor = false;
         IsCritical = false;
+        NoProc = false;
     }
 
     public DamageInfo(float amount, GameObject source, Vector3 hitPoint, Vector3 direction) : this(amount, source)
