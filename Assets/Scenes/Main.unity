@@ -2620,6 +2620,7 @@ GameObject:
   - component: {fileID: 1034868332}
   - component: {fileID: 1034868333}
   - component: {fileID: 1034868334}
+  - component: {fileID: 1034868335}
   m_Layer: 0
   m_Name: _Systems
   m_TagString: Untagged
@@ -2772,6 +2773,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemVfx
   lineMaterial: {fileID: 2100000, guid: b113e42c1e6f5f344ab116cb55bdff84, type: 2}
   beamMaterial: {fileID: 2100000, guid: 024ca86e40356764faa1d7b26bb54a48, type: 2}
+--- !u!114 &1034868335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034868326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee397be43b29ac0408d5826253c982b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossSpawner
+  bossPrefab: {fileID: 4340369852612086232, guid: b94b5e7e61b3dfb40a48d1d5e6834b13, type: 3}
+  distanceFromPipe: {x: 14, y: 20}
+  delay: 2
 --- !u!1 &1068892401
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,7 +18,8 @@ public class Hud : MonoBehaviour
 
     VisualElement hud, healthFill, items, crosshair, popup, abilitiesRow;
     Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText;
-    VisualElement objective, objectiveBar, objectiveFill;
+    VisualElement objective, objectiveBar, objectiveFill, boss, bossFill;
+    Label bossName;
     VisualElement difficultyFill;
 
     Health health;
@@ -54,6 +55,9 @@ public class Hud : MonoBehaviour
         objectiveText = root.Q<Label>("objective-text");
         objectiveBar = root.Q("objective-bar");
         objectiveFill = root.Q("objective-fill");
+        boss = root.Q("boss");
+        bossFill = root.Q("boss-fill");
+        bossName = root.Q<Label>("boss-name");
     }
 
     void Start()
@@ -116,6 +120,7 @@ public class Hud : MonoBehaviour
             stage.text = $"Fase {RunManager.Instance.Stage}";
         }
         UpdateObjective();
+        UpdateBoss();
         var dm = DifficultyManager.Instance;
         if (dm != null)
         {
@@ -191,18 +196,35 @@ public class Hud : MonoBehaviour
 
     // ---------- Objetivo ----------
 
-    public string ObjectiveText => objective != null && objective.style.display != DisplayStyle.None ? objectiveText.text : null;
+    public string ObjectiveText => objectiveText != null && objectiveText.style.display != DisplayStyle.None ? objectiveText.text : null;
 
     void UpdateObjective()
     {
         var pipe = ExitPipe.Instance;
-        if (pipe == null || pipe.Current == ExitPipe.State.Used) { objective.style.display = DisplayStyle.None; return; }
+        if (pipe == null || pipe.Current == ExitPipe.State.Used) { objectiveText.style.display = DisplayStyle.None; objectiveBar.AddToClassList("hidden"); return; }
+        objectiveText.style.display = DisplayStyle.Flex;
         objective.style.display = DisplayStyle.Flex;
         objectiveText.text = pipe.ObjectiveText;
         bool charging = pipe.Current == ExitPipe.State.Charging;
         objectiveText.EnableInClassList("objective-text--warning", charging && (!pipe.PlayerInZone || pipe.BlockersAlive > 0 && pipe.Charge >= 1f));
         objectiveBar.EnableInClassList("hidden", !charging);
         objectiveFill.style.width = Length.Percent(pipe.Charge * 100f);
+    }
+
+    // ---------- Chefe ----------
+
+    public bool BossBarVisible => boss != null && !boss.ClassListContains("hidden");
+    public float BossBarPercent => bossFill != null ? bossFill.style.width.value.value : 0f;
+
+    void UpdateBoss()
+    {
+        var b = MantisBoss.Current;
+        bool show = b != null && b.IsAlive;
+        boss.EnableInClassList("hidden", !show);
+        if (!show) return;
+        bossName.text = b.IsEnraged ? $"{b.BossName} (fúria!)" : b.BossName;
+        bossName.EnableInClassList("boss-name--enraged", b.IsEnraged);
+        bossFill.style.width = Length.Percent(Mathf.Clamp01(b.Health.Current / b.Health.Max) * 100f);
     }
 
     // ---------- Interação ----------

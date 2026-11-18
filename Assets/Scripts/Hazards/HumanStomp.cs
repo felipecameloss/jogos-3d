@@ -34,6 +34,8 @@ public class HumanStomp : MonoBehaviour
     [Header("Dano")]
     [Tooltip("Fração da vida máxima que o player perde (inimigos morrem).")]
     [SerializeField, Range(0f, 1f)] float playerDamageFraction = 0.45f;
+    [Tooltip("Fração da vida máxima que um chefe perde (chefes não morrem de uma vez).")]
+    [SerializeField, Range(0f, 1f)] float bossDamageFraction = 0.15f;
     [Tooltip("Distância fora da sola em que o player ainda é empurrado.")]
     [SerializeField, Min(0f)] float edgeKnockbackRange = 1.5f;
     [Tooltip("Empurrão (horizontal, vertical).")]
@@ -129,6 +131,8 @@ public class HumanStomp : MonoBehaviour
             Vector3 dir = comp.transform.position - transform.position;
             if (comp.TryGetComponent(out PlayerMovement _) && target is Health hp)
                 hp.TakeDamage(new DamageInfo(hp.Max * playerDamageFraction, gameObject, comp.transform.position, dir) { IgnoreArmor = true });
+            else if (comp.TryGetComponent(out EnemyBase boss) && boss.IsBoss && target is Health bh)
+                bh.TakeDamage(new DamageInfo(bh.Max * bossDamageFraction, gameObject, comp.transform.position, dir) { IgnoreArmor = true });
             else if (target is Health h)
                 h.Kill(gameObject);
             else

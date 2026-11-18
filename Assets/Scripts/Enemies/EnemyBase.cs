@@ -64,6 +64,9 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
+    /// <summary>Chefe: não morre de uma vez para perigos que matam na hora (pisão).</summary>
+    public virtual bool IsBoss => false;
+
     public Health Health { get; private set; }
     public bool IsAlive => Health != null && Health.IsAlive;
 

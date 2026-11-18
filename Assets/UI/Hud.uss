@@ -180,6 +180,40 @@
     background-color: rgb(140, 220, 90);
 }
 
+.boss {
+    margin-top: 10px;
+    align-items: center;
+}
+
+.boss-name {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(255, 214, 120);
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+.boss-name--enraged {
+    color: rgb(255, 110, 80);
+}
+
+.boss-bar {
+    width: 560px; height: 16px;
+    margin-top: 3px;
+    background-color: rgba(10, 14, 8, 0.8);
+    border-radius: 6px;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+}
+
+.boss-fill {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(205, 52, 40);
+    transition-property: width;
+    transition-duration: 0.15s;
+}
+
 /* ---------- Mira ---------- */
 
 .crosshair {

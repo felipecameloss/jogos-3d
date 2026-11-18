@@ -31,6 +31,12 @@
             <ui:VisualElement name="objective-bar" class="objective-bar hidden" picking-mode="Ignore">
                 <ui:VisualElement name="objective-fill" class="objective-fill" picking-mode="Ignore" />
             </ui:VisualElement>
+            <ui:VisualElement name="boss" class="boss hidden" picking-mode="Ignore">
+                <ui:Label name="boss-name" text="Chefe" class="boss-name" picking-mode="Ignore" />
+                <ui:VisualElement class="boss-bar" picking-mode="Ignore">
+                    <ui:VisualElement name="boss-fill" class="boss-fill" picking-mode="Ignore" />
+                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- Mira -->
