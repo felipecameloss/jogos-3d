@@ -59,6 +59,9 @@ public class EnemySpawner : MonoBehaviour
     readonly List<SpawnEntry> candidates = new();
     float credits;
     float nextWaveTime;
+    // Inimigo já sorteado esperando créditos: sem isso os caros nunca saem,
+    // porque cada onda gasta tudo nos baratos.
+    SpawnEntry pendingEntry;
     Transform player;
     NavMeshPath path;
 
@@ -98,13 +101,25 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnWave(float coeff)
     {
-        var entry = PickEntry(coeff);
+        var entry = pendingEntry ?? PickEntry(coeff);
         if (entry == null) return;
+        if (entry.cost > maxBankedCredits)
+        {
+            Debug.LogWarning($"{entry.prefab.name} custa mais que o máximo de créditos guardados; nunca vai nascer.", this);
+            pendingEntry = null;
+            return;
+        }
+        if (entry.cost > credits)
+        {
+            pendingEntry = entry; // junta créditos para esse
+            return;
+        }
 
         int groupMax = baseGroupSize + Mathf.FloorToInt(coeff - 1f);
         int count = Mathf.Min(Mathf.FloorToInt(credits / entry.cost), groupMax, maxAlive - alive.Count);
         if (count <= 0) return;
         if (!TryFindSpawnPoint(out Vector3 center)) return;
+        pendingEntry = null;
 
         for (int i = 0; i < count; i++)
         {
@@ -125,7 +140,7 @@ public class EnemySpawner : MonoBehaviour
         float total = 0f;
         foreach (var e in enemies)
         {
-            if (e.pool == null || e.weight <= 0f || e.cost > credits || coeff < e.minDifficulty) continue;
+            if (e.pool == null || e.weight <= 0f || coeff < e.minDifficulty) continue;
             candidates.Add(e);
             total += e.weight;
         }

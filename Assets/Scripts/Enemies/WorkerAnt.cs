@@ -4,6 +4,8 @@ using UnityEngine;
 /// Formiga operária: persegue o player e morde.
 /// A mordida tem aviso (a formiga recua o corpo antes) e só acerta se o player
 /// continuar perto e na frente quando ela fecha a mandíbula. Dá para desviar.
+/// Base das outras formigas corpo a corpo (ex.: formiga-soldado): os valores vêm
+/// do Inspector e os métodos On* deixam a subclasse reagir ao aviso e à mordida.
 /// </summary>
 public class WorkerAnt : EnemyBase
 {
@@ -21,6 +23,12 @@ public class WorkerAnt : EnemyBase
     [Header("Visual")]
     [Tooltip("Corpo que inclina no aviso e avança na mordida. Vazio = sem animação.")]
     [SerializeField] Transform body;
+    [Tooltip("Graus que o corpo empina no aviso.")]
+    [SerializeField] float windUpTilt = 20f;
+    [Tooltip("Quanto o corpo recua no aviso.")]
+    [SerializeField] float windUpRecoil = 0.25f;
+    [Tooltip("Quanto o corpo avança na mordida.")]
+    [SerializeField] float lungeDistance = 0.35f;
 
     enum State { Chase, WindUp, Recover }
     State state;
@@ -63,7 +71,9 @@ public class WorkerAnt : EnemyBase
 
             case State.WindUp:
                 FaceTarget();
-                AnimateBody(windUp: Mathf.Clamp01(stateTime / Mathf.Max(windUpTime, 0.01f)), lunge: 0f);
+                float progress = Mathf.Clamp01(stateTime / Mathf.Max(windUpTime, 0.01f));
+                AnimateBody(windUp: progress, lunge: 0f);
+                OnWindUp(progress);
                 if (stateTime >= windUpTime)
                 {
                     Bite();
@@ -87,14 +97,17 @@ public class WorkerAnt : EnemyBase
 
     void Bite()
     {
+        OnWindUp(0f);
         if (TargetHealth == null || !TargetInFront(attackRange + hitRangeBonus)) return;
         Vector3 dir = (Target.position - transform.position).normalized;
         TargetHealth.TakeDamage(new DamageInfo(damage * DamageMultiplier, gameObject, Target.position + Vector3.up, dir));
         BitesLanded++;
+        OnBiteLanded(dir);
     }
 
     void SetState(State s)
     {
+        if (state == State.WindUp && s != State.WindUp) OnWindUp(0f); // aviso interrompido
         state = s;
         stateTime = 0f;
         if (s == State.Chase) AnimateBody(0f, 0f);
@@ -104,9 +117,15 @@ public class WorkerAnt : EnemyBase
     {
         if (body == null) return;
         // Aviso: empina a cabeça e recua. Mordida: avança.
-        body.localRotation = bodyRestRot * Quaternion.Euler(-20f * windUp, 0f, 0f);
-        body.localPosition = bodyRestPos + Vector3.forward * (-0.25f * windUp + 0.35f * lunge);
+        body.localRotation = bodyRestRot * Quaternion.Euler(-windUpTilt * windUp, 0f, 0f);
+        body.localPosition = bodyRestPos + Vector3.forward * (-windUpRecoil * windUp + lungeDistance * lunge);
     }
+
+    /// <summary>A cada frame do aviso (0..1); 0 quando o aviso termina ou é interrompido.</summary>
+    protected virtual void OnWindUp(float progress) { }
+
+    /// <summary>A mordida acertou o alvo (dir = da formiga para o alvo).</summary>
+    protected virtual void OnBiteLanded(Vector3 direction) { }
 
     protected override void HandleDeath(DamageInfo killingBlow)
     {

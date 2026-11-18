@@ -39,6 +39,10 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Tempo que um pulo apertado cedo demais fica guardado.")]
     [SerializeField] float jumpBufferTime = 0.12f;
 
+    [Header("Empurrão")]
+    [Tooltip("Quão rápido o empurrão (knockback) perde força.")]
+    [SerializeField, Min(0.1f)] float knockbackDrag = 5f;
+
     [Header("Detecção de chão")]
     [SerializeField] LayerMask groundMask = ~0;
     [SerializeField] float groundCheckDistance = 0.08f;
@@ -59,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
 
     CharacterController controller;
     Vector3 horizontalVelocity;
+    Vector3 knockbackVelocity;
     float verticalVelocity;
     float lastGroundedTime = float.NegativeInfinity;
     float lastJumpPressedTime = float.NegativeInfinity;
@@ -133,7 +138,8 @@ public class PlayerMovement : MonoBehaviour
         float verticalDelta = (verticalStart + verticalVelocity) * 0.5f * dt;
 
         // ---------- Aplicar ----------
-        CollisionFlags flags = controller.Move(horizontalVelocity * dt + Vector3.up * verticalDelta);
+        knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, 1f - Mathf.Exp(-knockbackDrag * dt));
+        CollisionFlags flags = controller.Move((horizontalVelocity + knockbackVelocity) * dt + Vector3.up * verticalDelta);
         if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f) verticalVelocity = 0f; // bateu a cabeça
 
         // ---------- Girar para onde a câmera mira ----------
@@ -141,6 +147,17 @@ public class PlayerMovement : MonoBehaviour
         {
             Quaternion targetRot = Quaternion.LookRotation(camForward, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 1f - Mathf.Exp(-turnSpeed * dt));
+        }
+    }
+
+    /// <summary>Empurra o player (golpe forte, explosão). A parte vertical tira ele do chão.</summary>
+    public void AddKnockback(Vector3 velocity)
+    {
+        knockbackVelocity += new Vector3(velocity.x, 0f, velocity.z);
+        if (velocity.y > 0f)
+        {
+            verticalVelocity = Mathf.Max(verticalVelocity, velocity.y);
+            IsGrounded = false;
         }
     }
 

@@ -2158,6 +2158,11 @@ MonoBehaviour:
     weight: 1
     minDifficulty: 1
     poolPrewarm: 10
+  - prefab: {fileID: 7296238998685897525, guid: 1b7aa9b6b1b523f40a143fc916a9a08f, type: 3}
+    cost: 24
+    weight: 0.35
+    minDifficulty: 1.5
+    poolPrewarm: 4
   startingCredits: 24
   creditsPerSecond: 1.2
   maxBankedCredits: 80
@@ -3046,6 +3051,7 @@ MonoBehaviour:
   maxFallSpeed: 40
   coyoteTime: 0.12
   jumpBufferTime: 0.12
+  knockbackDrag: 5
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
