@@ -199,7 +199,6 @@ public class EnemySpawner : MonoBehaviour
         var enemy = entry.pool.Get(position, rot);
 
         var dm = DifficultyManager.Instance;
-        float coeff = dm != null ? dm.Coefficient : 1f;
         float hpMult = dm != null ? dm.EnemyHealthMultiplier : 1f;
         float dmgMult = dm != null ? dm.EnemyDamageMultiplier : 1f;
         if (dm != null) enemy.ApplyScaling(hpMult, dmgMult);
