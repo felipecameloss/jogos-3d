@@ -53406,6 +53406,20 @@ MonoBehaviour:
     weight: 0.5
     minDifficulty: 1.3
     poolPrewarm: 4
+  - prefab: {fileID: 8845971033183573282, guid: f11b4e0be1054f02a1f9d249f61dc3b9, type: 3}
+    cost: 5
+    weight: 0.7
+    minDifficulty: 1
+    minGroup: 3
+    extraGroupSize: 2
+    poolPrewarm: 12
+  - prefab: {fileID: 914957403550322866, guid: c2a5eff694334750b582e116ad5ecf74, type: 3}
+    cost: 10
+    weight: 0.3
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 4
   startingCredits: 24
   creditsPerSecond: 1.2
   maxBankedCredits: 80
@@ -87027,8 +87041,75 @@ Transform:
   - {fileID: 734185338}
   - {fileID: 1352964615}
   - {fileID: 1632761449}
+  - {fileID: 1981752591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1981752590
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1637951001}
+    m_Modifications:
+    - target: {fileID: 3245195986697868619, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_Name
+      value: Pickup (Espinho de rosa)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9192167671657020799, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: ce839b7ece2248228c1b46cd9f46cdc1, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+--- !u!4 &1981752591 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6567645848064957818, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
+  m_PrefabInstance: {fileID: 1981752590}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1643806783
 GameObject:
   m_ObjectHideFlags: 0
