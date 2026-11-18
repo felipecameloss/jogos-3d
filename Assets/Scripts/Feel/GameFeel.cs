@@ -62,6 +62,7 @@ public class GameFeel : MonoBehaviour
     /// <summary>Tremida de tela. 0.3 = leve, 1 = forte, 2 = enorme.</summary>
     public static void Shake(float force)
     {
+        force *= GameSettings.ScreenShake; // configuração "Tremida de tela"
         if (Instance == null || Instance.impulse == null || force <= 0f) return;
         Instance.impulse.GenerateImpulseWithForce(force);
         Instance.Shakes++;

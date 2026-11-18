@@ -31,7 +31,7 @@ public class DamageNumbers : MonoBehaviour
 
     public void Spawn(Vector3 worldPos, float amount, Color color, float scale = 1f)
     {
-        if (root == null || root.panel == null) return;
+        if (root == null || root.panel == null || !GameSettings.DamageNumbers) return;
         var n = Get();
         string text = amount >= 10f ? Mathf.RoundToInt(amount).ToString() : amount.ToString("0.#");
         n.label.text = text;

@@ -25,13 +25,13 @@
     border-radius: 20px;
     border-width: 2px;
     border-color: rgb(118, 148, 66);
-    padding: 36px 52px 30px 52px;
+    padding: 26px 52px 22px 52px;
     min-width: 440px;
     align-items: stretch;
 }
 
 .title {
-    font-size: 72px;
+    font-size: 60px;
     color: rgb(244, 226, 166);
     -unity-font-style: bold;
     -unity-text-align: middle-center;
@@ -42,7 +42,7 @@
     font-size: 21px;
     color: rgb(176, 198, 142);
     -unity-text-align: middle-center;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
 }
 
 .heading {
@@ -58,8 +58,8 @@
 }
 
 .btn {
-    height: 56px;
-    margin: 6px 0;
+    height: 50px;
+    margin: 5px 0;
     font-size: 23px;
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
@@ -146,4 +146,86 @@
 .action {
     font-size: 15px;
     color: rgb(210, 216, 196);
+}
+
+/* ---------- Configurações ---------- */
+
+.settings-panel {
+    width: 700px;
+    background-color: rgb(26, 30, 22); /* opaco: o menu de baixo não aparece através */
+    padding: 26px 40px 20px 40px;
+}
+
+.settings-section {
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: rgb(176, 198, 142);
+    margin: 10px 0 2px 0;
+    border-bottom-width: 1px;
+    border-color: rgba(176, 198, 142, 0.35);
+}
+
+.settings-row {
+    flex-direction: row;
+    align-items: center;
+    height: 36px;
+}
+
+.settings-label {
+    width: 240px;
+    font-size: 18px;
+    color: rgb(232, 236, 222);
+}
+
+.settings-slider {
+    flex-grow: 1;
+    margin: 0 12px 0 0;
+}
+
+.settings-value {
+    width: 60px;
+    font-size: 17px;
+    -unity-font-style: bold;
+    color: rgb(244, 226, 166);
+    -unity-text-align: middle-right;
+}
+
+/* Trilho e botão do slider (o tema padrão fica escuro no painel escuro) */
+.settings-slider .unity-base-slider__tracker {
+    background-color: rgb(58, 64, 50);
+    border-color: rgb(58, 64, 50);
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 3px;
+}
+
+.settings-slider .unity-base-slider__dragger {
+    background-color: rgb(244, 226, 166);
+    border-color: rgb(118, 148, 66);
+    width: 18px; height: 18px;
+    margin-top: -9px;
+    border-radius: 9px;
+}
+
+.settings-slider .unity-base-slider__dragger-border {
+    display: none;
+}
+
+.settings-toggle .unity-toggle__checkmark {
+    width: 24px; height: 24px;
+    background-color: rgb(58, 64, 50);
+    border-color: rgb(118, 148, 66);
+    border-width: 2px;
+    border-radius: 5px;
+    -unity-background-image-tint-color: rgb(244, 226, 166);
+}
+
+.settings-buttons {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.settings-button {
+    width: 300px;
 }

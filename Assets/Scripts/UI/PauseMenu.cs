@@ -25,6 +25,11 @@ public class PauseMenu : MonoBehaviour
             Resume();
             if (RunManager.Instance != null) RunManager.Instance.RestartRun();
         };
+        doc.Q<Button>("settings").clicked += () =>
+        {
+            var s = FindAnyObjectByType<SettingsScreen>();
+            if (s != null) s.Open(() => root.Q<Button>("resume").Focus());
+        };
         doc.Q<Button>("main-menu").clicked += SceneLoader.LoadMainMenu;
         doc.Q<Button>("quit").clicked += SceneLoader.Quit;
         root.AddToClassList("hidden");
@@ -53,7 +58,7 @@ public class PauseMenu : MonoBehaviour
     {
         bool pressed = (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
                        || (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame);
-        if (!pressed) return;
+        if (!pressed || SettingsScreen.IsOpenOrJustClosed) return; // Esc das configurações é delas
         if (IsPaused) Resume();
         else if (!RunOver) Pause();
     }

@@ -6,6 +6,7 @@
             <ui:Label name="title" text="ENCOLHIDOS" class="title" />
             <ui:Label text="um roguelike no quintal" class="subtitle" />
             <ui:Button name="play" text="Jogar" class="btn" />
+            <ui:Button name="settings" text="Configurações" class="btn btn--secondary" />
             <ui:Button name="controls-toggle" text="Controles" class="btn btn--secondary" />
             <ui:VisualElement name="controls" class="controls hidden">
                 <ui:VisualElement class="controls-row"><ui:Label text="W A S D" class="key" /><ui:Label text="andar" class="action" /></ui:VisualElement>

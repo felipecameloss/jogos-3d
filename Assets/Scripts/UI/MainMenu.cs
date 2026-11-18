@@ -18,6 +18,11 @@ public class MainMenu : MonoBehaviour
         root.Q<Button>("quit").clicked += SceneLoader.Quit;
         controls = root.Q("controls");
         root.Q<Button>("controls-toggle").clicked += ToggleControls;
+        root.Q<Button>("settings").clicked += () =>
+        {
+            var s = FindAnyObjectByType<SettingsScreen>();
+            if (s != null) s.Open(() => root.Q<Button>("play").Focus());
+        };
         root.Q<Button>("play").Focus();
     }
 
@@ -27,6 +32,7 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
+        if (SettingsScreen.IsOpenOrJustClosed) return;
         var kb = Keyboard.current;
         if (kb != null && (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)) SceneLoader.LoadGame();
     }
