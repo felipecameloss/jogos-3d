@@ -139,6 +139,47 @@
     background-color: rgb(250, 190, 70);
 }
 
+.stage {
+    font-size: 15px;
+    color: rgb(200, 210, 186);
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- Objetivo ---------- */
+
+.objective {
+    position: absolute;
+    left: 0; right: 0; top: 20px;
+    align-items: center;
+}
+
+.objective-text {
+    font-size: 19px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgba(10, 14, 8, 0.6);
+    border-radius: 8px;
+    padding: 4px 14px;
+}
+
+.objective-text--warning {
+    color: rgb(255, 130, 105);
+}
+
+.objective-bar {
+    width: 320px; height: 10px;
+    margin-top: 6px;
+    background-color: rgba(10, 14, 8, 0.75);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.objective-fill {
+    height: 100%;
+    width: 0%;
+    background-color: rgb(140, 220, 90);
+}
+
 /* ---------- Mira ---------- */
 
 .crosshair {

@@ -14,8 +14,8 @@ public class CursorLock : MonoBehaviour
         if (lockOnStart) SetLocked(true);
     }
 
-    // Em menu (pause / fim de run) o cursor fica solto para clicar nos botões
-    static bool InMenu => PauseMenu.IsPaused || (RunManager.Instance != null && RunManager.Instance.IsRunOver);
+    // Em menu (pause / fim de run / vitória) o cursor fica solto para clicar nos botões
+    static bool InMenu => RunManager.InMenu;
 
     void Update()
     {

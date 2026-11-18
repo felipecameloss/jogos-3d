@@ -26,6 +26,14 @@ public class PlayerWallet : MonoBehaviour
         OnCrumbsChanged?.Invoke(Crumbs, amount);
     }
 
+    /// <summary>Restaura ao passar de fase.</summary>
+    public void RestoreState(int crumbs, int totalCollected)
+    {
+        Crumbs = Mathf.Max(0, crumbs);
+        TotalCollected = Mathf.Max(0, totalCollected);
+        OnCrumbsChanged?.Invoke(Crumbs, 0);
+    }
+
     public bool CanAfford(int cost) => cost <= Crumbs;
 
     /// <summary>Gasta se tiver o bastante. Retorna se conseguiu.</summary>

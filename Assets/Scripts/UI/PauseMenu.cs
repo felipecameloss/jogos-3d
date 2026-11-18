@@ -46,7 +46,8 @@ public class PauseMenu : MonoBehaviour
         IsPaused = false;
     }
 
-    bool RunOver => RunManager.Instance != null && RunManager.Instance.IsRunOver;
+    // Fim de run ou vitória: o pause não abre
+    bool RunOver => RunManager.Instance != null && (RunManager.Instance.IsRunOver || RunManager.Instance.IsStageComplete);
 
     void Update()
     {

@@ -26,7 +26,6 @@ public class Inventory : MonoBehaviour
 
     readonly Dictionary<ItemData, int> stacks = new();
     readonly List<ItemData> order = new();
-    readonly List<ItemData> iterate = new(); // cópia: um efeito pode dar/tirar item no meio do loop
 
     // Valores base (sem itens), lidos no Awake
     float baseMaxHealth, baseArmor, baseRegen;
@@ -69,7 +68,8 @@ public class Inventory : MonoBehaviour
 
     public int GetCount(ItemData item) => item != null && stacks.TryGetValue(item, out int n) ? n : 0;
 
-    public void Add(ItemData item, int count = 1)
+    /// <param name="silent">Sem popup de "pegou" (restaurar itens ao passar de fase).</param>
+    public void Add(ItemData item, int count = 1, bool silent = false)
     {
         if (item == null || count <= 0) return;
         int now = GetCount(item) + count;
@@ -78,7 +78,7 @@ public class Inventory : MonoBehaviour
         TotalItems += count;
         RecalculateStats();
         item.OnAcquired(this, now);
-        OnItemAdded?.Invoke(item, now);
+        if (!silent) OnItemAdded?.Invoke(item, now);
         OnInventoryChanged?.Invoke();
     }
 
@@ -152,9 +152,10 @@ public class Inventory : MonoBehaviour
 
     void ForEachItem(Action<ItemData, int> action)
     {
-        iterate.Clear();
-        iterate.AddRange(order);
-        foreach (var item in iterate)
+        // Cópia própria por chamada: um efeito pode disparar outro gancho no meio do loop
+        // (raio do caco mata um inimigo -> "ao matar") ou dar/tirar item.
+        var snapshot = order.ToArray();
+        foreach (var item in snapshot)
         {
             int n = GetCount(item);
             if (n <= 0) continue;

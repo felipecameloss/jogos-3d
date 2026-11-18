@@ -26,9 +26,7 @@ public class Interactor : MonoBehaviour
 
     void OnEnable() => interactAction?.action.Enable();
 
-    bool Blocked =>
-        PauseMenu.IsPaused || (health != null && !health.IsAlive) ||
-        (RunManager.Instance != null && RunManager.Instance.IsRunOver);
+    bool Blocked => RunManager.InMenu || (health != null && !health.IsAlive);
 
     void Update()
     {

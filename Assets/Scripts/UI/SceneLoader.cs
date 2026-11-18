@@ -7,8 +7,9 @@ public static class SceneLoader
     public const string MainMenuScene = "MainMenu";
     public const string GameScene = "Main";
 
-    public static void LoadGame() => Load(GameScene);
-    public static void LoadMainMenu() => Load(MainMenuScene);
+    /// <summary>Run nova do zero.</summary>
+    public static void LoadGame() { RunManager.ClearCarryOver(); Load(GameScene); }
+    public static void LoadMainMenu() { RunManager.ClearCarryOver(); Load(MainMenuScene); }
 
     static void Load(string scene)
     {

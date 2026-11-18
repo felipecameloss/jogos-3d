@@ -18,9 +18,18 @@
         <!-- Canto superior direito: tempo e dificuldade -->
         <ui:VisualElement class="top-right" picking-mode="Ignore">
             <ui:Label name="timer" text="0:00" class="timer" picking-mode="Ignore" />
+            <ui:Label name="stage" text="Fase 1" class="stage" picking-mode="Ignore" />
             <ui:Label name="difficulty" text="Fácil" class="difficulty" picking-mode="Ignore" />
             <ui:VisualElement class="difficulty-bar" picking-mode="Ignore">
                 <ui:VisualElement name="difficulty-fill" class="difficulty-fill" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Objetivo da fase (centro em cima) -->
+        <ui:VisualElement name="objective" class="objective" picking-mode="Ignore">
+            <ui:Label name="objective-text" text="Encontre o cano e ative-o" class="objective-text" picking-mode="Ignore" />
+            <ui:VisualElement name="objective-bar" class="objective-bar hidden" picking-mode="Ignore">
+                <ui:VisualElement name="objective-fill" class="objective-fill" picking-mode="Ignore" />
             </ui:VisualElement>
         </ui:VisualElement>
 

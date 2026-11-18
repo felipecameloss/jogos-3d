@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Menus.uss" />
+    <ui:VisualElement name="root" class="screen overlay hidden">
+        <ui:VisualElement class="panel">
+            <ui:Label name="heading" text="Fase 1 concluída!" class="heading" />
+            <ui:VisualElement class="stats">
+                <ui:VisualElement class="stat-row"><ui:Label text="Tempo" class="stat-label" /><ui:Label name="time" text="0:00" class="stat-value" /></ui:VisualElement>
+                <ui:VisualElement class="stat-row"><ui:Label text="Dificuldade" class="stat-label" /><ui:Label name="difficulty" text="Fácil" class="stat-value" /></ui:VisualElement>
+                <ui:VisualElement class="stat-row"><ui:Label text="Inimigos derrotados" class="stat-label" /><ui:Label name="kills" text="0" class="stat-value" /></ui:VisualElement>
+                <ui:VisualElement class="stat-row"><ui:Label text="Itens" class="stat-label" /><ui:Label name="items" text="0" class="stat-value" /></ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button name="next" text="Próxima fase" class="btn" />
+            <ui:Button name="main-menu" text="Menu principal" class="btn btn--secondary" />
+            <ui:Label text="Itens, migalhas e vida vão com você. A dificuldade continua subindo." class="hint" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -49,6 +49,9 @@ public class EnemySpawner : MonoBehaviour
     /// <summary>Disparado para cada inimigo que nasce (já posicionado e escalado).</summary>
     public event Action<EnemyBase> OnEnemySpawned;
 
+    /// <summary>Multiplica a taxa de créditos e a frequência das ondas (ex.: 2.5 durante a ativação da saída).</summary>
+    [HideInInspector] public float Intensity = 1f;
+
     public int AliveCount => alive.Count;
     public int TotalSpawned { get; private set; }
     public float Credits => credits;
@@ -90,11 +93,11 @@ public class EnemySpawner : MonoBehaviour
         if (player == null || (RunManager.Instance != null && RunManager.Instance.IsRunOver)) return;
 
         float coeff = Difficulty;
-        credits = Mathf.Min(credits + creditsPerSecond * coeff * Time.deltaTime, maxBankedCredits);
+        credits = Mathf.Min(credits + creditsPerSecond * coeff * Intensity * Time.deltaTime, maxBankedCredits);
 
         if (Time.time < nextWaveTime) return;
         // Ondas um pouco mais frequentes com a dificuldade
-        float interval = UnityEngine.Random.Range(waveIntervalMin, waveIntervalMax) / (1f + 0.15f * (coeff - 1f));
+        float interval = UnityEngine.Random.Range(waveIntervalMin, waveIntervalMax) / (1f + 0.15f * (coeff - 1f)) / Mathf.Max(0.1f, Intensity);
         nextWaveTime = Time.time + interval;
         SpawnWave(coeff);
     }

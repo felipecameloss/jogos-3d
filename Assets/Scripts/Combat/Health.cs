@@ -98,6 +98,14 @@ public class Health : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(Current, maxHealth);
     }
 
+    /// <summary>Define a vida atual direto (passar de fase, debug). Não dispara dano/cura.</summary>
+    public void SetCurrent(float value)
+    {
+        if (!IsAlive) return;
+        Current = Mathf.Clamp(value, 0.0001f, maxHealth);
+        OnHealthChanged?.Invoke(Current, maxHealth);
+    }
+
     /// <summary>Volta à vida cheia (reaproveitar inimigo do pool, reiniciar run).</summary>
     public void ResetHealth()
     {

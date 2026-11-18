@@ -83,6 +83,13 @@ public class ChestSpawner : MonoBehaviour
 
     bool TooClose(Vector3 pos)
     {
+        // Nada de baú na área do cano de saída (o [E] confundiria baú com cano)
+        var pipe = ExitPipe.Instance;
+        if (pipe != null)
+        {
+            float keep = pipe.ZoneRadius + 1f;
+            if ((pipe.transform.position - pos).sqrMagnitude < keep * keep) return true;
+        }
         foreach (var c in spawned)
             if (c != null && (c.transform.position - pos).sqrMagnitude < minSpacing * minSpacing) return true;
         return false;

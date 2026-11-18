@@ -17,7 +17,8 @@ public class Hud : MonoBehaviour
     [SerializeField, Range(0f, 1f)] float lowHealth = 0.3f;
 
     VisualElement hud, healthFill, items, crosshair, popup, abilitiesRow;
-    Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt;
+    Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText;
+    VisualElement objective, objectiveBar, objectiveFill;
     VisualElement difficultyFill;
 
     Health health;
@@ -48,6 +49,11 @@ public class Hud : MonoBehaviour
         popupDesc = root.Q<Label>("popup-desc");
         prompt = root.Q<Label>("prompt");
         abilitiesRow = root.Q("abilities");
+        stage = root.Q<Label>("stage");
+        objective = root.Q("objective");
+        objectiveText = root.Q<Label>("objective-text");
+        objectiveBar = root.Q("objective-bar");
+        objectiveFill = root.Q("objective-fill");
     }
 
     void Start()
@@ -66,7 +72,11 @@ public class Hud : MonoBehaviour
             inventory.OnItemAdded += ShowPopup;
             inventory.OnInventoryChanged += RebuildItems;
         }
-        if (RunManager.Instance != null) RunManager.Instance.OnRunEnded += Hide;
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.OnRunEnded += Hide;
+            RunManager.Instance.OnStageCompleted += Hide;
+        }
         RebuildItems();
     }
 
@@ -77,7 +87,11 @@ public class Hud : MonoBehaviour
             inventory.OnItemAdded -= ShowPopup;
             inventory.OnInventoryChanged -= RebuildItems;
         }
-        if (RunManager.Instance != null) RunManager.Instance.OnRunEnded -= Hide;
+        if (RunManager.Instance != null)
+        {
+            RunManager.Instance.OnRunEnded -= Hide;
+            RunManager.Instance.OnStageCompleted -= Hide;
+        }
     }
 
     void Hide() => hud.style.display = DisplayStyle.None;
@@ -99,7 +113,9 @@ public class Hud : MonoBehaviour
         {
             int s = Mathf.FloorToInt(RunManager.Instance.RunTime);
             timer.text = $"{s / 60}:{s % 60:00}";
+            stage.text = $"Fase {RunManager.Instance.Stage}";
         }
+        UpdateObjective();
         var dm = DifficultyManager.Instance;
         if (dm != null)
         {
@@ -171,6 +187,22 @@ public class Hud : MonoBehaviour
     {
         if (items == null || i >= items.childCount) return null;
         return string.Join(" ", items[i].Query<Label>().ToList().Select(l => l.text));
+    }
+
+    // ---------- Objetivo ----------
+
+    public string ObjectiveText => objective != null && objective.style.display != DisplayStyle.None ? objectiveText.text : null;
+
+    void UpdateObjective()
+    {
+        var pipe = ExitPipe.Instance;
+        if (pipe == null || pipe.Current == ExitPipe.State.Used) { objective.style.display = DisplayStyle.None; return; }
+        objective.style.display = DisplayStyle.Flex;
+        objectiveText.text = pipe.ObjectiveText;
+        bool charging = pipe.Current == ExitPipe.State.Charging;
+        objectiveText.EnableInClassList("objective-text--warning", charging && (!pipe.PlayerInZone || pipe.BlockersAlive > 0 && pipe.Charge >= 1f));
+        objectiveBar.EnableInClassList("hidden", !charging);
+        objectiveFill.style.width = Length.Percent(pipe.Charge * 100f);
     }
 
     // ---------- Interação ----------
