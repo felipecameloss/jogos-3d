@@ -2091,6 +2091,7 @@ GameObject:
   - component: {fileID: 1034868331}
   - component: {fileID: 1034868330}
   - component: {fileID: 1034868332}
+  - component: {fileID: 1034868333}
   m_Layer: 0
   m_Name: _Systems
   m_TagString: Untagged
@@ -2210,6 +2211,26 @@ MonoBehaviour:
   launchUp: 6
   launchSideways: 3
   AttractRadiusMultiplier: 1
+--- !u!114 &1034868333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034868326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1923a1d1979b5cd47b7cf115d6d1ecf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StompDirector
+  stompPrefab: {fileID: 1653759583857852823, guid: fae4a01d70090ef4ea65fc08604e0e75, type: 3}
+  firstStompDelay: 20
+  interval: {x: 18, y: 28}
+  frequencyPerPoint: 0.35
+  minInterval: 5
+  aimAtPlayerChance: 0.6
+  leadTime: 0.6
+  randomRadius: 10
 --- !u!1 &1068892401
 GameObject:
   m_ObjectHideFlags: 0
