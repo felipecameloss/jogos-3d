@@ -58,6 +58,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsGrounded { get; private set; }
     public bool IsSprinting { get; private set; }
+    /// <summary>True quando o jogador segura Ctrl para caminhar devagar / focar a mira.</summary>
+    public bool IsSlowWalkHeld => InputEnabled && sprintAction != null && sprintAction.action.IsPressed();
     /// <summary>Velocidade real (no chão, ignora a força que cola o player no chão).</summary>
     public Vector3 Velocity => horizontalVelocity + Vector3.up * (IsGrounded ? 0f : verticalVelocity);
     /// <summary>Velocidade horizontal normalizada pela velocidade de andar (útil para animação).</summary>
