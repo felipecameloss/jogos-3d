@@ -1,0 +1,102 @@
+# jogos-3d
+
+Jogo roguelite de ação em terceira pessoa desenvolvido em **Unity `6000.6.5f1`**, ambientado em um quintal em escala miniaturizada: explore o jardim, colete migalhas, abra baús e santuários, enfrente enxames de insetos e elites, derrote o chefe louva-a-deus e alcance o cano de saída para avançar de fase.
+
+---
+
+## Stack e Pacotes Principais
+
+- **Engine**: Unity `6000.6.5f1`
+- **Renderização**: Universal Render Pipeline (`com.unity.render-pipelines.universal` `17.6.0`)
+- **Câmera**: Cinemachine (`com.unity.cinemachine` `6.6.0`)
+- **Controles**: Input System (`com.unity.inputsystem` `1.20.0`)
+- **Navegação**: AI Navigation (`com.unity.ai.navigation` `2.0.15`)
+- **Modelos 3D**: glTFast (`com.unity.cloud.gltfast` `6.21.0`)
+- **UI**: UI Toolkit (`MainMenu`, `Hud`, `PauseMenu`, `SettingsScreen`, `VictoryScreen`, `EndRunScreen`)
+
+---
+
+## Controles
+
+Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_Actions.inputactions) e [`PlayerMovement.cs`](Assets/Scripts/Player/PlayerMovement.cs):
+
+| Ação | Tecla / Botão |
+| :--- | :--- |
+| Mover (corre por padrão) | `W` `A` `S` `D` |
+| Modo foco tático (andar devagar, zoom, mira e tiro mais rápido/forte) | `Left Ctrl` |
+| Pular | `Space` |
+| Dash | `Left Shift` |
+| Tiro principal (Estilingue de Espinhos) | `M1` (Botão esquerdo do mouse) |
+| Agulha (`NeedleThrust`) | `M2` (Botão direito do mouse) |
+| Invocar Formigas Aliadas (`SummonAllies`) | `R` |
+| Usar Equipamento Ativo (`EquipmentSlot`) | `Q` |
+| Trocar ombro da câmera (`DynamicCameraFeel`) | `V` |
+| Zoom da câmera (`DynamicCameraFeel`) | `Scroll do mouse` |
+| Interagir (baús, santuários, equipamentos, cano de saída) | `E` |
+| Pausar | `Esc` |
+
+---
+
+## Sistemas do Jogo
+
+- **Loop de Run e Dificuldade**: [`RunManager.cs`](Assets/Scripts/Core/RunManager.cs) mantém tempo, kills, fase atual e transição entre fases (levando itens, equipamento, cooldown restante, migalhas e proporção de vida); [`DifficultyManager.cs`](Assets/Scripts/Core/DifficultyManager.cs) escala a dificuldade ao longo do tempo; [`DayNightCycle.cs`](Assets/Scripts/Core/DayNightCycle.cs) alterna iluminação dia/pôr do sol/noite (`AmbientMode.Trilight`).
+- **Inimigos e Chefe**:
+  - Comuns: Formiga Operária (`WorkerAnt`), Formiga Soldado (`SoldierAnt`), Pulgão (`Aphid`), Besouro-Bombardeiro (`BombardierBeetle`, com projétil `AcidBlob` e poça `AcidPool`) e Cupim (`Termite`).
+  - Variantes Elite: [`EnemyElite.cs`](Assets/Scripts/Enemies/EnemyElite.cs) (Gigante e Flamejante, com bônus de velocidade e recompensa ampliada de migalhas).
+  - Chefe: Louva-a-Deus (`MantisBoss`, spawnado por [`BossSpawner.cs`](Assets/Scripts/Enemies/BossSpawner.cs) no evento do cano de saída `ExitPipe`).
+- **Itens, Equipamentos, Economia e Santuários**:
+  - Moeda (`Crumb` / `PlayerWallet` / `CrumbDropper`), baús (`ChestSmall`, `ChestLarge`) e santuários (`Shrine`: **Tampinha da sorte** e **Santuário de sangue**, distribuídos por `ShrineSpawner`).
+  - Raridades em [`ItemRarity.cs`](Assets/Scripts/Items/ItemRarity.cs): `Comum`, `Incomum`, `Lendario`, `Amaldicoado` e `Equipamento`, gerenciadas por [`ItemDatabase.cs`](Assets/Scripts/Items/ItemDatabase.cs) com efeitos passivos em `Assets/Scripts/Items/Effects/` (incluindo itens de movimento como Perna de Gafanhoto e Asa de Mosca, e itens amaldiçoados como Café Derramado e Cola Branca).
+  - Equipamentos ativos em `Assets/Scripts/Items/Equipment/` (`EquipmentData`, `EquipmentSlot`, `MagnifierEquipment` / [`Lupa.asset`](Assets/ScriptableObjects/Items/Lupa.asset)).
+- **Câmera, Ambiente, Perigos e Áudio**:
+  - Câmera dinâmica em 3ª pessoa ([`DynamicCameraFeel.cs`](Assets/Scripts/Feel/DynamicCameraFeel.cs)): FOV dinâmico, *Dutch tilt*, ombro alternável, zoom por scroll, modo foco tático com `Ctrl` (zoom over-the-shoulder + retículo de precisão e vinheta no `Hud`), enquadramento no chefe e órbita ao fim da run.
+  - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs).
+  - Perigos e feedback: pisão humano (`HumanStomp` / `StompDirector`), sensação de combate (`GameFeel`, `HitFlash`, `HitStop`, `DamageNumbers`) e áudio procedural para música dia/noite e SFX (`GameAudio`).
+
+---
+
+## Estrutura do Projeto
+
+```text
+Assets/
+├── Art/                 # Materiais, modelos 3D (.glb) e texturas
+├── Editor/              # ArtMeshBinder.cs, BuildWindows.cs e EquipmentSmokeTest.cs
+├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
+├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
+├── ScriptableObjects/   # Itens, Lupa.asset e ItemDatabase.asset
+├── Scripts/
+│   ├── Audio/           # GameAudio (música dinâmica dia/noite e SFX)
+│   ├── Combat/          # Vida, dano, projéteis, status effects e estilingue
+│   ├── Core/            # RunManager, DifficultyManager, DayNightCycle, Settings, Pool
+│   ├── Enemies/         # Base, spawners, elites, inimigos comuns e MantisBoss
+│   ├── Feel/            # DynamicCameraFeel, BackyardAtmosphere, HitFlash, HitStop, DamageNumbers, GameFeel
+│   ├── Hazards/         # HumanStomp e StompDirector
+│   ├── Items/           # Inventário, baús, santuários, migalhas, carteira, Effects/ e Equipment/
+│   ├── Level/           # ExitPipe
+│   ├── Player/          # Movimento, animação e Abilities/
+│   └── UI/              # HUD, menus de pausa, configurações, vitória e fim de run
+└── UI/                  # UXML/USS de HUD e menus (UI Toolkit)
+Tools/
+└── Blender/             # Scripts procedurais (.py) que geram os modelos .glb em Assets/Art/Models/
+```
+
+---
+
+## Como Abrir e Gerar Build
+
+1. **Pré-requisitos**:
+   - **Unity `6000.6.5f1`**
+   - **Git LFS** habilitado antes de clonar/puxar (`.gitattributes` rastreia modelos `.glb`, imagens e áudios):
+     ```bash
+     git lfs install
+     git lfs pull
+     ```
+2. **Cenas no Build**:
+   - `Assets/Scenes/MainMenu.unity`
+   - `Assets/Scenes/Main.unity`
+3. **Build para Windows**:
+   - Pelo Editor do Unity: menu **Jogo > Build Windows** (`Builds/Windows/jogos-3d.exe`).
+   - Via CLI (`Unity.exe`):
+     ```bash
+     Unity.exe -batchmode -quit -projectPath . -executeMethod BuildWindows.Build
+     ```
