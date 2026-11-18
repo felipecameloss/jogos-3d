@@ -88,7 +88,31 @@ public class DayNightCycle : MonoBehaviour
             sun.intensity = moonIntensity * moonUp;
             sun.color = moonColor;
         }
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+        float sunset = Mathf.Clamp01(1f - Mathf.Abs(Daylight - 0.45f) * 2.5f) * Mathf.Clamp01(Daylight * 2.5f);
+        Color daySky = new(0.56f, 0.72f, 0.88f);
+        Color dayEq = new(0.54f, 0.60f, 0.56f);
+        Color dayGnd = new(0.24f, 0.30f, 0.18f);
+
+        Color duskSky = new(0.76f, 0.46f, 0.36f);
+        Color duskEq = new(0.84f, 0.56f, 0.36f);
+        Color duskGnd = new(0.28f, 0.20f, 0.16f);
+
+        Color nightSky = new(0.10f, 0.14f, 0.26f);
+        Color nightEq = new(0.14f, 0.18f, 0.30f);
+        Color nightGnd = new(0.06f, 0.08f, 0.11f);
+
+        Color baseSky = Color.Lerp(nightSky, daySky, Daylight);
+        Color baseEq = Color.Lerp(nightEq, dayEq, Daylight);
+        Color baseGnd = Color.Lerp(nightGnd, dayGnd, Daylight);
+
+        RenderSettings.ambientSkyColor = Color.Lerp(baseSky, duskSky, sunset * 0.75f);
+        RenderSettings.ambientEquatorColor = Color.Lerp(baseEq, duskEq, sunset * 0.75f);
+        RenderSettings.ambientGroundColor = Color.Lerp(baseGnd, duskGnd, sunset * 0.75f);
         RenderSettings.ambientIntensity = Mathf.Lerp(dayAmbient * nightAmbient, dayAmbient, Daylight);
-        if (RenderSettings.fog) RenderSettings.fogColor = Color.Lerp(nightFog, dayFog, Daylight);
+
+        Color duskFog = new(0.86f, 0.66f, 0.54f);
+        Color baseFog = Color.Lerp(nightFog, dayFog, Daylight);
+        if (RenderSettings.fog) RenderSettings.fogColor = Color.Lerp(baseFog, duskFog, sunset * 0.65f);
     }
 }
