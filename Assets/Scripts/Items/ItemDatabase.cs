@@ -22,13 +22,19 @@ public class ItemDatabase : ScriptableObject
         return buffer.Count == 0 ? null : buffer[UnityEngine.Random.Range(0, buffer.Count)];
     }
 
-    /// <summary>Sorteia a raridade pelos pesos (comum, incomum, lendário) e depois o item.</summary>
-    public ItemData RandomWeighted(float common = 79f, float uncommon = 20f, float legendary = 1f)
+    /// <summary>Sorteia a raridade pelos pesos (comum, incomum, lendário, amaldiçoado) e depois o item.</summary>
+    public ItemData RandomWeighted(float common = 79f, float uncommon = 20f, float legendary = 1f, float cursed = 0f)
     {
-        float roll = UnityEngine.Random.value * (common + uncommon + legendary);
-        var rarity = roll < common ? ItemRarity.Comum : roll < common + uncommon ? ItemRarity.Incomum : ItemRarity.Lendario;
+        float roll = UnityEngine.Random.value * (common + uncommon + legendary + cursed);
+        var rarity = roll < common
+            ? ItemRarity.Comum
+            : roll < common + uncommon
+                ? ItemRarity.Incomum
+                : roll < common + uncommon + legendary
+                    ? ItemRarity.Lendario
+                    : ItemRarity.Amaldicoado;
         // Se a raridade sorteada não tiver itens ainda, cai para as outras
-        return Random(rarity) ?? Random(ItemRarity.Comum) ?? Random(ItemRarity.Incomum) ?? Random(ItemRarity.Lendario);
+        return Random(rarity) ?? Random(ItemRarity.Comum) ?? Random(ItemRarity.Incomum) ?? Random(ItemRarity.Lendario) ?? Random(ItemRarity.Amaldicoado);
     }
 
 #if UNITY_EDITOR

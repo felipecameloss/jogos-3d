@@ -157,7 +157,9 @@ public class Hud : MonoBehaviour
     {
         popupName.text = item.DisplayName;
         popupName.style.color = item.Color;
-        popupDesc.text = item.Description;
+        popupDesc.text = item.Rarity == ItemRarity.Amaldicoado
+            ? $"[Amaldiçoado] {item.Description}"
+            : item.Description;
         popup.RemoveFromClassList("popup--hidden");
         popupUntil = Time.unscaledTime + popupDuration;
     }

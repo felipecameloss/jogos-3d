@@ -15,6 +15,8 @@ public class DamageZone : MonoBehaviour
     [SerializeField] bool ignoreArmor = false;
     [Tooltip("Vazio = afeta todos. Ex.: 'Player' para só o jogador.")]
     [SerializeField] string onlyTag = "";
+
+    public string OnlyTag { get => onlyTag; set => onlyTag = value; }
     [Tooltip("Quem é dono da zona (fica como Source do dano). Vazio = esta zona.")]
     [SerializeField] GameObject owner;
 
