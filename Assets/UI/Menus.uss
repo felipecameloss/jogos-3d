@@ -134,16 +134,16 @@
 .controls-row {
     flex-direction: row;
     justify-content: space-between;
-    margin: 3px 0;
+    margin: 1px 0;
 }
 
 .key {
-    font-size: 17px;
+    font-size: 15px;
     color: rgb(244, 226, 166);
     -unity-font-style: bold;
 }
 
 .action {
-    font-size: 17px;
+    font-size: 15px;
     color: rgb(210, 216, 196);
 }
