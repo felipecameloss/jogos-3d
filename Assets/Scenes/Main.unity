@@ -44532,6 +44532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 830687286}
   - component: {fileID: 830687285}
+  - component: {fileID: 830687287}
   m_Layer: 0
   m_Name: Chests
   m_TagString: Untagged
@@ -44563,6 +44564,28 @@ MonoBehaviour:
   areaSize: {x: 104, y: 104}
   minSpacing: 8
   minDistanceFromPlayer: 6
+--- !u!114 &830687287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830687284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 065ae6181f8a446fbe19a2620d94e549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShrineSpawner
+  shrines:
+  - prefab: {fileID: 1892844987262634120, guid: 8be17855a30e4e79a37dbf7ae5b91e48, type: 3}
+    weight: 0.55
+  - prefab: {fileID: 8245463533808508462, guid: e6b1b2faeed94097abcfa7ef0e90ddfa, type: 3}
+    weight: 0.45
+  initialCount: 5
+  areaCenter: {x: 0, y: 0, z: 0}
+  areaSize: {x: 96, y: 96}
+  minSpacing: 12
+  minDistanceFromPlayer: 8
 --- !u!4 &830687286
 Transform:
   m_ObjectHideFlags: 0
@@ -53330,6 +53353,7 @@ GameObject:
   - component: {fileID: 1034868336}
   - component: {fileID: 1034868338}
   - component: {fileID: 1034868339}
+  - component: {fileID: 1034868340}
   m_Layer: 0
   m_Name: _Systems
   m_TagString: Untagged
@@ -53622,6 +53646,18 @@ MonoBehaviour:
   moteMaterial: {fileID: 2100000, guid: ce621026335644d45988e9e9a2c7743e, type: 2}
   pollenRate: 18
   fireflyRate: 16
+--- !u!114 &1034868340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034868326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52cc463991c74b898da93e74fc8687ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameAudio
 --- !u!1 &1037242472
 GameObject:
   m_ObjectHideFlags: 0

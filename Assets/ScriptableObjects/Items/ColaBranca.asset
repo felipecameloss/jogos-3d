@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffda8da63dea4b05954e6f08d1dc3bad, type: 3}
+  m_Name: ColaBranca
+  m_EditorClassIdentifier: Assembly-CSharp::WhiteGlueItem
+  displayName: Cola branca
+  description: Inimigos ficam lentos, mas você fica 25% mais lento.
+  rarity: 3
+  icon: {fileID: 0}
+  modifiers:
+  - stat: 2
+    mode: 1
+    value: -0.25
+  enemySlowPerStack: 0.55

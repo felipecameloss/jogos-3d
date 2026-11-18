@@ -14,9 +14,10 @@ public class Chest : Interactable
     [SerializeField, Min(0)] int baseCost = 25;
 
     [Header("Pesos da raridade")]
-    [SerializeField, Min(0f)] float commonWeight = 79f;
-    [SerializeField, Min(0f)] float uncommonWeight = 20f;
+    [SerializeField, Min(0f)] float commonWeight = 76f;
+    [SerializeField, Min(0f)] float uncommonWeight = 19f;
     [SerializeField, Min(0f)] float legendaryWeight = 1f;
+    [SerializeField, Min(0f)] float cursedWeight = 4f;
 
     [Header("Referências")]
     [SerializeField] ItemDatabase database;
@@ -80,7 +81,7 @@ public class Chest : Interactable
 
     /// <summary>Sorteia um item pelos pesos deste baú.</summary>
     public ItemData RollItem() =>
-        database != null ? database.RandomWeighted(commonWeight, uncommonWeight, legendaryWeight) : null;
+        database != null ? database.RandomWeighted(commonWeight, uncommonWeight, legendaryWeight, cursedWeight) : null;
 
     void Open(Vector3 towards)
     {

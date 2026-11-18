@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb3d23ce82b3e34d8cbf248c4b1cdd1, type: 3}
+  m_Name: CafeDerramado
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  displayName: Café derramado
+  description: "+50% velocidade de ataque, -30% vida máxima."
+  rarity: 3
+  icon: {fileID: 0}
+  modifiers:
+  - stat: 1
+    mode: 1
+    value: 0.5
+  - stat: 5
+    mode: 1
+    value: -0.3

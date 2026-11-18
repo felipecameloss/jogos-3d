@@ -48,7 +48,7 @@ public class CrumbDropper : MonoBehaviour
 
     void HandleEnemyDied(EnemyBase enemy, DamageInfo killingBlow)
     {
-        Drop(ScaledReward(enemy.CrumbReward), enemy.transform.position + Vector3.up * 0.8f);
+        Drop(ScaledReward(enemy.CrumbReward) * EnemyElite.CrumbMultiplierFor(enemy), enemy.transform.position + Vector3.up * 0.8f);
     }
 
     /// <summary>Solta `total` migalhas em pedaços a partir de `position`.</summary>

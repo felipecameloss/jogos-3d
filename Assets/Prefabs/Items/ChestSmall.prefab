@@ -318,9 +318,10 @@ MonoBehaviour:
   focusHeight: 0.5
   displayName: tampinha
   baseCost: 25
-  commonWeight: 79
-  uncommonWeight: 20
+  commonWeight: 76
+  uncommonWeight: 19
   legendaryWeight: 1
+  cursedWeight: 4
   database: {fileID: 11400000, guid: 979bc07c69fc017448bf2f72ef9a97df, type: 2}
   pickupPrefab: {fileID: 9192167671657020799, guid: 981b7e0ba3f538e48ba83e445d23ee47, type: 3}
   lid: {fileID: 5814328148953892037}

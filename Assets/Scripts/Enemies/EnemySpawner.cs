@@ -30,6 +30,12 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] List<SpawnEntry> enemies = new();
 
+    [Header("Elites")]
+    [SerializeField, Min(1f)] float minEliteDifficulty = 1.15f;
+    [SerializeField, Range(0f, 1f)] float eliteChanceBase = 0.08f;
+    [SerializeField, Min(0f)] float eliteChancePerDifficulty = 0.06f;
+    [SerializeField, Range(0f, 1f)] float maxEliteChance = 0.45f;
+
     [Header("Créditos")]
     [SerializeField, Min(0f)] float startingCredits = 24f;
     [Tooltip("Créditos por segundo com dificuldade 1 (multiplica pelo coeficiente).")]
@@ -193,7 +199,20 @@ public class EnemySpawner : MonoBehaviour
         var enemy = entry.pool.Get(position, rot);
 
         var dm = DifficultyManager.Instance;
-        if (dm != null) enemy.ApplyScaling(dm.EnemyHealthMultiplier, dm.EnemyDamageMultiplier);
+        float coeff = dm != null ? dm.Coefficient : 1f;
+        float hpMult = dm != null ? dm.EnemyHealthMultiplier : 1f;
+        float dmgMult = dm != null ? dm.EnemyDamageMultiplier : 1f;
+        if (dm != null) enemy.ApplyScaling(hpMult, dmgMult);
+
+        if (!enemy.IsBoss && coeff >= minEliteDifficulty)
+        {
+            float chance = Mathf.Min(maxEliteChance, eliteChanceBase + (coeff - minEliteDifficulty) * eliteChancePerDifficulty);
+            if (UnityEngine.Random.value < chance)
+            {
+                var variant = UnityEngine.Random.value < 0.5f ? EnemyElite.Variant.Giant : EnemyElite.Variant.Blazing;
+                EnemyElite.Apply(enemy, variant, hpMult, dmgMult);
+            }
+        }
 
         alive.Add(enemy);
         owners[enemy] = entry;
