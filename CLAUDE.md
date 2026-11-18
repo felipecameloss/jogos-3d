@@ -24,3 +24,6 @@
 
 ## Unity
 - Scripts em `Assets/Scripts/`, itens como ScriptableObjects, object pooling para inimigos e projéteis
+- Insetos são animados por `ProceduralInsectAnimator` (pernas em tripé, bob, antenas, abdômen,
+  squash + flash ao levar dano): basta o modelo seguir os nomes acima (Body > Leg_L1.., Antenna_*, Abdomen)
+- Para ligar um FBX novo num prefab: `Jogo/Art/Aplicar modelos FBX dos insetos` (`InsectModelBinder`)

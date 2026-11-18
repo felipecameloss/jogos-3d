@@ -36,7 +36,7 @@ public class SpiderSmokeTest
 
         // ---- Pulo: a 8 m ela agacha (aviso), salta e pousa no player
         var spider = Spawn(player, 8f);
-        Assert.IsNotNull(spider.GetComponent<InsectAnimator>());
+        Assert.IsNotNull(spider.GetComponent<ProceduralInsectAnimator>());
         float hp0 = health.Current;
         bool sawTelegraph = false, sawAir = false;
         float maxHeight = 0f, groundY = spider.transform.position.y;

@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 249a2fe0c64574c4ca83a232d47e8b6b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InsectAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::ProceduralInsectAnimator
   model: {fileID: 7858014239417812484}
   strideLength: 1.112459
   fullSpeed: 7.2

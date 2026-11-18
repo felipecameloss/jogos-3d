@@ -9,7 +9,7 @@ using UnityEngine.AI;
 /// dos inimigos: troca o "Visual" antigo (primitivas) pelo FBX como filho "Model",
 /// na escala do visual antigo (o colisor/NavMeshAgent continuam valendo) com os pés no
 /// chão, religa as referências (bocal do besouro, garras do louva-a-deus) e adiciona o
-/// InsectAnimator (pernas, antenas e abdômen animados por código).
+/// ProceduralInsectAnimator (pernas, antenas e abdômen animados por código).
 /// Pode rodar de novo depois de regerar um FBX: substitui o "Model" existente.
 /// Menu: Jogo/Art/Aplicar modelos FBX dos insetos.
 /// </summary>
@@ -75,7 +75,7 @@ public static class InsectModelBinder
         var notes = new List<string>();
         Rewire(root, mt, notes);
 
-        var anim = root.GetComponent<InsectAnimator>() ?? root.gameObject.AddComponent<InsectAnimator>();
+        var anim = root.GetComponent<ProceduralInsectAnimator>() ?? root.gameObject.AddComponent<ProceduralInsectAnimator>();
         float speed = root.TryGetComponent(out NavMeshAgent agent) ? agent.speed : 3f;
         anim.EditorSetup(mt, Mathf.Max(0.2f, scaled.size.z * 0.55f), Mathf.Max(0.5f, speed));
 
