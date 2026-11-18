@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Perna de gafanhoto
   description: Aumenta a altura do pulo em 25%.
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 65d9e849ed9ab9740b0aad4add9be541, type: 3}
   modifiers:
   - stat: 3
     mode: 1

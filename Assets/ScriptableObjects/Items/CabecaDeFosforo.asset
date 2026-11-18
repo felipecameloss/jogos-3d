@@ -15,8 +15,9 @@ MonoBehaviour:
   displayName: "Cabe\xE7a de f\xF3sforo"
   description: "Chance de p\xF4r fogo no inimigo."
   rarity: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 54b2e80bd31713b45b366abfce9c983a, type: 3}
   modifiers: []
   chancePerStack: 0.1
   damageCoefficient: 2
   duration: 3
+  isPoison: 0

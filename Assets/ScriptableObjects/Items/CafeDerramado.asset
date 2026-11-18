@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb3d23ce82b3e34d8cbf248c4b1cdd1, type: 3}
   m_Name: CafeDerramado
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  displayName: Café derramado
-  description: "+50% velocidade de ataque, -30% vida máxima."
+  displayName: "Caf\xE9 derramado"
+  description: "+50% velocidade de ataque, -30% vida m\xE1xima."
   rarity: 3
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 904fc1475ca211f4e917aa3993a30e96, type: 3}
   modifiers:
   - stat: 1
     mode: 1

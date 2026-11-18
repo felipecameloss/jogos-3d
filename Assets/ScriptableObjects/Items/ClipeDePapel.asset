@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Clipe de papel
   description: "Chance do espinho ricochetear em inimigos pr\xF3ximos."
   rarity: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 82fe7b67b72831c4f846668909af2a86, type: 3}
   modifiers: []
   chancePerStack: 0.25
   bounces: 2

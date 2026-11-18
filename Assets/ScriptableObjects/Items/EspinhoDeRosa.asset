@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EspinhoDeRosa
   m_EditorClassIdentifier: Assembly-CSharp::ReflectOnDamagedItem
   displayName: Espinho de rosa
-  description: Devolve parte do dano recebido a quem bate em você.
+  description: "Devolve parte do dano recebido a quem bate em voc\xEA."
   rarity: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 488003d19548ee34fb93e9fcce26f0c7, type: 3}
   modifiers: []
   reflectPerStack: 0.5
   minimumDamage: 0

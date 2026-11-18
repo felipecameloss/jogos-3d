@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Casca de semente
   description: Leva menos dano.
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 3aac58088edda6747b8da63e9eeb8774, type: 3}
   modifiers:
   - stat: 6
     mode: 0

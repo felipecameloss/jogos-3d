@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: "Gr\xE3o de a\xE7\xFAcar"
   description: "Atira mais r\xE1pido."
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0d80b8a59f5df3e41914810e28072c72, type: 3}
   modifiers:
   - stat: 1
     mode: 1

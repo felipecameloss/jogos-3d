@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: "Peda\xE7o de chiclete"
   description: Acertos deixam inimigos lentos.
   rarity: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f275f2fd1ba5f8a478cd497d3be2f93c, type: 3}
   modifiers: []
   slowPerStack: 0.25
   duration: 2

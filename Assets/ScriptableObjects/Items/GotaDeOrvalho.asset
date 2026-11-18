@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Gota de orvalho
   description: Recupera vida aos poucos.
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 98efbc43650d3004a8f6ca9a8201c70a, type: 3}
   modifiers:
   - stat: 7
     mode: 0

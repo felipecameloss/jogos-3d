@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Lupa
   description: 'Q: raio de sol que queima tudo em linha.'
   rarity: 4
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b5227f7c36280e44288707701310bc87, type: 3}
   modifiers: []
   cooldown: 40
   duration: 1.6

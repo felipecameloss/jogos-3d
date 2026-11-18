@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CascaDeAmendoim
   m_EditorClassIdentifier: Assembly-CSharp::ExplodeOnKillItem
   displayName: Casca de amendoim
-  description: Inimigos explodem ao morrer causando dano em área.
+  description: "Inimigos explodem ao morrer causando dano em \xE1rea."
   rarity: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b45d80c9399ca5a459aac9e17a9e7f56, type: 3}
   modifiers: []
   radius: 6
   radiusPerExtraStack: 1.5

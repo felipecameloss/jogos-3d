@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Caco de lente
   description: A cada 4s, um raio de sol queima o inimigo na mira.
   rarity: 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 5c1af74fe69492b43b2badd71150e443, type: 3}
   modifiers: []
   intervalSeconds: 4
   damageCoefficient: 4

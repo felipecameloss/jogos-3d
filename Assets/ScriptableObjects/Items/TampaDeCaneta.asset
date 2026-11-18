@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TampaDeCaneta
   m_EditorClassIdentifier: Assembly-CSharp::ShieldOnCooldownItem
   displayName: Tampa de caneta
-  description: Concede escudo que recarrega após ficar 6s sem levar dano.
+  description: "Concede escudo que recarrega ap\xF3s ficar 6s sem levar dano."
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 1c6024d6e08e0724e91d2cf73422647d, type: 3}
   modifiers:
   - stat: 9
     mode: 0

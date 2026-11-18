@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ColaBranca
   m_EditorClassIdentifier: Assembly-CSharp::WhiteGlueItem
   displayName: Cola branca
-  description: Inimigos ficam lentos, mas você fica 25% mais lento.
+  description: "Inimigos ficam lentos, mas voc\xEA fica 25% mais lento."
   rarity: 3
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a8ec52228bacd97499dc766b25bab59d, type: 3}
   modifiers:
   - stat: 2
     mode: 1

@@ -47,6 +47,7 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 - **Itens, Equipamentos, Economia e Santuários**:
   - Moeda (`Crumb` / `PlayerWallet` / `CrumbDropper`), baús (`ChestSmall`, `ChestLarge`) e santuários (`Shrine`: **Tampinha da sorte** e **Santuário de sangue**, distribuídos por `ShrineSpawner`).
   - Raridades em [`ItemRarity.cs`](Assets/Scripts/Items/ItemRarity.cs): `Comum`, `Incomum`, `Lendario`, `Amaldicoado` e `Equipamento`, gerenciadas por [`ItemDatabase.cs`](Assets/Scripts/Items/ItemDatabase.cs) com efeitos passivos em `Assets/Scripts/Items/Effects/` (incluindo itens de movimento como Perna de Gafanhoto e Asa de Mosca, e itens amaldiçoados como Café Derramado e Cola Branca).
+  - Ícones dos itens em `Assets/Art/Icons/` (256x256, fundo transparente), gerados por `Tools/Blender/build_item_icons.py` (folha de contato em `Tools/Blender/previews/ItemIcons.png`), importados como Sprite por [`IconImportSettings.cs`](Assets/Editor/IconImportSettings.cs) e ligados em `ItemData.icon` pelo menu `Jogo/Art/Ligar ícones nos itens` ([`AssignItemIcons.cs`](Assets/Editor/AssignItemIcons.cs)); a HUD mostra o ícone no lugar da sigla.
   - Equipamentos ativos em `Assets/Scripts/Items/Equipment/` (`EquipmentData`, `EquipmentSlot`, `MagnifierEquipment` / [`Lupa.asset`](Assets/ScriptableObjects/Items/Lupa.asset)).
 - **Câmera, Ambiente, Perigos e Áudio**:
   - Câmera dinâmica em 3ª pessoa ([`DynamicCameraFeel.cs`](Assets/Scripts/Feel/DynamicCameraFeel.cs)): FOV dinâmico, *Dutch tilt*, ombro alternável, zoom por scroll, modo foco tático com `Ctrl` (zoom over-the-shoulder + retículo de precisão e vinheta no `Hud`), enquadramento no chefe e órbita ao fim da run.
@@ -62,7 +63,7 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 ```text
 Assets/
 ├── Art/                 # Materiais, modelos 3D (.glb, .fbx dos insetos e dos props) e texturas
-├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, SpiderSmokeTest.cs)
+├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, ícones (IconImportSettings.cs, AssignItemIcons.cs), BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, SpiderSmokeTest.cs)
 ├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
 ├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
 ├── ScriptableObjects/   # Itens, Lupa.asset e ItemDatabase.asset

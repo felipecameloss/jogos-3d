@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CascoDeTatuzinho
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   displayName: Casco de tatuzinho
-  description: Reduz todo dano recebido em 5 (mínimo 1).
+  description: "Reduz todo dano recebido em 5 (m\xEDnimo 1)."
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 74fc96fc6c3d15745ac121e22b849eb4, type: 3}
   modifiers:
   - stat: 10
     mode: 0

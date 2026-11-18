@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b396750a04b46748692fcbedba49baa, type: 3}
   m_Name: GrafiteDeLapis
   m_EditorClassIdentifier: Assembly-CSharp::FullHealthBonusOnHitItem
-  displayName: Grafite de lápis
+  displayName: "Grafite de l\xE1pis"
   description: Causa dano extra contra inimigos com vida cheia.
   rarity: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ceaebc65935a50b42bc2226d20a31df8, type: 3}
   modifiers: []
   bonusPerStack: 0.75
   minHealthFraction: 0.95
