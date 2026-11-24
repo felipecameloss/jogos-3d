@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Menus.uss" />
+    <ui:VisualElement name="root" class="screen overlay hidden">
+        <ui:VisualElement class="panel journal-panel">
+            <ui:Label text="Diário de descobertas" class="heading journal-heading" />
+            <ui:ScrollView name="scroll" class="journal-scroll">
+                <ui:VisualElement class="journal-section">
+                    <ui:Label text="Itens" class="journal-section__title" />
+                    <ui:Label name="item-count" text="0/0" class="journal-section__count" />
+                </ui:VisualElement>
+                <ui:VisualElement name="item-grid" class="journal-grid" />
+                <ui:VisualElement class="journal-section">
+                    <ui:Label text="Inimigos" class="journal-section__title" />
+                    <ui:Label name="enemy-count" text="0/0" class="journal-section__count" />
+                </ui:VisualElement>
+                <ui:VisualElement name="enemy-grid" class="journal-grid" />
+            </ui:ScrollView>
+            <ui:VisualElement class="journal-details">
+                <ui:VisualElement class="journal-details__header">
+                    <ui:Label name="detail-name" text="" class="journal-details__name" />
+                    <ui:Label name="detail-tag" text="" class="journal-details__tag" />
+                </ui:VisualElement>
+                <ui:Label name="detail-desc" text="" class="journal-details__desc" />
+            </ui:VisualElement>
+            <ui:Button name="back" text="Voltar" class="btn journal-back" />
+            <ui:Label text="Esc para voltar" class="hint journal-hint" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-/// <summary>Menu principal: Jogar, Controles, Sair. Enter também começa.</summary>
+/// <summary>Menu principal: Jogar, Configurações, Diário de descobertas, Controles, Sair. Enter também começa.</summary>
 [RequireComponent(typeof(UIDocument))]
 public class MainMenu : MonoBehaviour
 {
@@ -23,6 +23,11 @@ public class MainMenu : MonoBehaviour
             var s = FindAnyObjectByType<SettingsScreen>();
             if (s != null) s.Open(() => root.Q<Button>("play").Focus());
         };
+        root.Q<Button>("journal").clicked += () =>
+        {
+            var j = FindAnyObjectByType<DiscoveryJournalScreen>();
+            if (j != null) j.Open(() => root.Q<Button>("journal").Focus());
+        };
         root.Q<Button>("play").Focus();
     }
 
@@ -32,7 +37,7 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (SettingsScreen.IsOpenOrJustClosed) return;
+        if (SettingsScreen.IsOpenOrJustClosed || DiscoveryJournalScreen.IsOpenOrJustClosed) return;
         var kb = Keyboard.current;
         if (kb != null && (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)) SceneLoader.LoadGame();
     }

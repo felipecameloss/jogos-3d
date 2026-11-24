@@ -12,7 +12,7 @@ Jogo roguelite de ação em terceira pessoa desenvolvido em **Unity `6000.6.5f1`
 - **Controles**: Input System (`com.unity.inputsystem` `1.20.0`)
 - **Navegação**: AI Navigation (`com.unity.ai.navigation` `2.0.15`)
 - **Modelos 3D**: glTFast (`com.unity.cloud.gltfast` `6.21.0`)
-- **UI**: UI Toolkit (`MainMenu`, `Hud`, `PauseMenu`, `SettingsScreen`, `VictoryScreen`, `EndRunScreen`)
+- **UI**: UI Toolkit (`MainMenu`, `Hud`, `PauseMenu`, `SettingsScreen`, `DiscoveryJournalScreen`, `VictoryScreen`, `EndRunScreen`)
 
 ---
 
@@ -49,6 +49,7 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
   - Raridades em [`ItemRarity.cs`](Assets/Scripts/Items/ItemRarity.cs): `Comum`, `Incomum`, `Lendario`, `Amaldicoado` e `Equipamento`, gerenciadas por [`ItemDatabase.cs`](Assets/Scripts/Items/ItemDatabase.cs) com efeitos passivos em `Assets/Scripts/Items/Effects/` (incluindo itens de movimento como Perna de Gafanhoto e Asa de Mosca, e itens amaldiçoados como Café Derramado e Cola Branca). Item ao matar `MushroomOnKillItem` / [`EsporoDeCogumelo.asset`](Assets/ScriptableObjects/Items/EsporoDeCogumelo.asset) (Incomum): 20% de chance por stack de brotar um cogumelo ([`HealingMushroom.cs`](Assets/Scripts/Items/HealingMushroom.cs), malha low-poly feita em código) onde o inimigo morreu; ele cura 3% da vida máxima por segundo (+1,5% por stack extra) quem ficar dentro do círculo rosa de 3,5 m (+0,5 m por stack extra) por 6s, com no máximo 3 cogumelos ao mesmo tempo (o mais velho murcha).
   - Ícones dos itens em `Assets/Art/Icons/` (256x256, fundo transparente), gerados por `Tools/Blender/build_item_icons.py` (folha de contato em `Tools/Blender/previews/ItemIcons.png`), importados como Sprite por [`IconImportSettings.cs`](Assets/Editor/IconImportSettings.cs) e ligados em `ItemData.icon` pelo menu `Jogo/Art/Ligar ícones nos itens` ([`AssignItemIcons.cs`](Assets/Editor/AssignItemIcons.cs)); a HUD mostra o ícone no lugar da sigla.
   - Equipamentos ativos em `Assets/Scripts/Items/Equipment/` (`EquipmentData`, `EquipmentSlot`; `MagnifierEquipment` / [`Lupa.asset`](Assets/ScriptableObjects/Items/Lupa.asset): raio de sol em linha; `MintEquipment` / [`PastilhaDeMenta.asset`](Assets/ScriptableObjects/Items/PastilhaDeMenta.asset): cura 45% da vida na hora, recarga 45s, não gasta com vida cheia).
+- **Diário de descobertas** (menu principal > *Diário de descobertas*): [`DiscoveryJournal.cs`](Assets/Scripts/Core/DiscoveryJournal.cs) registra os itens já pegos (`Inventory.Add`) e os inimigos já vistos (a até `EnemyBase.DiscoverDistance` = 30 m do player, ou mortos por ele de longe) e salva como JSON no PlayerPrefs (chave `journal.v1`; ids = nome do asset do item e nome da classe do inimigo). A tela [`DiscoveryJournalScreen.cs`](Assets/Scripts/UI/DiscoveryJournalScreen.cs) (`Assets/UI/DiscoveryJournal.uxml`) mostra em cards o que está no [`DiscoveryCatalog.asset`](Assets/ScriptableObjects/DiscoveryCatalog.asset) (itens do `ItemDatabase` + inimigos com nome, descrição e retrato): descoberto com ícone, nome e descrição; ainda oculto como silhueta preta e "???". Retratos dos inimigos em `Assets/Art/Icons/Enemies/`, gerados por `Tools/Blender/build_enemy_icons.py` (folha em `Tools/Blender/previews/EnemyIcons.png`). Inimigo novo: entrada no catálogo com o nome da classe em `id`.
 - **Câmera, Ambiente, Perigos e Áudio**:
   - Câmera dinâmica em 3ª pessoa ([`DynamicCameraFeel.cs`](Assets/Scripts/Feel/DynamicCameraFeel.cs)): FOV dinâmico, *Dutch tilt*, ombro alternável, zoom por scroll, modo foco tático com `Ctrl` (zoom over-the-shoulder + retículo de precisão e vinheta no `Hud`), enquadramento no chefe e órbita ao fim da run.
   - Ambiente & Arte: [`BackyardAtmosphere.cs`](Assets/Scripts/Feel/BackyardAtmosphere.cs) (chão procedural com normal map, horizonte além da cerca, vegetação, poças animadas, nuvens/estrelas, pólen/vaga-lumes e DoF), modelos 3D `.glb` em `Assets/Art/Models/` gerados via Blender em `Tools/Blender/` e vinculados no Editor por [`ArtMeshBinder.cs`](Assets/Editor/ArtMeshBinder.cs) (cupim, formiga aliada, santuários, pickups, vaso, tijolo, cerca e lata em pé).
@@ -63,24 +64,24 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 ```text
 Assets/
 ├── Art/                 # Materiais, modelos 3D (.glb, .fbx dos insetos e dos props) e texturas
-├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, ícones (IconImportSettings.cs, AssignItemIcons.cs), BuildWindows.cs e testes (EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, ItemIconsSmokeTest.cs, MushroomSmokeTest.cs, SpiderSmokeTest.cs)
+├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, ícones (IconImportSettings.cs, AssignItemIcons.cs), BuildWindows.cs e testes (DiscoveryJournalSmokeTest.cs, EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, ItemIconsSmokeTest.cs, MushroomSmokeTest.cs, SpiderSmokeTest.cs)
 ├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
 ├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
-├── ScriptableObjects/   # Itens, Lupa.asset e ItemDatabase.asset
+├── ScriptableObjects/   # Itens, Lupa.asset, ItemDatabase.asset e DiscoveryCatalog.asset (diário)
 ├── Scripts/
 │   ├── Audio/           # GameAudio (música dinâmica dia/noite e SFX)
 │   ├── Combat/          # Vida, dano, projéteis, status effects e estilingue
-│   ├── Core/            # RunManager, DifficultyManager, DayNightCycle, Settings, Pool
+│   ├── Core/            # RunManager, DifficultyManager, DayNightCycle, Settings, Pool, DiscoveryJournal/DiscoveryCatalog
 │   ├── Enemies/         # Base, spawners, elites, inimigos comuns e MantisBoss
 │   ├── Feel/            # DynamicCameraFeel, BackyardAtmosphere, HitFlash, HitStop, DamageNumbers, GameFeel
 │   ├── Hazards/         # HumanStomp e StompDirector
 │   ├── Items/           # Inventário, baús, santuários, migalhas, carteira, Effects/ e Equipment/
 │   ├── Level/           # ExitPipe
 │   ├── Player/          # Movimento, animação e Abilities/
-│   └── UI/              # HUD, menus de pausa, configurações, vitória e fim de run
+│   └── UI/              # HUD, menus de pausa, configurações, diário de descobertas, vitória e fim de run
 └── UI/                  # UXML/USS de HUD e menus (UI Toolkit)
 Tools/
-└── Blender/             # Scripts procedurais (.py) que geram os modelos .glb e os .fbx dos insetos (+ previews/)
+└── Blender/             # Scripts procedurais (.py) que geram os modelos .glb e os .fbx dos insetos, ícones dos itens e retratos dos inimigos (+ previews/)
 ```
 
 ---

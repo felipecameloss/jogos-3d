@@ -561,7 +561,7 @@ def setup_render(scene):
     return False
 
 
-def frame_camera(scene):
+def frame_camera(scene, view_dir=VIEW_DIR):
     pts = [o.matrix_world @ Vector(c) for o in scene.objects if o.type == "MESH" for c in o.bound_box]
     center = sum(pts, Vector()) / len(pts)
     lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
@@ -570,8 +570,8 @@ def frame_camera(scene):
     cam = bpy.data.objects.new("IconCam", bpy.data.cameras.new("IconCam"))
     cam.data.type = "ORTHO"
     scene.collection.objects.link(cam)
-    cam.location = center + VIEW_DIR * 20
-    cam.rotation_euler = (-VIEW_DIR).to_track_quat("-Z", "Y").to_euler()
+    cam.location = center + view_dir * 20
+    cam.rotation_euler = (-view_dir).to_track_quat("-Z", "Y").to_euler()
     bpy.context.view_layer.update()
     inv = cam.matrix_world.inverted()
     local = [inv @ p for p in pts]
@@ -617,7 +617,7 @@ def render_item(name, builder):
     return path
 
 
-def contact_sheet(paths, cols=5):
+def contact_sheet(paths, cols=5, out_path=SHEET):
     """Folha com todos os ícones sobre cinza (para ver a transparência e comparar)."""
     import numpy as np
     rows = math.ceil(len(paths) / cols)
@@ -636,7 +636,7 @@ def contact_sheet(paths, cols=5):
         dst[:, :, :3] = px[:, :, :3] * a + dst[:, :, :3] * (1 - a)
     out = bpy.data.images.new("ItemIcons", W, H, alpha=True)
     out.pixels = sheet.ravel()
-    out.filepath_raw = SHEET
+    out.filepath_raw = out_path
     out.file_format = "PNG"
     out.save()
 
@@ -652,4 +652,6 @@ def main():
     print(f"[icons] {len(names)} ícones em {OUT}; folha: {SHEET}")
 
 
-main()
+# build_enemy_icons.py importa este arquivo para reaproveitar o render
+if __name__ == "__main__":
+    main()

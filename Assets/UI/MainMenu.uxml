@@ -7,6 +7,7 @@
             <ui:Label text="um roguelike no quintal" class="subtitle" />
             <ui:Button name="play" text="Jogar" class="btn" />
             <ui:Button name="settings" text="Configurações" class="btn btn--secondary" />
+            <ui:Button name="journal" text="Diário de descobertas" class="btn btn--secondary" />
             <ui:Button name="controls-toggle" text="Controles" class="btn btn--secondary" />
             <ui:VisualElement name="controls" class="controls hidden">
                 <ui:VisualElement class="controls-row"><ui:Label text="W A S D" class="key" /><ui:Label text="andar (Ctrl: devagar)" class="action" /></ui:VisualElement>

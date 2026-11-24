@@ -109,6 +109,7 @@ public abstract class EnemyBase : MonoBehaviour
         if (!Active.Contains(this)) Active.Add(this);
         if (Agent.isOnNavMesh) Agent.isStopped = false;
         FindTarget();
+        discovered = false;
     }
 
     protected virtual void OnDisable()
@@ -126,12 +127,31 @@ public abstract class EnemyBase : MonoBehaviour
         if (!IsAlive) return;
         Agent.speed = moveSpeed * SpeedMultiplier * StatusSpeedMultiplier;
         if (Target == null) FindTarget();
+        TrackDiscovery();
         if (!HasValidTarget)
         {
             StopMoving();
             return;
         }
         Tick();
+    }
+
+    // ---------- Diário de descobertas ----------
+
+    /// <summary>Perto assim do player, o inimigo conta como "visto" no diário.</summary>
+    public const float DiscoverDistance = 30f;
+
+    /// <summary>Id do inimigo no Diário de descobertas: o nome da classe (WorkerAnt, Spider...).</summary>
+    public string JournalId => GetType().Name;
+
+    bool discovered;
+
+    void TrackDiscovery()
+    {
+        if (discovered || Target == null) return;
+        if ((Target.position - transform.position).sqrMagnitude > DiscoverDistance * DiscoverDistance) return;
+        discovered = true;
+        DiscoveryJournal.DiscoverEnemy(JournalId);
     }
 
     /// <summary>Comportamento do inimigo, chamado a cada frame enquanto vivo e com alvo vivo.</summary>
@@ -201,6 +221,12 @@ public abstract class EnemyBase : MonoBehaviour
         StopMoving();
         Agent.enabled = false;
         foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false; // não bloqueia tiros nem o player
+        // Morto pelo player de longe (estilingue): também conta como visto
+        if (!discovered && killingBlow.Source != null && Target != null && killingBlow.Source.transform.IsChildOf(Target))
+        {
+            discovered = true;
+            DiscoveryJournal.DiscoverEnemy(JournalId);
+        }
         OnAnyEnemyDied?.Invoke(this, killingBlow);
         despawnRoutine = StartCoroutine(DespawnAfterDelay());
     }

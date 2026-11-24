@@ -76,6 +76,7 @@ public class Inventory : MonoBehaviour
     public void Add(ItemData item, int count = 1, bool silent = false)
     {
         if (item == null || count <= 0) return;
+        DiscoveryJournal.DiscoverItem(item);
         // Equipamento não empilha: vai para o slot do Q (troca e dropa o antigo)
         if (item is EquipmentData equipment)
         {
