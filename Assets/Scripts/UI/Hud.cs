@@ -284,6 +284,8 @@ public class Hud : MonoBehaviour
         abilities.Clear();
         foreach (var a in player.GetComponents<IHudAbility>().OrderBy(a => a.HudSlot))
         {
+            // Habilidade desligada pelo personagem escolhido (ex.: besouro não usa o estilingue)
+            if (a is Behaviour b && !b.enabled) continue;
             var box = new VisualElement { pickingMode = PickingMode.Ignore };
             box.AddToClassList("ability");
             box.style.borderTopColor = box.style.borderBottomColor = box.style.borderLeftColor = box.style.borderRightColor = a.HudColor;

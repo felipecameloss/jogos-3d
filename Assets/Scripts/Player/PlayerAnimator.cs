@@ -37,8 +37,15 @@ public class PlayerAnimator : MonoBehaviour
         foreach (var c in new[] { idle, walk, run }) if (c != null) anim[c].wrapMode = WrapMode.Loop;
         foreach (var c in new[] { roll, punch }) if (c != null) anim[c].wrapMode = WrapMode.Once;
         if (death != null) anim[death].wrapMode = WrapMode.ClampForever;
-        if (health != null) health.OnDeath += _ => Die();
+        if (health != null) health.OnDeath += HandleDeath;
     }
+
+    void OnDestroy()
+    {
+        if (health != null) health.OnDeath -= HandleDeath;
+    }
+
+    void HandleDeath(DamageInfo _) => Die();
 
     /// <summary>Nome do clipe "X" ou "Armature|X" (o glTF pode trazer os dois).</summary>
     string Find(string name)
@@ -64,6 +71,8 @@ public class PlayerAnimator : MonoBehaviour
     void Die()
     {
         dead = true;
+        // Personagem sem esse modelo (formiga, besouro): o componente fica desligado
+        if (anim == null || !isActiveAndEnabled) return;
         if (death != null) { anim[death].speed = 1f; anim.CrossFade(death, 0.1f); CurrentClip = death; }
     }
 

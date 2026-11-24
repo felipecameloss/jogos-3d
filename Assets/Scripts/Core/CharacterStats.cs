@@ -15,4 +15,12 @@ public class CharacterStats : MonoBehaviour
 
     public float Damage => baseDamage * DamageMultiplier;
     public float AttackSpeed => Mathf.Max(0.01f, baseAttackSpeed * AttackSpeedMultiplier);
+    public float BaseDamage => baseDamage;
+
+    /// <summary>Stats base do personagem escolhido (PlayerCharacterSetup). Os itens continuam multiplicando.</summary>
+    public void SetBase(float damage, float attackSpeed)
+    {
+        baseDamage = Mathf.Max(0f, damage);
+        baseAttackSpeed = Mathf.Max(0.01f, attackSpeed);
+    }
 }

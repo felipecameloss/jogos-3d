@@ -64,6 +64,15 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 Velocity => horizontalVelocity + Vector3.up * (IsGrounded ? 0f : verticalVelocity);
     /// <summary>Velocidade horizontal normalizada pela velocidade de andar (útil para animação).</summary>
     public float NormalizedSpeed => horizontalVelocity.magnitude / Mathf.Max(walkSpeed, 0.01f);
+    public float WalkSpeed => walkSpeed;
+    public float SprintSpeed => sprintSpeed;
+
+    /// <summary>Velocidades base do personagem escolhido (PlayerCharacterSetup). Itens multiplicam por SpeedMultiplier.</summary>
+    public void SetBaseSpeeds(float walk, float sprint)
+    {
+        walkSpeed = Mathf.Max(0.1f, walk);
+        sprintSpeed = Mathf.Max(walkSpeed, sprint);
+    }
 
     CharacterController controller;
     Vector3 horizontalVelocity;

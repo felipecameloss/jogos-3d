@@ -25,10 +25,10 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 | Mover (corre por padrão) | `W` `A` `S` `D` |
 | Modo foco tático (andar devagar, zoom, mira e tiro mais rápido/forte) | `Left Ctrl` |
 | Pular | `Space` |
-| Dash | `Left Shift` |
-| Tiro principal (Estilingue de Espinhos) | `M1` (Botão esquerdo do mouse) |
-| Agulha (`NeedleThrust`) | `M2` (Botão direito do mouse) |
-| Invocar Formigas Aliadas (`SummonAllies`) | `R` |
+| Utilidade: Dash (Explorador/Formiga) ou Carapaça (Besouro) | `Left Shift` |
+| Ataque principal: Estilingue de Espinhos (Explorador/Formiga) ou Chifrada (Besouro) | `M1` (Botão esquerdo do mouse) |
+| Secundária: Agulha (`NeedleThrust`; Mordida na Formiga) ou Investida (Besouro) | `M2` (Botão direito do mouse) |
+| Especial: Formigas Aliadas (`SummonAllies`) ou Terremoto (Besouro) | `R` |
 | Usar Equipamento Ativo (`EquipmentSlot`) | `Q` |
 | Trocar ombro da câmera (`DynamicCameraFeel`) | `V` |
 | Zoom da câmera (`DynamicCameraFeel`) | `Scroll do mouse` |
@@ -40,6 +40,12 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 ## Sistemas do Jogo
 
 - **Loop de Run e Dificuldade**: [`RunManager.cs`](Assets/Scripts/Core/RunManager.cs) mantém tempo, kills, fase atual e transição entre fases (levando itens, equipamento, cooldown restante, migalhas e proporção de vida); [`DifficultyManager.cs`](Assets/Scripts/Core/DifficultyManager.cs) escala a dificuldade ao longo do tempo; [`DayNightCycle.cs`](Assets/Scripts/Core/DayNightCycle.cs) alterna iluminação dia/pôr do sol/noite (`AmbientMode.Trilight`).
+- **Nova run: escolha do personagem** (menu principal > *Jogar* ou `Enter`): a tela "Nova run" do [`MainMenu.cs`](Assets/Scripts/UI/MainMenu.cs) (`Assets/UI/MainMenu.uxml`) mostra um card por personagem (e os modificadores marcados, se houver); *Começar run* aplica o personagem e carrega `Main` (a última escolha fica salva no PlayerPrefs, chave `run.character`). Abrir a cena `Main` direto no Editor (e os testes) joga com o Explorador.
+  - Personagens ([`PlayerCharacters.cs`](Assets/Scripts/Player/PlayerCharacters.cs), aplicados por [`PlayerCharacter.cs`](Assets/Scripts/Player/PlayerCharacter.cs) quando a cena carrega, antes dos `Start`, sem nada ligado à mão na cena):
+    - **Explorador**: o player original da cena (vida 100, estilingue, agulha, dash, formigas aliadas).
+    - **Formiga** (issue #36): rápida e frágil (vida 70, +20% de velocidade), comanda aliados: `R` chama 5 formigas por 12s (recarga 12s), dash com recarga 1,5s, a agulha vira *Mordida* e a passiva [`AntColonyCall.cs`](Assets/Scripts/Player/Abilities/AntColonyCall.cs) traz uma formiga aliada a cada 5 abates (máx. 4 ao mesmo tempo).
+    - **Besouro** (issue #37): tanque corpo a corpo (vida 180, armadura 25, mais lento) com kit próprio nas mesmas teclas: [`BeetleHorn`](Assets/Scripts/Player/Abilities/BeetleHorn.cs) (`M1`, chifrada em área à frente, 220% de dano, o 3º golpe seguido causa 1,8x e é mais largo), [`BeetleCharge`](Assets/Scripts/Player/Abilities/BeetleCharge.cs) (`M2`, investida de 10 m invencível, 400% em quem atropelar), [`BeetleShell`](Assets/Scripts/Player/Abilities/BeetleShell.cs) (`Shift`, carapaça: leva só 30% do dano por 3,5s via `Health.DamageTakenMultiplier` + choque em volta) e [`BeetleQuake`](Assets/Scripts/Player/Abilities/BeetleQuake.cs) (`R`, terremoto de 7,5 m: 500% de dano + 50% de lentidão por 2,5s).
+    - Modelos da Formiga e do Besouro: `Tools/Blender/build_player_ant.py` e `build_player_beetle.py` (via `ant_common.py`, opção `fbx_subdir`), exportados para `Assets/Art/Models/Characters/Resources/` (`PlayerAnt.fbx`, `PlayerBeetle.fbx`) e carregados com `Resources.Load`; animados pelo `ProceduralInsectAnimator` e por [`InsectPlayerVisual.cs`](Assets/Scripts/Player/InsectPlayerVisual.cs) (tranco nos golpes e tombo de costas ao morrer). Previews em `Tools/Blender/previews/PlayerAnt.png` e `PlayerBeetle.png`.
 - **Inimigos e Chefe**:
   - Comuns: Formiga Operária (`WorkerAnt`), Formiga Soldado (`SoldierAnt`), Pulgão (`Aphid`), Besouro-Bombardeiro (`BombardierBeetle`, com projétil `AcidBlob` e poça `AcidPool`), Cupim (`Termite`) e Aranha (`Spider`: pula no player com aviso de círculo vermelho e dano ao pousar; cospe teia `WebShot` que vira `WebPatch` no chão e prende o player por um instante via `PlayerMovement.Root`, sem andar/pular/dash).
   - Variantes Elite: [`EnemyElite.cs`](Assets/Scripts/Enemies/EnemyElite.cs) (Gigante e Flamejante, com bônus de velocidade e recompensa ampliada de migalhas).
@@ -65,8 +71,8 @@ Configurados em [`Assets/InputSystem_Actions.inputactions`](Assets/InputSystem_A
 
 ```text
 Assets/
-├── Art/                 # Materiais, modelos 3D (.glb, .fbx dos insetos e dos props) e texturas
-├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, ícones (IconImportSettings.cs, AssignItemIcons.cs), BuildWindows.cs e testes (DiscoveryJournalSmokeTest.cs, EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, ItemIconsSmokeTest.cs, LadybugSmokeTest.cs, LightningPollenSmokeTest.cs, MushroomSmokeTest.cs, RunModifiersSmokeTest.cs, SpiderSmokeTest.cs)
+├── Art/                 # Materiais, modelos 3D (.glb, .fbx dos insetos e dos props), .fbx dos personagens jogáveis em Models/Characters/Resources/ e texturas
+├── Editor/              # ArtMeshBinder.cs, InsectModelBinder.cs, PropsBinder.cs, ícones (IconImportSettings.cs, AssignItemIcons.cs), BuildWindows.cs e testes (CharacterSelectSmokeTest.cs, DiscoveryJournalSmokeTest.cs, EquipmentSmokeTest.cs, InsectModelsSmokeTest.cs, ItemIconsSmokeTest.cs, LadybugSmokeTest.cs, LightningPollenSmokeTest.cs, MushroomSmokeTest.cs, RunModifiersSmokeTest.cs, SpiderSmokeTest.cs)
 ├── Prefabs/             # Inimigos, itens/baús/santuários, player, projéteis e hazards
 ├── Scenes/              # MainMenu.unity e Main.unity (além do NavMesh-Backyard)
 ├── ScriptableObjects/   # Itens, Lupa.asset, ItemDatabase.asset, DiscoveryCatalog.asset (diário) e LadybugConfig.asset (joaninhas)
@@ -80,7 +86,7 @@ Assets/
 │   ├── Hazards/         # HumanStomp e StompDirector
 │   ├── Items/           # Inventário, baús, santuários, migalhas, carteira, Effects/ e Equipment/
 │   ├── Level/           # ExitPipe
-│   ├── Player/          # Movimento, animação e Abilities/
+│   ├── Player/          # Movimento, animação, personagens jogáveis (PlayerCharacters/PlayerCharacter) e Abilities/
 │   └── UI/              # HUD, menus de pausa, configurações, diário de descobertas, vitória e fim de run
 └── UI/                  # UXML/USS de HUD e menus (UI Toolkit)
 Tools/

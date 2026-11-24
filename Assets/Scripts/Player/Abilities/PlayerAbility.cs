@@ -25,6 +25,30 @@ public abstract class PlayerAbility : MonoBehaviour, IHudAbility
     public bool IsReady => CooldownRemaining <= 0f;
     /// <summary>Quantas vezes foi usada (testes/depuração).</summary>
     public int Uses { get; private set; }
+    public InputActionReference Action => action;
+
+    /// <summary>
+    /// Configura em código (habilidades do personagem escolhido, criadas com AddComponent).
+    /// Liga a ação de input se ela ainda não estava ligada.
+    /// </summary>
+    public void Configure(InputActionReference inputAction, float cooldownSeconds, int slot, string displayName, string key, Color color)
+    {
+        action = inputAction;
+        cooldown = Mathf.Max(0f, cooldownSeconds);
+        hudSlot = slot;
+        hudName = displayName;
+        hudKey = key;
+        hudColor = color;
+        if (action != null && isActiveAndEnabled) action.action.Enable();
+    }
+
+    /// <summary>Muda só o que aparece na HUD e o cooldown (personagem que reaproveita a habilidade).</summary>
+    public void SetHudAndCooldown(string displayName, Color color, float cooldownSeconds)
+    {
+        hudName = displayName;
+        hudColor = color;
+        cooldown = Mathf.Max(0f, cooldownSeconds);
+    }
 
     protected Health Health { get; private set; }
     protected PlayerMovement Movement { get; private set; }

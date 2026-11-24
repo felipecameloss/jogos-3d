@@ -49,6 +49,9 @@ public class ThornSlingshot : MonoBehaviour, IHudAbility
     public float CooldownDuration => 1f / ShotsPerSecond;
 
     public float ShotsPerSecond => baseShotsPerSecond * (stats != null ? stats.AttackSpeed : 1f);
+    public InputActionReference AttackAction => attackAction;
+    /// <summary>De onde o espinho sai (o personagem escolhido ajusta a altura).</summary>
+    public Transform Muzzle => muzzle;
 
     CharacterStats stats;
     Health health;

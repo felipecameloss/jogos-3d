@@ -43,6 +43,11 @@ public class Health : MonoBehaviour, IDamageable
     public float Armor { get => armor; set => armor = value; }
     public float RegenPerSecond { get => regenPerSecond; set => regenPerSecond = Mathf.Max(0f, value); }
     public float FlatDamageReduction { get; set; }
+    /// <summary>
+    /// Multiplica o dano recebido que não ignora armadura (0.3 = leva só 30%). Para habilidades temporárias
+    /// (carapaça do besouro): o Inventory não mexe aqui, ao contrário de Armor/FlatDamageReduction.
+    /// </summary>
+    [HideInInspector] public float DamageTakenMultiplier = 1f;
 
     float invulnerableUntil = float.NegativeInfinity;
 
@@ -63,6 +68,9 @@ public class Health : MonoBehaviour, IDamageable
         float damage = info.IgnoreArmor ? info.Amount : ApplyArmor(info.Amount, armor);
         if (!info.IgnoreArmor && FlatDamageReduction > 0f)
             damage = Mathf.Max(1f, damage - FlatDamageReduction);
+        // Igual à armadura: dano que ignora armadura (Kill, veneno, pisão) também ignora isso
+        if (!info.IgnoreArmor && DamageTakenMultiplier != 1f) damage *= Mathf.Max(0f, DamageTakenMultiplier);
+        if (damage <= 0f) return;
 
         LastDamagedTime = Time.time;
 

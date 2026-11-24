@@ -29,6 +29,13 @@ public class NeedleThrust : PlayerAbility
         if (needleVisual != null) needleVisual.SetActive(false);
     }
 
+    /// <summary>Tira a agulha visível (personagem que usa a estocada como mordida).</summary>
+    public void HideVisual()
+    {
+        if (needleVisual != null) needleVisual.SetActive(false);
+        needleVisual = null;
+    }
+
     protected override bool TryActivate()
     {
         StartCoroutine(Thrust(AimForward));

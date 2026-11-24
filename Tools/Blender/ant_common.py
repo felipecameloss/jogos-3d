@@ -420,7 +420,10 @@ def run(overrides, builder=None):
     e renderiza o preview."""
     cfg = {**DEFAULTS, **overrides}
     name = cfg["name"]
-    fbx = os.path.join(ROOT, "Assets", "Art", "Models", "Characters", f"{name}.fbx")
+    # fbx_subdir: subpasta de Characters (ex.: "Resources" para os personagens jogáveis,
+    # que o jogo carrega com Resources.Load)
+    sub = [cfg["fbx_subdir"]] if cfg.get("fbx_subdir") else []
+    fbx = os.path.join(ROOT, "Assets", "Art", "Models", "Characters", *sub, f"{name}.fbx")
     preview = os.path.join(HERE, "previews", f"{name}.png")
 
     (builder or build_ant)(cfg)

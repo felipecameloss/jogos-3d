@@ -39,14 +39,28 @@ public class Inventory : MonoBehaviour
         Stats = GetComponent<CharacterStats>();
         Movement = GetComponent<PlayerMovement>();
         Equipment = GetComponent<EquipmentSlot>();
-        if (Health != null)
-        {
-            baseMaxHealth = Health.Max;
-            baseArmor = Health.Armor;
-            baseRegen = Health.RegenPerSecond;
-            baseMaxShield = Health.MaxShield;
-            baseFlatReduction = Health.FlatDamageReduction;
-        }
+        ReadBaseStats();
+    }
+
+    void ReadBaseStats()
+    {
+        if (Health == null) return;
+        baseMaxHealth = Health.Max;
+        baseArmor = Health.Armor;
+        baseRegen = Health.RegenPerSecond;
+        baseMaxShield = Health.MaxShield;
+        baseFlatReduction = Health.FlatDamageReduction;
+    }
+
+    /// <summary>
+    /// O personagem escolhido mudou a vida/armadura base do Health depois do Awake:
+    /// relê os valores base (sem itens) e recalcula. Chame antes de ganhar itens.
+    /// </summary>
+    public void RefreshBaseStats()
+    {
+        if (TotalItems > 0) Debug.LogWarning("Inventory.RefreshBaseStats com itens: a base lida já inclui os bônus deles.", this);
+        ReadBaseStats();
+        RecalculateStats();
     }
 
     void OnEnable()

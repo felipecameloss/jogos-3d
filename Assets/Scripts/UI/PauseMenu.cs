@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
     VisualElement root;
     PlayerMovement movement;
     ThornSlingshot slingshot;
+    bool slingshotWasEnabled = true;
 
     void OnEnable()
     {
@@ -90,6 +91,9 @@ public class PauseMenu : MonoBehaviour
     void SetPlayerControl(bool on)
     {
         if (movement != null) movement.InputEnabled = on;
-        if (slingshot != null) slingshot.enabled = on;
+        if (slingshot == null) return;
+        // Volta ao estado de antes do pause: o besouro joga com o estilingue desligado
+        if (!on) { slingshotWasEnabled = slingshot.enabled; slingshot.enabled = false; }
+        else slingshot.enabled = slingshotWasEnabled;
     }
 }

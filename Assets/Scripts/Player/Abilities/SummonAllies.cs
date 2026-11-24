@@ -9,6 +9,17 @@ public class SummonAllies : PlayerAbility
     [SerializeField, Min(1)] int count = 3;
     [SerializeField, Min(1f)] float lifetime = 10f;
 
+    public AllyAnt AllyPrefab => allyPrefab;
+    public int Count => count;
+    public float Lifetime => lifetime;
+
+    /// <summary>Quantas formigas e por quanto tempo (personagem Formiga chama mais).</summary>
+    public void SetSquad(int allies, float seconds)
+    {
+        count = Mathf.Max(1, allies);
+        lifetime = Mathf.Max(1f, seconds);
+    }
+
     protected override bool TryActivate()
     {
         if (allyPrefab == null) return false;

@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="Menus.uss" />
     <ui:VisualElement name="root" class="screen menu-bg">
-        <ui:VisualElement class="panel">
+        <ui:VisualElement name="main-panel" class="panel">
             <!-- Nome provisório: troque aqui quando o jogo tiver nome -->
             <ui:Label name="title" text="ENCOLHIDOS" class="title" />
             <ui:Label text="um roguelike no quintal" class="subtitle" />
@@ -20,16 +20,29 @@
                 <ui:VisualElement class="controls-row"><ui:Label text="W A S D" class="key" /><ui:Label text="andar (Ctrl: devagar)" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Espaço" class="key" /><ui:Label text="pular" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Mouse" class="key" /><ui:Label text="mirar" class="action" /></ui:VisualElement>
-                <ui:VisualElement class="controls-row"><ui:Label text="Botão esquerdo" class="key" /><ui:Label text="atirar (segurar)" class="action" /></ui:VisualElement>
-                <ui:VisualElement class="controls-row"><ui:Label text="Botão direito" class="key" /><ui:Label text="agulha" class="action" /></ui:VisualElement>
-                <ui:VisualElement class="controls-row"><ui:Label text="Shift" class="key" /><ui:Label text="dash" class="action" /></ui:VisualElement>
-                <ui:VisualElement class="controls-row"><ui:Label text="R" class="key" /><ui:Label text="formigas aliadas" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="Botão esquerdo" class="key" /><ui:Label text="atacar (segurar)" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="Botão direito" class="key" /><ui:Label text="habilidade secundária" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="Shift" class="key" /><ui:Label text="utilidade (dash / carapaça)" class="action" /></ui:VisualElement>
+                <ui:VisualElement class="controls-row"><ui:Label text="R" class="key" /><ui:Label text="especial" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Q" class="key" /><ui:Label text="equipamento" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="E" class="key" /><ui:Label text="abrir / interagir" class="action" /></ui:VisualElement>
                 <ui:VisualElement class="controls-row"><ui:Label text="Esc" class="key" /><ui:Label text="pausar" class="action" /></ui:VisualElement>
             </ui:VisualElement>
             <ui:Button name="quit" text="Sair" class="btn btn--secondary" />
             <ui:Label text="Enter para jogar" class="hint" />
+        </ui:VisualElement>
+
+        <!-- Nova run: escolha do personagem (cards montados pelo MainMenu.cs). Os modificadores são do painel "Modificadores de run" -->
+        <ui:VisualElement name="new-run" class="panel new-run-panel hidden">
+            <ui:Label text="Nova run" class="heading new-run-heading" />
+            <ui:Label text="Escolha seu inseto" class="settings-section" />
+            <ui:VisualElement name="characters" class="character-row" />
+            <ui:Label name="new-run-modifiers" class="new-run-modifiers" />
+            <ui:VisualElement class="new-run-buttons">
+                <ui:Button name="back" text="Voltar" class="btn btn--secondary new-run-button" />
+                <ui:Button name="start" text="Começar run" class="btn new-run-button" />
+            </ui:VisualElement>
+            <ui:Label text="Setas para escolher · Enter para começar · Esc para voltar" class="hint" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
