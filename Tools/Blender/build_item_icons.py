@@ -488,11 +488,40 @@ def pastilha_de_menta():
     obj("PastilhaDeMenta", build, m, matrix=tilt(rx=35, rz=-15))
 
 
+def esporo_de_cogumelo():
+    m = {"chapeu": mat("ShroomCap", (0.79, 0.033, 0.15), 0.45), "pinta": mat("ShroomSpot", (1.0, 0.98, 0.95), 0.5),
+         "talo": mat("ShroomStem", (0.98, 0.93, 0.8), 0.6), "esporo": mat("Spore", (1.0, 0.68, 0.84), 0.4)}
+    cap_c, cap_h = Vector((0, 0, 0.2)), 0.62  # centro e altura do domo do chapéu (raio 1)
+
+    def build(bm, M):
+        add(bm, M("talo"), cone, (0, 0, -0.95), (0, 0, 0.15), 0.34, 0.26, 8)
+        # chapéu: domo com a parte de baixo bem achatada
+        before = set(bm.faces)
+        geom = bmesh.ops.create_uvsphere(bm, u_segments=12, v_segments=7, radius=1.0)
+        for v in geom["verts"]:
+            v.co.z *= cap_h if v.co.z > 0 else 0.18
+            v.co += cap_c
+        set_mat(new_faces(bm, before), M("chapeu"))
+        # pintas brancas encostadas na superfície do domo
+        for th, ph in [(20, 50), (140, 52), (255, 50), (80, 78), (200, 80), (320, 76), (0, 0)]:
+            t, p = math.radians(th), math.radians(ph)
+            pos = Vector((math.sin(p) * math.cos(t), math.sin(p) * math.sin(t), cap_h * math.cos(p)))
+            normal = Vector((pos.x, pos.y, pos.z / cap_h ** 2)).normalized()
+            rot = normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+            add(bm, M("pinta"), ellipsoid, cap_c + pos + normal * 0.02, (0.17, 0.17, 0.05), 8, 4, rot)
+        # esporos soltos subindo do chapéu
+        for c, r in (((1.25, 0.55, 1.05), 0.13), ((1.6, 0.95, 0.5), 0.1), ((0.85, 0.6, 1.65), 0.085)):
+            add(bm, M("esporo"), ellipsoid, Vector(c), (r, r, r), 8, 5)
+
+    obj("EsporoDeCogumelo", build, m, matrix=tilt(rx=8, rz=-12))
+
+
 ITEMS = {
     "AsaDeMosca": asa_de_mosca, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
     "CafeDerramado": cafe_derramado, "CascaDeAmendoim": casca_de_amendoim, "CascaDeSemente": casca_de_semente,
     "CascoDeTatuzinho": casco_de_tatuzinho, "ClipeDePapel": clipe_de_papel, "ColaBranca": cola_branca,
-    "EspinhoDeRosa": espinho_de_rosa, "FerraoDeAbelha": ferrao_de_abelha, "GotaDeOrvalho": gota_de_orvalho,
+    "EspinhoDeRosa": espinho_de_rosa, "EsporoDeCogumelo": esporo_de_cogumelo, "FerraoDeAbelha": ferrao_de_abelha,
+    "GotaDeOrvalho": gota_de_orvalho,
     "GotinhaDeMel": gotinha_de_mel, "GrafiteDeLapis": grafite_de_lapis, "GraoDeAcucar": grao_de_acucar,
     "Lupa": lupa, "PastilhaDeMenta": pastilha_de_menta, "PedacoDeChiclete": pedaco_de_chiclete, "PernaDeGafanhoto": perna_de_gafanhoto,
     "SementeDeDenteDeLeao": semente_de_dente_de_leao, "TampaDeCaneta": tampa_de_caneta,
