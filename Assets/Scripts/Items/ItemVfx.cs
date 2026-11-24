@@ -56,6 +56,50 @@ public class ItemVfx : MonoBehaviour
         if (lr != null) Destroy(lr.gameObject);
     }
 
+    /// <summary>Raio elétrico em zigue-zague entre dois pontos; treme e some rápido (fio elétrico).</summary>
+    public static void Lightning(Vector3 from, Vector3 to, Color color, float width = 0.09f, float duration = 0.22f)
+    {
+        if (Instance == null || Instance.lineMaterial == null) return;
+        var go = new GameObject("VFX Lightning");
+        var lr = go.AddComponent<LineRenderer>();
+        lr.sharedMaterial = Instance.lineMaterial;
+        lr.positionCount = LightningPoints;
+        lr.widthMultiplier = width;
+        lr.startColor = lr.endColor = color;
+        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        Instance.StartCoroutine(FlickerLightning(lr, from, to, color, duration));
+    }
+
+    const int LightningPoints = 9;
+
+    static IEnumerator FlickerLightning(LineRenderer lr, Vector3 from, Vector3 to, Color color, float duration)
+    {
+        Vector3 dir = to - from;
+        float length = dir.magnitude;
+        Vector3 side = Vector3.Cross(dir, Vector3.up);
+        if (side.sqrMagnitude < 0.0001f) side = Vector3.right;
+        side.Normalize();
+        Vector3 up = Vector3.Cross(side, dir).normalized;
+        float jitter = Mathf.Min(0.6f, length * 0.12f);
+        for (float t = 0f; t < duration && lr != null; t += Time.deltaTime)
+        {
+            // Novo zigue-zague a cada frame (pontas fixas nos inimigos)
+            for (int i = 0; i < LightningPoints; i++)
+            {
+                float k = i / (float)(LightningPoints - 1);
+                Vector3 p = Vector3.Lerp(from, to, k);
+                if (i > 0 && i < LightningPoints - 1)
+                    p += side * Random.Range(-jitter, jitter) + up * Random.Range(-jitter, jitter);
+                lr.SetPosition(i, p);
+            }
+            var c = color;
+            c.a *= (1f - t / duration) * Random.Range(0.6f, 1f);
+            lr.startColor = lr.endColor = c;
+            yield return null;
+        }
+        if (lr != null) Destroy(lr.gameObject);
+    }
+
     /// <summary>Coluna de luz vinda do céu sobre um ponto (raio de sol).</summary>
     public static void Beam(Vector3 groundPoint, Color color, float radius = 0.9f, float height = 40f, float duration = 0.4f)
     {

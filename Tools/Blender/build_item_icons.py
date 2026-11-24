@@ -516,14 +516,59 @@ def esporo_de_cogumelo():
     obj("EsporoDeCogumelo", build, m, matrix=tilt(rx=8, rz=-12))
 
 
+def fio_eletrico():
+    m = {"capa": mat("WireRed", (0.85, 0.08, 0.06), 0.45), "corte": mat("WireCut", (0.5, 0.04, 0.03), 0.5),
+         "cobre": mat("Copper", (0.95, 0.45, 0.15), 0.3, 0.6), "faisca": mat("Spark", (1.0, 0.9, 0.2), 0.2)}
+
+    def build(bm, M):
+        # cabo fino em S, encapado de vermelho, com a ponta cortada
+        pts = [Vector((-1.35, 0.0, -0.75)), Vector((-1.0, 0.0, -0.3)), Vector((-0.55, 0.0, -0.32)),
+               Vector((-0.2, 0.0, -0.05)), Vector((0.05, 0.0, 0.12))]
+        add(bm, M("capa"), tube, pts, [0.16] * 5, 10)
+        add(bm, M("corte"), cone, (0.03, 0, 0.11), (0.09, 0, 0.15), 0.165, 0.165, 10)
+        # alma de cobre exposta e os fiozinhos abertos na ponta
+        core_end = Vector((0.4, 0.0, 0.36))
+        add(bm, M("cobre"), tube, [Vector((0.06, 0.0, 0.13)), core_end], [0.095, 0.085], 8)
+        for ang in (-50, -22, 5, 32, 60):
+            a = math.radians(ang + 35)
+            end = core_end + Vector((math.cos(a), 0.0, math.sin(a))) * 0.36
+            mid = core_end.lerp(end, 0.5) + Vector((0.0, -0.03, 0.0))
+            add(bm, M("cobre"), tube, [core_end, mid, end], [0.05, 0.04, 0.03], 5)
+        # raio em zigue-zague saindo dos fiozinhos
+        bolt = [Vector(p) for p in ((0.62, 0, 0.62), (0.95, 0, 0.78), (0.82, 0, 0.92), (1.2, 0, 1.12), (1.05, 0, 1.25), (1.45, 0, 1.5))]
+        add(bm, M("faisca"), tube, bolt, [0.1, 0.11, 0.11, 0.1, 0.085, 0.03], 5)
+
+    obj("FioEletrico", build, m, matrix=tilt(rz=10))
+
+
+def polen():
+    m = {"polen": mat("Pollen", (1.0, 0.72, 0.05), 0.55), "espinho": mat("PollenSpike", (0.95, 0.5, 0.02), 0.5)}
+
+    def build(bm, M):
+        # grãos de pólen: bolas com espinhos espalhados por igual (esfera de Fibonacci)
+        for c, r, n in (((0, 0, 0), 0.62, 26), ((0.88, 0.3, -0.38), 0.38, 14), ((-0.58, 0.4, 0.62), 0.3, 12)):
+            c = Vector(c)
+            add(bm, M("polen"), ellipsoid, c, (r, r, r), 12, 8)
+            for i in range(n):
+                z = 1 - 2 * (i + 0.5) / n
+                rr = math.sqrt(1 - z * z)
+                a = i * 2.39996
+                d = Vector((math.cos(a) * rr, math.sin(a) * rr, z))
+                add(bm, M("espinho"), cone, c + d * r * 0.9, c + d * r * 1.3, r * 0.13, 0.0, 4)
+
+    obj("Polen", build, m)
+
+
 ITEMS = {
     "AsaDeMosca": asa_de_mosca, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
     "CafeDerramado": cafe_derramado, "CascaDeAmendoim": casca_de_amendoim, "CascaDeSemente": casca_de_semente,
     "CascoDeTatuzinho": casco_de_tatuzinho, "ClipeDePapel": clipe_de_papel, "ColaBranca": cola_branca,
     "EspinhoDeRosa": espinho_de_rosa, "EsporoDeCogumelo": esporo_de_cogumelo, "FerraoDeAbelha": ferrao_de_abelha,
+    "FioEletrico": fio_eletrico,
     "GotaDeOrvalho": gota_de_orvalho,
     "GotinhaDeMel": gotinha_de_mel, "GrafiteDeLapis": grafite_de_lapis, "GraoDeAcucar": grao_de_acucar,
     "Lupa": lupa, "PastilhaDeMenta": pastilha_de_menta, "PedacoDeChiclete": pedaco_de_chiclete, "PernaDeGafanhoto": perna_de_gafanhoto,
+    "Polen": polen,
     "SementeDeDenteDeLeao": semente_de_dente_de_leao, "TampaDeCaneta": tampa_de_caneta,
 }
 

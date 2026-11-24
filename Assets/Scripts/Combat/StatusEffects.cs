@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Efeitos de status num alvo: lentidão e fogo (dano ao longo do tempo).
+/// Efeitos de status num alvo: lentidão, fogo/veneno (dano ao longo do tempo) e confusão (pólen).
 /// Adicionado sob demanda com StatusEffects.On(alvo). Limpa tudo ao desativar
 /// (inimigo voltando para o pool). Dano de status é NoProc e ignora armadura.
 /// </summary>
@@ -15,11 +15,14 @@ public class StatusEffects : MonoBehaviour
     static readonly Color SlowTint = new(1f, 0.45f, 0.75f);   // rosa chiclete
     static readonly Color BurnGlow = new(1f, 0.45f, 0.08f);
     static readonly Color PoisonGlow = new(0.28f, 0.95f, 0.25f);
+    static readonly Color ConfuseTint = new(1f, 0.86f, 0.25f);  // amarelo pólen
 
     struct Burn { public float dps; public float until; public GameObject source; public bool isPoison; }
 
     public bool IsSlowed => Time.time < slowUntil;
     public float SlowAmount => IsSlowed ? slowAmount : 0f;
+    /// <summary>Confuso (pólen): o inimigo anda sem rumo e não ataca.</summary>
+    public bool IsConfused => Time.time < confusedUntil;
     public bool IsBurning { get { foreach (var b in burns) if (!b.isPoison) return true; return false; } }
     public bool IsPoisoned { get { foreach (var b in burns) if (b.isPoison) return true; return false; } }
     /// <summary>Dano por segundo somado de todos os fogos/venenos ativos.</summary>
@@ -27,7 +30,7 @@ public class StatusEffects : MonoBehaviour
 
     Health health;
     EnemyBase enemy;
-    float slowAmount, slowUntil;
+    float slowAmount, slowUntil, confusedUntil;
     readonly List<Burn> burns = new();
     float nextBurnTick;
     Renderer[] renderers;
@@ -75,9 +78,25 @@ public class StatusEffects : MonoBehaviour
     public void ApplyPoison(float totalDamage, float duration, GameObject source) =>
         ApplyBurn(totalDamage, duration, source, isPoison: true);
 
+    /// <summary>
+    /// Confusão: o inimigo para de atacar e anda sem rumo até acabar (a duração renova).
+    /// Só inimigos; chefes são imunes. Devolve false se não pegou.
+    /// </summary>
+    public bool ApplyConfusion(float duration)
+    {
+        if (enemy == null || enemy.IsBoss || duration <= 0f || (health != null && !health.IsAlive)) return false;
+        confusedUntil = Mathf.Max(confusedUntil, Time.time + duration);
+        enemy.IsConfused = true;
+        return true;
+    }
+
     void Update()
     {
-        if (enemy != null) enemy.StatusSpeedMultiplier = 1f - SlowAmount;
+        if (enemy != null)
+        {
+            enemy.StatusSpeedMultiplier = 1f - SlowAmount;
+            enemy.IsConfused = IsConfused;
+        }
 
         if (burns.Count > 0 && Time.time >= nextBurnTick)
         {
@@ -97,20 +116,22 @@ public class StatusEffects : MonoBehaviour
 
     void UpdateTint()
     {
-        bool slowed = IsSlowed, burning = IsBurning, poisoned = IsPoisoned;
+        bool slowed = IsSlowed, burning = IsBurning, poisoned = IsPoisoned, confused = IsConfused;
         bool hasGlow = burning || poisoned;
-        if (!slowed && !hasGlow && !tinted) return;
+        if (!slowed && !confused && !hasGlow && !tinted) return;
         float flicker = 0.6f + 0.4f * Mathf.Sin(Time.time * 18f);
         Color glow = burning && poisoned ? Color.Lerp(BurnGlow, PoisonGlow, 0.5f) : poisoned ? PoisonGlow : BurnGlow;
         for (int i = 0; i < renderers.Length; i++)
         {
             if (renderers[i] == null) continue;
             renderers[i].GetPropertyBlock(block);
-            block.SetColor(BaseColorId, slowed ? Color.Lerp(baseColors[i], SlowTint, 0.45f) : baseColors[i]);
+            Color baseColor = slowed ? Color.Lerp(baseColors[i], SlowTint, 0.45f) : baseColors[i];
+            if (confused) baseColor = Color.Lerp(baseColor, ConfuseTint, 0.4f + 0.15f * Mathf.Sin(Time.time * 10f));
+            block.SetColor(BaseColorId, baseColor);
             block.SetColor(EmissionId, hasGlow ? glow * (1.3f * flicker) : Color.black);
             renderers[i].SetPropertyBlock(block);
         }
-        tinted = slowed || hasGlow;
+        tinted = slowed || confused || hasGlow;
     }
 
     public void ClearAll()
@@ -118,7 +139,12 @@ public class StatusEffects : MonoBehaviour
         burns.Clear();
         slowAmount = 0f;
         slowUntil = 0f;
-        if (enemy != null) enemy.StatusSpeedMultiplier = 1f;
+        confusedUntil = 0f;
+        if (enemy != null)
+        {
+            enemy.StatusSpeedMultiplier = 1f;
+            enemy.IsConfused = false;
+        }
         if (tinted) UpdateTint(); // sem efeitos ativos: volta a cor original
     }
 

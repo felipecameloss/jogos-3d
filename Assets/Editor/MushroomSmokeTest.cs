@@ -11,12 +11,18 @@ public class MushroomSmokeTest
 {
     const string ItemPath = "Assets/ScriptableObjects/Items/EsporoDeCogumelo.asset";
 
-    static IEnumerator EnterMain()
+    /// <summary>Abre a cena do jogo. O EnterPlayMode vem logo depois, no próprio teste:
+    /// o runner de EditMode ignora essa instrução dentro de um helper.</summary>
+    static void OpenMain()
     {
         // Erros de outros sistemas (partículas etc.) não devem derrubar este teste
         LogAssert.ignoreFailingMessages = true;
         EditorSceneManager.OpenScene("Assets/Scenes/Main.unity");
-        yield return new EnterPlayMode();
+    }
+
+    /// <summary>Já em Play Mode: espera a cena assentar e deixa só o que o teste criar.</summary>
+    static IEnumerator PrepareRun()
+    {
         LogAssert.ignoreFailingMessages = true;
         for (int i = 0; i < 10; i++) yield return null;
         foreach (var e in EnemyBase.Active.ToArray()) Object.Destroy(e.gameObject);
@@ -32,7 +38,9 @@ public class MushroomSmokeTest
     [UnityTest]
     public IEnumerator CogumeloCuraSoQuemEstaDentroESome()
     {
-        yield return EnterMain();
+        OpenMain();
+        yield return new EnterPlayMode();
+        yield return PrepareRun();
         var player = GameObject.FindGameObjectWithTag("Player");
         var health = player.GetComponent<Health>();
         health.Invincible = true; // inimigos que nascerem no meio do teste não atrapalham a conta
@@ -64,7 +72,9 @@ public class MushroomSmokeTest
     [UnityTest]
     public IEnumerator ItemBrotaCogumeloAoMatarERespeitaOMaximo()
     {
-        yield return EnterMain();
+        OpenMain();
+        yield return new EnterPlayMode();
+        yield return PrepareRun();
         var player = GameObject.FindGameObjectWithTag("Player");
         var inv = player.GetComponent<Inventory>();
         player.GetComponent<Health>().Invincible = true;

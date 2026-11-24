@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d286f8ff5841a7895292015d479275, type: 3}
+  m_Name: Polen
+  m_EditorClassIdentifier: Assembly-CSharp::PollenOnHitItem
+  displayName: "P\xF3len"
+  description: "Chance de soltar uma nuvem de p\xF3len que deixa os inimigos confusos."
+  rarity: 1
+  icon: {fileID: 21300000, guid: 23ced534d95b4d89b0b54bc401475929, type: 3}
+  modifiers: []
+  chancePerStack: 0.12
+  radius: 3.5
+  radiusPerExtraStack: 0.5
+  cloudDuration: 2.5
+  confuseDuration: 2
+  confusePerExtraStack: 0.5
+  maxClouds: 4
+  cloudMaterial: {fileID: 2100000, guid: 240aeb71c365c264ea7792d13b9412bd, type: 2}

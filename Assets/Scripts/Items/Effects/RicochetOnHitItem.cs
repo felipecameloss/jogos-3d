@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// Chance de o acerto ricochetear em inimigos próximos, um depois do outro (Clipe de papel).
-/// Serve de base para o fio elétrico (raio que pula entre inimigos): mesma lógica, outra cor.
+/// O fio elétrico (ChainLightningOnHitItem) pula do mesmo jeito, mas com dano do player e acertando o alvo também.
 /// </summary>
 [CreateAssetMenu(menuName = "Jogo/Itens/Ricochete ao acertar", fileName = "NovoItemRicochete")]
 public class RicochetOnHitItem : ItemData

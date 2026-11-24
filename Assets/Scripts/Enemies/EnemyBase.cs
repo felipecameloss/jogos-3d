@@ -36,6 +36,8 @@ public abstract class EnemyBase : MonoBehaviour
     [HideInInspector] public float SpeedMultiplier = 1f;
     /// <summary>Lentidão de efeitos de status (chiclete, cola). Controlado por StatusEffects.</summary>
     [HideInInspector] public float StatusSpeedMultiplier = 1f;
+    /// <summary>Confuso (nuvem de pólen): não ataca e anda sem rumo. Controlado por StatusEffects.</summary>
+    public bool IsConfused { get; set; }
 
     /// <summary>Inimigos ativos na cena (vivos ou morrendo). Para itens acharem alvos sem FindObjects.</summary>
     public static readonly List<EnemyBase> Active = new();
@@ -105,6 +107,7 @@ public abstract class EnemyBase : MonoBehaviour
         Agent.enabled = true;
         SpeedMultiplier = 1f;
         StatusSpeedMultiplier = 1f;
+        IsConfused = false;
         Agent.speed = moveSpeed * SpeedMultiplier;
         if (!Active.Contains(this)) Active.Add(this);
         if (Agent.isOnNavMesh) Agent.isStopped = false;
@@ -130,10 +133,23 @@ public abstract class EnemyBase : MonoBehaviour
         TrackDiscovery();
         if (!HasValidTarget)
         {
-            StopMoving();
+            if (IsConfused) Wander();
+            else StopMoving();
             return;
         }
         Tick();
+    }
+
+    float nextWanderAt;
+
+    /// <summary>Confuso: troca de rumo a cada pouco, para pontos aleatórios perto de onde está.</summary>
+    void Wander()
+    {
+        if (Time.time < nextWanderAt) return;
+        nextWanderAt = Time.time + UnityEngine.Random.Range(0.5f, 1f);
+        Vector2 r = UnityEngine.Random.insideUnitCircle.normalized * UnityEngine.Random.Range(2f, 5f);
+        if (NavMesh.SamplePosition(transform.position + new Vector3(r.x, 0f, r.y), out var hit, 2.5f, NavMesh.AllAreas))
+            MoveTo(hit.position);
     }
 
     // ---------- Diário de descobertas ----------
@@ -157,9 +173,13 @@ public abstract class EnemyBase : MonoBehaviour
     /// <summary>Comportamento do inimigo, chamado a cada frame enquanto vivo e com alvo vivo.</summary>
     protected abstract void Tick();
 
+    /// <summary>
+    /// Pode ir atrás do alvo: player vivo, run rolando e sem confusão. Quando vira falso, as
+    /// subclasses cancelam o ataque em andamento (o mesmo caminho serve para a confusão do pólen).
+    /// </summary>
     protected bool HasValidTarget =>
         Target != null && (TargetHealth == null || TargetHealth.IsAlive) &&
-        (RunManager.Instance == null || !RunManager.Instance.IsRunOver);
+        (RunManager.Instance == null || !RunManager.Instance.IsRunOver) && !IsConfused;
 
     void FindTarget()
     {
