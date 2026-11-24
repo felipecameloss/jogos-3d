@@ -21,6 +21,8 @@ public class RunManager : MonoBehaviour
         public readonly List<(ItemData item, int count)> items = new();
         public EquipmentData equipment;
         public float equipmentCooldown;
+        public LadybugConfig ladybugConfig;
+        public int ladybugs;
     }
     static CarryOver carry;
 
@@ -98,6 +100,8 @@ public class RunManager : MonoBehaviour
         var wallet = playerHealth.GetComponent<PlayerWallet>();
         if (wallet != null) wallet.RestoreState(carry.crumbs, carry.crumbsTotal);
         playerHealth.SetCurrent(playerHealth.Max * carry.healthFraction);
+        if (carry.ladybugs > 0 && carry.ladybugConfig != null)
+            LadybugSwarm.For(playerHealth.gameObject).Restore(carry.ladybugConfig, carry.ladybugs);
         carry = null;
     }
 
@@ -144,7 +148,7 @@ public class RunManager : MonoBehaviour
         OnStageCompleted?.Invoke();
     }
 
-    /// <summary>Vai para a próxima fase levando itens, migalhas, vida, tempo e kills.</summary>
+    /// <summary>Vai para a próxima fase levando itens, migalhas, vida, tempo, kills e joaninhas.</summary>
     public void GoToNextStage()
     {
         var c = new CarryOver
@@ -160,6 +164,11 @@ public class RunManager : MonoBehaviour
         {
             c.equipment = slot.Current;
             c.equipmentCooldown = slot.CooldownRemaining;
+        }
+        if (playerHealth != null && playerHealth.TryGetComponent(out LadybugSwarm swarm) && swarm.Count > 0)
+        {
+            c.ladybugConfig = swarm.Config;
+            c.ladybugs = swarm.Count;
         }
         carry = c;
         Time.timeScale = 1f;

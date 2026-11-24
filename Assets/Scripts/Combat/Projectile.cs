@@ -18,6 +18,7 @@ public class Projectile : MonoBehaviour
     float damage;
     float timeAlive;
     GameObject owner;
+    bool noProc;
     Action<Projectile> release;
     Action<IDamageable, DamageInfo> onHit;
     TrailRenderer trail;
@@ -32,13 +33,15 @@ public class Projectile : MonoBehaviour
 
     /// <param name="release">Como devolver ao pool. Null = Destroy.</param>
     /// <param name="onHit">Chamado quando acerta algo com vida (hook "ao acertar" dos itens).</param>
+    /// <param name="noProc">O dano conta como do dono (kills, migalhas) mas não dispara itens "ao acertar" (aliados).</param>
     public void Launch(Vector3 position, Vector3 velocity, float damage, GameObject owner,
-                       Action<Projectile> release = null, Action<IDamageable, DamageInfo> onHit = null)
+                       Action<Projectile> release = null, Action<IDamageable, DamageInfo> onHit = null, bool noProc = false)
     {
         transform.SetPositionAndRotation(position, Quaternion.LookRotation(velocity));
         this.velocity = velocity;
         this.damage = damage;
         this.owner = owner;
+        this.noProc = noProc;
         this.release = release;
         this.onHit = onHit;
         timeAlive = 0f;
@@ -88,7 +91,7 @@ public class Projectile : MonoBehaviour
         var target = hit.collider.GetComponentInParent<IDamageable>();
         if (target != null && target.IsAlive)
         {
-            var info = new DamageInfo(damage, owner, hit.point, dir);
+            var info = new DamageInfo(damage, owner, hit.point, dir) { NoProc = noProc };
             target.TakeDamage(info);
             onHit?.Invoke(target, info);
         }
