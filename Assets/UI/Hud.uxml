@@ -35,6 +35,7 @@
             <ui:VisualElement class="difficulty-bar" picking-mode="Ignore">
                 <ui:VisualElement name="difficulty-fill" class="difficulty-fill" picking-mode="Ignore" />
             </ui:VisualElement>
+            <ui:Label name="modifiers" text="" class="run-modifiers hidden" picking-mode="Ignore" />
         </ui:VisualElement>
 
         <!-- Objetivo da fase (centro em cima) -->

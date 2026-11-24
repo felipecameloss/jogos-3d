@@ -128,7 +128,7 @@ public class MantisBoss : EnemyBase
 
     protected override void Tick()
     {
-        Agent.speed = moveSpeed * SpeedMultiplier * StatusSpeedMultiplier / (IsEnraged ? enrageTimeScale : 1f);
+        Agent.speed = moveSpeed * TotalSpeedMultiplier / (IsEnraged ? enrageTimeScale : 1f);
         if (attacking != null) return;
 
         float d = FlatDistanceToTarget();
@@ -343,7 +343,10 @@ public class MantisBoss : EnemyBase
     void DropLegendary()
     {
         if (database == null || pickupPrefab == null) return;
-        var item = database.Random(ItemRarity.Lendario) ?? database.RandomWeighted(0f, 1f, 0f);
+        // Modificador "só amaldiçoados": o banco já sorteia só amaldiçoado
+        var item = RunModifiers.Is(RunModifier.CursedItemsOnly)
+            ? database.RandomWeighted()
+            : database.Random(ItemRarity.Lendario) ?? database.RandomWeighted(0f, 1f, 0f);
         if (item == null) return;
         Vector3 land = transform.position + transform.forward * 2f;
         if (UnityEngine.AI.NavMesh.SamplePosition(land, out var hit, 4f, UnityEngine.AI.NavMesh.AllAreas)) land = hit.position;

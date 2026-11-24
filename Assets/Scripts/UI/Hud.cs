@@ -18,7 +18,7 @@ public class Hud : MonoBehaviour
 
     VisualElement hud, healthFill, shieldFill, items, crosshair, popup, abilitiesRow, damageFlash, focusVignette;
     float flashAmount;
-    Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText;
+    Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText, modifiers;
     VisualElement objective, objectiveBar, objectiveFill, boss, bossFill;
     Label bossName;
     VisualElement difficultyFill;
@@ -63,6 +63,7 @@ public class Hud : MonoBehaviour
         boss = root.Q("boss");
         bossFill = root.Q("boss-fill");
         bossName = root.Q<Label>("boss-name");
+        modifiers = root.Q<Label>("modifiers");
     }
 
     void Start()
@@ -88,6 +89,12 @@ public class Hud : MonoBehaviour
             RunManager.Instance.OnStageCompleted += Hide;
         }
         RebuildItems();
+        // Modificadores de run valendo (um por linha, embaixo da dificuldade)
+        if (modifiers != null)
+        {
+            modifiers.text = RunModifiers.Describe(RunModifiers.Active).Replace(" · ", "\n");
+            modifiers.EnableInClassList("hidden", RunModifiers.Active == RunModifier.None);
+        }
     }
 
     void OnDestroy()
@@ -244,6 +251,8 @@ public class Hud : MonoBehaviour
 
     public bool BossBarVisible => boss != null && !boss.ClassListContains("hidden");
     public float BossBarPercent => bossFill != null ? bossFill.style.width.value.value : 0f;
+    /// <summary>Texto dos modificadores na HUD (vazio/escondido sem nenhum), para testes.</summary>
+    public string ModifiersText => modifiers != null && !modifiers.ClassListContains("hidden") ? modifiers.text : "";
 
     void UpdateBoss()
     {
