@@ -198,6 +198,16 @@
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
 }
 
+/* Modificadores de run valendo (um por linha, embaixo da dificuldade) */
+.run-modifiers {
+    margin-top: 6px;
+    font-size: 13px;
+    -unity-font-style: bold;
+    -unity-text-align: upper-right;
+    color: rgb(255, 132, 104);
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+}
+
 /* ---------- Objetivo ---------- */
 
 .objective {

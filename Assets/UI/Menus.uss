@@ -156,6 +156,49 @@
     color: rgb(210, 216, 196);
 }
 
+/* ---------- Modificadores de run (menu principal) ---------- */
+
+.modifiers {
+    margin: 4px 0 10px 0;
+    padding: 10px 18px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+}
+
+.modifier-toggle {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.modifier-toggle .unity-base-field__label {
+    min-width: 0;
+    margin-left: 10px;
+    font-size: 17px;
+    color: rgb(232, 236, 222);
+}
+
+.modifier-toggle:checked .unity-base-field__label {
+    color: rgb(255, 150, 120);
+    -unity-font-style: bold;
+}
+
+.modifier-toggle .unity-toggle__checkmark {
+    width: 24px; height: 24px;
+    background-color: rgb(58, 64, 50);
+    border-color: rgb(118, 148, 66);
+    border-width: 2px;
+    border-radius: 5px;
+    -unity-background-image-tint-color: rgb(255, 150, 120);
+}
+
+.modifiers-hint {
+    font-size: 13px;
+    color: rgb(146, 158, 126);
+    margin-top: 4px;
+}
+
 /* ---------- Configurações ---------- */
 
 .settings-panel {

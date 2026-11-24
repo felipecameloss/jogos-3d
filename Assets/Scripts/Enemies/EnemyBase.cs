@@ -77,7 +77,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected Health TargetHealth { get; private set; }
 
     Vector3 initialScale;
-    float baseMaxHealth;
+    float baseMaxHealth, baseAcceleration;
     Coroutine despawnRoutine;
 
     protected virtual void Awake()
@@ -86,6 +86,7 @@ public abstract class EnemyBase : MonoBehaviour
         Agent = GetComponent<NavMeshAgent>();
         initialScale = transform.localScale;
         baseMaxHealth = Health.Max;
+        baseAcceleration = Agent.acceleration;
         Health.OnDeath += HandleDeath;
     }
 
@@ -108,7 +109,8 @@ public abstract class EnemyBase : MonoBehaviour
         SpeedMultiplier = 1f;
         StatusSpeedMultiplier = 1f;
         IsConfused = false;
-        Agent.speed = moveSpeed * SpeedMultiplier;
+        Agent.speed = moveSpeed * SpeedMultiplier * RunModifiers.EnemySpeedMultiplier;
+        Agent.acceleration = baseAcceleration * RunModifiers.EnemySpeedMultiplier; // modificador "2x mais rápidos"
         if (!Active.Contains(this)) Active.Add(this);
         if (Agent.isOnNavMesh) Agent.isStopped = false;
         FindTarget();
@@ -128,7 +130,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual void Update()
     {
         if (!IsAlive) return;
-        Agent.speed = moveSpeed * SpeedMultiplier * StatusSpeedMultiplier;
+        Agent.speed = moveSpeed * TotalSpeedMultiplier;
         if (Target == null) FindTarget();
         TrackDiscovery();
         if (!HasValidTarget)
@@ -169,6 +171,9 @@ public abstract class EnemyBase : MonoBehaviour
         discovered = true;
         DiscoveryJournal.DiscoverEnemy(JournalId);
     }
+
+    /// <summary>Velocidade final: dificuldade/elite x status (lentidão) x modificador de run.</summary>
+    protected float TotalSpeedMultiplier => SpeedMultiplier * StatusSpeedMultiplier * RunModifiers.EnemySpeedMultiplier;
 
     /// <summary>Comportamento do inimigo, chamado a cada frame enquanto vivo e com alvo vivo.</summary>
     protected abstract void Tick();
