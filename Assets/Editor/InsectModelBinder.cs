@@ -30,6 +30,7 @@ public static class InsectModelBinder
         ("Spider", "Spider"),
         ("SpiderQueen", "SpiderQueen"),
         ("Grasshopper", "Grasshopper"),
+        ("Slug", "Slug"),
     };
 
     const string GlowMaterials = "Assets/Art/Materials/Insects/";
@@ -131,6 +132,12 @@ public static class InsectModelBinder
         {
             var so = new SerializedObject(grasshopper);
             so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha nos avisos)
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+        if (root.TryGetComponent(out Slug slug))
+        {
+            var so = new SerializedObject(slug);
+            so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (estica ao rastejar)
             so.ApplyModifiedPropertiesWithoutUndo();
         }
         if (root.TryGetComponent(out SpiderQueen queen))

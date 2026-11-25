@@ -38,6 +38,7 @@ ENEMIES = {
     "SpiderQueen": {"script": "build_spider_queen.py"},
     "MantisBoss": {"script": "build_mantis.py"},
     "Grasshopper": {"script": "build_grasshopper.py"},
+    "Slug": {"script": "build_slug.py"},
 }
 
 

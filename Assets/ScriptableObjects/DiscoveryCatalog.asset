@@ -59,3 +59,8 @@ MonoBehaviour:
     description: "Fica longe e salta em cima de voc\xEA: o c\xEDrculo vermelho marca onde cai e trava no fim (d\xE1 para sair). Pousa tonto. De perto, vira de costas e d\xE1 um coice."
     icon: {fileID: 21300000, guid: e0be6668007b86e419c76919d8dbaf38, type: 3}
     isBoss: 0
+  - id: Slug
+    displayName: Lesma
+    description: "Lenta e parruda. Deixa um rastro de gosma que faz voc\xEA escorregar. De perto, ergue a frente e d\xE1 um bote."
+    icon: {fileID: 21300000, guid: 93240b2685e6b9f44b34d756309aed7b, type: 3}
+    isBoss: 0
