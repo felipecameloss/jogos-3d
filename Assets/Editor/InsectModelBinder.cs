@@ -29,6 +29,7 @@ public static class InsectModelBinder
         ("MantisBoss", "MantisBoss"),
         ("Spider", "Spider"),
         ("SpiderQueen", "SpiderQueen"),
+        ("Grasshopper", "Grasshopper"),
     };
 
     const string GlowMaterials = "Assets/Art/Materials/Insects/";
@@ -125,6 +126,12 @@ public static class InsectModelBinder
             so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha no aviso)
             so.ApplyModifiedPropertiesWithoutUndo();
             notes.Add($"fiandeira={(spinner != null)}");
+        }
+        if (root.TryGetComponent(out Grasshopper grasshopper))
+        {
+            var so = new SerializedObject(grasshopper);
+            so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha nos avisos)
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
         if (root.TryGetComponent(out SpiderQueen queen))
         {

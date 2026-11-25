@@ -54,3 +54,8 @@ MonoBehaviour:
     description: "Chefe. Cospe leques de teia que prendem, invoca aranhinhas e esmaga com pulos (o c\xEDrculo vermelho marca onde cai)."
     icon: {fileID: 21300000, guid: bb7c7baaedcce434b9bad2335b7d318e, type: 3}
     isBoss: 1
+  - id: Grasshopper
+    displayName: Gafanhoto
+    description: "Fica longe e salta em cima de voc\xEA: o c\xEDrculo vermelho marca onde cai e trava no fim (d\xE1 para sair). Pousa tonto. De perto, vira de costas e d\xE1 um coice."
+    icon: {fileID: 21300000, guid: e0be6668007b86e419c76919d8dbaf38, type: 3}
+    isBoss: 0
