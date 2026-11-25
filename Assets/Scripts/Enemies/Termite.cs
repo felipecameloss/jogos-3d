@@ -19,6 +19,9 @@ public class Termite : WorkerAnt
 
     public bool IsEmerging { get; private set; }
 
+    /// <summary>Cupim não é formiga: o apito de feromônio não mexe com ele.</summary>
+    public override bool IsAnt => false;
+
     static Mesh fallbackDirtMesh;
     float emergeTime;
     Vector3 moundRestScale = Vector3.one;
