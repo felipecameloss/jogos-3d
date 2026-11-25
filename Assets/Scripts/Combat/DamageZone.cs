@@ -83,6 +83,7 @@ public class DamageZone : MonoBehaviour
                 continue;
             }
             if (!target.IsAlive) continue; // morto não sai da lista: pode ser revivido/reaproveitado
+            if (target is Component c && c.TryGetComponent(out PlayerMovement mover) && mover.IsFloating) continue; // bolha de sabão por cima da poça
             Vector3 point = col.bounds.center;
             target.TakeDamage(new DamageInfo(amount, source, point, point - transform.position) { IgnoreArmor = ignoreArmor });
         }

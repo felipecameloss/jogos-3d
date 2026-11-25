@@ -69,6 +69,8 @@ public class MantisBoss : EnemyBase
     public int DashesLanded { get; private set; }
     public int LeapsPerformed { get; private set; }
     public int LeapsLanded { get; private set; }
+    /// <summary>Pulos esmagadores que o player escapou flutuando na bolha de sabão.</summary>
+    public int LeapsFloatedOver { get; private set; }
     public ItemPickup DroppedItem { get; private set; }
 
     /// <summary>O chefe vivo agora (barra de vida da HUD).</summary>
@@ -273,7 +275,10 @@ public class MantisBoss : EnemyBase
 
         Vector3 d = Target.position - targetPoint; d.y = 0f;
         GameFeel.Shake(0.9f);
-        if (d.magnitude <= leapRadius) { Hit(leapDamage); LeapsLanded++; }
+        // Dentro da bolha de sabão a onda de choque passa por baixo do player
+        bool floating = Target.TryGetComponent(out PlayerMovement floatMove) && floatMove.IsFloating;
+        if (d.magnitude <= leapRadius && floating) LeapsFloatedOver++;
+        else if (d.magnitude <= leapRadius) { Hit(leapDamage); LeapsLanded++; }
         ResetPose();
         nextLeap = Time.time + T(leapCooldown);
     }

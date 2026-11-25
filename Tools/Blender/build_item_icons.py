@@ -516,6 +516,39 @@ def esporo_de_cogumelo():
     obj("EsporoDeCogumelo", build, m, matrix=tilt(rx=8, rz=-12))
 
 
+def bolha_de_sabao():
+    m = {"bolha": mat("Bubble", (0.6, 0.86, 1.0), 0.12), "rosa": mat("BubblePink", (1.0, 0.5, 0.85), 0.12),
+         "amarelo": mat("BubbleYellow", (1.0, 0.9, 0.4), 0.12), "brilho": mat("BubbleShine", (1, 1, 1), 0.1)}
+    to_cam = Vector((0.55, -1.0, 0.8)).normalized()  # mesma direção da câmera dos ícones (VIEW_DIR)
+    rim_side = Vector((0.6, 0.0, -0.8)).normalized()  # borda de baixo/direita, onde aparece o furta-cor
+
+    def build(bm, M):
+        def bubble(c, r):
+            c = Vector(c)
+            before = set(bm.faces)
+            geom = bmesh.ops.create_uvsphere(bm, u_segments=20, v_segments=14, radius=r)
+            bmesh.ops.translate(bm, verts=geom["verts"], vec=c)
+            # furta-cor: meia-lua rosa e amarela na borda, do lado de baixo/direita
+            for f in new_faces(bm, before):
+                n = (f.calc_center_median() - c).normalized()
+                rim = 1.0 - max(0.0, n.dot(to_cam))
+                side = n.dot(rim_side)
+                if side > -0.15 and rim > 0.42:
+                    f.material_index = M("amarelo") if rim > 0.7 else M("rosa")
+            # brilho em cima à esquerda, de frente para a câmera (eixo fino apontando para ela)
+            face_cam = to_cam.to_track_quat("Z", "Y").to_matrix().to_4x4()
+            spot = (to_cam * 0.7 + Vector((-0.45, 0.1, 0.5))).normalized()
+            add(bm, M("brilho"), ellipsoid, c + spot * (r * 0.92), (0.24 * r, 0.13 * r, 0.03 * r), 10, 4, face_cam @ tilt(rz=35))
+            add(bm, M("brilho"), ellipsoid, c + (spot + Vector((0.25, 0, -0.25))).normalized() * (r * 0.95),
+                (0.06 * r, 0.06 * r, 0.02 * r), 6, 3, face_cam)
+
+        bubble((0, 0, 0), 0.8)
+        bubble((0.98, 0.15, 0.62), 0.32)
+        bubble((0.78, -0.25, -0.78), 0.22)
+
+    obj("BolhaDeSabao", build, m, smooth=True)
+
+
 def fio_eletrico():
     m = {"capa": mat("WireRed", (0.85, 0.08, 0.06), 0.45), "corte": mat("WireCut", (0.5, 0.04, 0.03), 0.5),
          "cobre": mat("Copper", (0.95, 0.45, 0.15), 0.3, 0.6), "faisca": mat("Spark", (1.0, 0.9, 0.2), 0.2)}
@@ -560,7 +593,7 @@ def polen():
 
 
 ITEMS = {
-    "AsaDeMosca": asa_de_mosca, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
+    "AsaDeMosca": asa_de_mosca, "BolhaDeSabao": bolha_de_sabao, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
     "CafeDerramado": cafe_derramado, "CascaDeAmendoim": casca_de_amendoim, "CascaDeSemente": casca_de_semente,
     "CascoDeTatuzinho": casco_de_tatuzinho, "ClipeDePapel": clipe_de_papel, "ColaBranca": cola_branca,
     "EspinhoDeRosa": espinho_de_rosa, "EsporoDeCogumelo": esporo_de_cogumelo, "FerraoDeAbelha": ferrao_de_abelha,

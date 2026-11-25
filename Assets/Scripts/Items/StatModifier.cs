@@ -26,6 +26,8 @@ public enum StatType
     MaxShield,
     /// <summary>Redução fixa de dano por golpe (mínimo 1). Só fixo.</summary>
     DamageReduction,
+    /// <summary>Segundos flutuando numa bolha a cada vez no ar, segurando pulo (bolha de sabão). Só fixo.</summary>
+    FloatTime,
 }
 
 public enum ModifierMode
