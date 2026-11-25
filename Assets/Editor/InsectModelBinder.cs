@@ -28,6 +28,7 @@ public static class InsectModelBinder
         ("BombardierBeetle", "BombardierBeetle"),
         ("MantisBoss", "MantisBoss"),
         ("Spider", "Spider"),
+        ("SpiderQueen", "SpiderQueen"),
     };
 
     const string GlowMaterials = "Assets/Art/Materials/Insects/";
@@ -41,7 +42,7 @@ public static class InsectModelBinder
         Debug.Log("[InsectModelBinder]\n" + log);
     }
 
-    static string Apply(string prefabPath, string fbxPath)
+    public static string Apply(string prefabPath, string fbxPath)
     {
         var fbx = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
         if (fbx == null) return $"{prefabPath}: FBX não encontrado ({fbxPath})";
@@ -120,6 +121,16 @@ public static class InsectModelBinder
             so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha no aviso)
             so.ApplyModifiedPropertiesWithoutUndo();
             notes.Add($"fiandeira={(spinner != null)}");
+        }
+        if (root.TryGetComponent(out SpiderQueen queen))
+        {
+            var spinner = FindDeep(model, "Spinner");
+            var so = new SerializedObject(queen);
+            so.FindProperty("spinner").objectReferenceValue = spinner;
+            so.FindProperty("spinnerRenderer").objectReferenceValue = spinner != null ? GlowRenderer(spinner, "SpiderQueenSpinnerGlow") : null;
+            so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha/ergue nos avisos)
+            so.ApplyModifiedPropertiesWithoutUndo();
+            notes.Add($"fiandeira da rainha={(spinner != null)}");
         }
     }
 

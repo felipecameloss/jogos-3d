@@ -9,7 +9,7 @@ using UnityEngine;
 /// Abaixo de metade da vida entra em fúria: avisos e recargas mais curtos, anda mais rápido.
 /// Ao morrer solta um item lendário.
 /// </summary>
-public class MantisBoss : EnemyBase
+public class MantisBoss : EnemyBase, IBoss
 {
     [Header("Chefe")]
     [SerializeField] string bossName = "Louva-a-deus";
@@ -104,6 +104,7 @@ public class MantisBoss : EnemyBase
     {
         base.OnEnable();
         Current = this;
+        BossTracker.Register(this);
         nextDash = Time.time + 1.5f;
         nextLeap = Time.time + 3f;
     }
@@ -112,12 +113,14 @@ public class MantisBoss : EnemyBase
     {
         base.OnDisable();
         if (Current == this) Current = null;
+        BossTracker.Unregister(this);
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         if (Current == this) Current = null;
+        BossTracker.Unregister(this);
         if (leapTelegraph != null) Destroy(leapTelegraph.gameObject);
         if (dashTelegraph != null) Destroy(dashTelegraph.gameObject);
     }

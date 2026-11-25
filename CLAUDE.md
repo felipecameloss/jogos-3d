@@ -4,7 +4,7 @@
 - Low-poly estilizado, cores chapadas e saturadas, sem texturas (só materiais de cor)
 - Silhuetas claras e exageradas: cabeça e olhos grandes, visual meio fofo
 - Cada inimigo com uma cor dominante: formiga operária vermelha, formiga-soldado vermelho-escuro,
-  besouro-bombardeiro verde metálico, aranha roxa, pulgão verde-claro, louva-a-deus verde-limão
+  besouro-bombardeiro verde metálico, aranha roxa (aranha-rainha: roxo-real com coroa dourada), pulgão verde-claro, louva-a-deus verde-limão
 - Máximo de ~1500 triângulos por personagem
 
 ## Regras dos modelos (Blender)

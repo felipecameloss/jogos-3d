@@ -256,7 +256,7 @@ public class Hud : MonoBehaviour
 
     void UpdateBoss()
     {
-        var b = MantisBoss.Current;
+        var b = BossTracker.Current; // louva-a-deus, aranha-rainha...
         bool show = b != null && b.IsAlive;
         boss.EnableInClassList("hidden", !show);
         if (!show) return;

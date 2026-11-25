@@ -105,6 +105,16 @@ public abstract class EnemyBase : MonoBehaviour
         Health.OnDeath += HandleDeath;
     }
 
+    /// <summary>
+    /// Muda o tamanho base (aranhinhas da rainha são menores): vale na hora e na animação
+    /// de morte, que encolhe a partir dele.
+    /// </summary>
+    public void SetBaseScale(Vector3 scale)
+    {
+        initialScale = scale;
+        transform.localScale = scale;
+    }
+
     /// <summary>Escala de dificuldade: aplicada pelo spawner logo depois de nascer. Volta com vida cheia.</summary>
     public void ApplyScaling(float healthMultiplier, float damageMultiplier)
     {

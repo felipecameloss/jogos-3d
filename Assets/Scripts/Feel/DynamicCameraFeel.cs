@@ -77,7 +77,7 @@ public class DynamicCameraFeel : MonoBehaviour
     bool wasGrounded = true;
     float minVerticalVelInAir;
     float lastBossCheck;
-    MantisBoss activeBoss;
+    EnemyBase activeBoss;
     float lastAppliedSens = -1f;
 
     void Awake()
@@ -301,7 +301,7 @@ public class DynamicCameraFeel : MonoBehaviour
         if (activeBoss != null && activeBoss.IsAlive) return;
         if (Time.unscaledTime - lastBossCheck < 0.35f) return;
         lastBossCheck = Time.unscaledTime;
-        activeBoss = FindAnyObjectByType<MantisBoss>();
+        activeBoss = BossTracker.Current as EnemyBase; // qualquer chefe (louva-a-deus, aranha-rainha)
     }
 
     bool IsBossActive()
