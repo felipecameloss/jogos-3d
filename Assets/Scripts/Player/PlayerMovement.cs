@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Movimento em terceira pessoa com CharacterController:
 /// andar/correr relativo à câmera, pulo com coyote time e buffer, gravidade própria
-/// e o player sempre virado para onde a câmera mira.
+/// e o player sempre virado para onde a câmera mira. Com a bolha de sabão (FloatTime),
+/// segurar pulo caindo faz ele flutuar descendo devagar até o tempo da bolha acabar.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -41,6 +42,12 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Tempo que um pulo apertado cedo demais fica guardado.")]
     [SerializeField] float jumpBufferTime = 0.12f;
 
+    [Header("Bolha de sabão")]
+    [Tooltip("Velocidade de queda dentro da bolha (m/s).")]
+    [SerializeField, Min(0f)] float floatFallSpeed = 1.6f;
+    [Tooltip("Quão rápido a bolha freia a queda ao se formar (m/s²).")]
+    [SerializeField, Min(1f)] float floatBrake = 55f;
+
     [Header("Empurrão")]
     [Tooltip("Quão rápido o empurrão (knockback) perde força.")]
     [SerializeField, Min(0.1f)] float knockbackDrag = 5f;
@@ -53,6 +60,10 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float SpeedMultiplier = 1f;
     [HideInInspector] public float JumpHeightMultiplier = 1f;
     [HideInInspector] public int ExtraJumps = 0;
+    /// <summary>Segundos de bolha por vez no ar (0 = sem bolha). Controlado pelo Inventory.</summary>
+    [HideInInspector] public float FloatTime = 0f;
+    /// <summary>Segura o pulo por código, sem teclado (testes).</summary>
+    [HideInInspector] public bool HoldJumpOverride;
     /// <summary>Desligado = ignora o input mas a gravidade continua (morte, cutscene, menu).</summary>
     [HideInInspector] public bool InputEnabled = true;
 
@@ -65,6 +76,18 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>Velocidade horizontal normalizada pela velocidade de andar (útil para animação).</summary>
     public float NormalizedSpeed => horizontalVelocity.magnitude / Mathf.Max(walkSpeed, 0.01f);
     public float WalkSpeed => walkSpeed;
+    /// <summary>Dentro da bolha de sabão agora (no ar, segurando pulo).</summary>
+    public bool IsFloating { get; private set; }
+    /// <summary>Quanto da bolha ainda sobra neste pulo (1 = cheia, 0 = estourou).</summary>
+    public float FloatRemaining01 => FloatTime > 0f ? Mathf.Clamp01(1f - floatUsed / FloatTime) : 0f;
+    public bool HasFloat => FloatTime > 0f;
+
+    /// <summary>Estoura a bolha agora (levou dano): só volta depois de pisar no chão.</summary>
+    public void PopFloat()
+    {
+        floatUsed = FloatTime;
+        IsFloating = false;
+    }
     public float SprintSpeed => sprintSpeed;
 
     /// <summary>Velocidades base do personagem escolhido (PlayerCharacterSetup). Itens multiplicam por SpeedMultiplier.</summary>
@@ -84,6 +107,7 @@ public class PlayerMovement : MonoBehaviour
     float lastGroundedTime = float.NegativeInfinity;
     float lastJumpPressedTime = float.NegativeInfinity;
     int jumpsUsed;
+    float floatUsed;
     readonly Collider[] groundHits = new Collider[8];
 
     void Awake()
@@ -125,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
             controller.Move(dashVelocity * dt);
             horizontalVelocity = dashVelocity * 0.3f; // sai do dash com um pouco de embalo
             verticalVelocity = 0f;
+            IsFloating = false;
             FaceCamera(camForward, dt);
             return;
         }
@@ -151,12 +176,22 @@ public class PlayerMovement : MonoBehaviour
             IsGrounded = false;
         }
 
+        // ---------- Bolha de sabão: segurando pulo enquanto cai ----------
+        bool jumpHeld = InputEnabled && (HoldJumpOverride || (jumpAction != null && jumpAction.action.IsPressed()));
+        IsFloating = FloatTime > 0f && !IsGrounded && !IsRooted && jumpHeld && verticalVelocity <= 0f && floatUsed < FloatTime;
+        if (IsFloating) floatUsed += dt;
+
         // ---------- Gravidade ----------
         // Deslocamento pela média da velocidade no frame: a altura do pulo fica igual em qualquer FPS.
         float verticalStart = verticalVelocity;
         if (IsGrounded && verticalVelocity < 0f)
         {
             verticalVelocity = verticalStart = -2f; // mantém o controller colado no chão (rampas/degraus)
+        }
+        else if (IsFloating)
+        {
+            // A bolha freia a queda rápido e depois desce devagar
+            verticalVelocity = Mathf.MoveTowards(verticalVelocity, -floatFallSpeed, floatBrake * dt);
         }
         else
         {
@@ -243,6 +278,8 @@ public class PlayerMovement : MonoBehaviour
         {
             lastGroundedTime = Time.time;
             jumpsUsed = 0;
+            floatUsed = 0f; // a bolha enche de novo ao pisar no chão
+            IsFloating = false;
         }
     }
 

@@ -155,6 +155,7 @@ public class Inventory : MonoBehaviour
             Movement.SpeedMultiplier = Multiplier(StatType.MoveSpeed);
             Movement.JumpHeightMultiplier = Multiplier(StatType.JumpHeight);
             Movement.ExtraJumps = Mathf.Max(0, Mathf.RoundToInt(Sum(StatType.ExtraJumps).flat));
+            Movement.FloatTime = Mathf.Max(0f, Sum(StatType.FloatTime).flat);
         }
         if (Health != null)
         {

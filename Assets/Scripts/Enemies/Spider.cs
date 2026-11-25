@@ -187,6 +187,7 @@ public class Spider : EnemyBase
         if (TargetHealth == null || !TargetHealth.IsAlive) return;
         Vector3 d = Target.position - leapTo;
         if (Mathf.Abs(d.y) > 2.5f) return;
+        if (Target.TryGetComponent(out PlayerMovement floatMove) && floatMove.IsFloating) return; // bolha de sabão: passa por baixo
         d.y = 0f;
         if (d.magnitude > landRadius) return;
         Vector3 dir = d.sqrMagnitude > 0.01f ? d.normalized : transform.forward;

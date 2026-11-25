@@ -54,6 +54,7 @@ public class WebPatch : MonoBehaviour
             if (player == null) return;
         }
         Vector3 d = player.transform.position - transform.position;
+        if (player.IsFloating) return; // flutuando na bolha de sabão não gruda na teia
         if (Mathf.Abs(d.y) < 1.2f && new Vector2(d.x, d.z).sqrMagnitude <= radius * radius) TryCatch(player);
     }
 
