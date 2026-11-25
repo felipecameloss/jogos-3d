@@ -32,6 +32,8 @@ public static class InsectModelBinder
         ("Grasshopper", "Grasshopper"),
         ("Slug", "Slug"),
         ("Firefly", "Firefly"),
+        ("Centipede", "Centipede"),
+        ("CentipedeSegment", "Centipede"),
     };
 
     const string GlowMaterials = "Assets/Art/Materials/Insects/";
@@ -152,6 +154,17 @@ public static class InsectModelBinder
             so.FindProperty("glowLight").objectReferenceValue = light != null ? light.GetComponent<Light>() : null;
             so.ApplyModifiedPropertiesWithoutUndo();
             notes.Add($"lanterna={(lantern != null)} luz={(light != null)}");
+        }
+        if (root.TryGetComponent(out Centipede centipede))
+        {
+            var head = FindDeep(model, "Head");
+            var tail = FindDeep(model, "Tail");
+            var so = new SerializedObject(centipede);
+            so.FindProperty("body").objectReferenceValue = model.parent;
+            so.FindProperty("headPart").objectReferenceValue = head;
+            so.FindProperty("tailPart").objectReferenceValue = tail;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            notes.Add($"cabeça={(head != null)} rabo={(tail != null)}");
         }
         if (root.TryGetComponent(out SpiderQueen queen))
         {

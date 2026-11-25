@@ -230,6 +230,9 @@ public class ProceduralInsectAnimator : MonoBehaviour
         model.localScale = Vector3.Scale(modelRestScale, new Vector3(1f + s * 0.5f, 1f - s, 1f + s * 0.5f));
     }
 
+    /// <summary>Adianta/atrasa a passada (radianos): segmentos da centopeia andam em onda.</summary>
+    public void OffsetGait(float radians) => cycle += radians;
+
     /// <summary>Ajusta a passada em runtime (modelo do player, criado em código).</summary>
     public void ConfigureGait(float stride, float speedForFull)
     {

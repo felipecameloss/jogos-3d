@@ -40,6 +40,9 @@ ENEMIES = {
     "Grasshopper": {"script": "build_grasshopper.py"},
     "Slug": {"script": "build_slug.py"},
     "Firefly": {"script": "build_firefly.py"},
+    # o FBX é um segmento só; no retrato, uma fila deles em curva, vista mais de cima e com
+    # contorno fino (as pernas são finas e sumiriam no contorno padrão)
+    "Centipede": {"script": "build_centipede.py", "cfg": {"chain": 3}, "view": (0.55, 0.75, 1.5), "outline": 1.2},
 }
 
 
