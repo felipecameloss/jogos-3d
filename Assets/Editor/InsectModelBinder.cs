@@ -42,7 +42,11 @@ public static class InsectModelBinder
         Debug.Log("[InsectModelBinder]\n" + log);
     }
 
-    public static string Apply(string prefabPath, string fbxPath)
+    /// <summary>
+    /// Troca o modelo do prefab pelo FBX. <paramref name="fixedScale"/>: escala do modelo pedida
+    /// pelo builder de um inimigo novo (senão mantém a do Model anterior ou mede pelo Visual antigo).
+    /// </summary>
+    public static string Apply(string prefabPath, string fbxPath, float? fixedScale = null)
     {
         var fbx = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
         if (fbx == null) return $"{prefabPath}: FBX não encontrado ({fbxPath})";
@@ -67,7 +71,7 @@ public static class InsectModelBinder
         mt.localRotation = Quaternion.identity;
         mt.localScale = Vector3.one;
         Bounds raw = LocalBounds(root, mt);
-        float scale = replacingModel ? previousScale : oldBounds.size.z / raw.size.z;
+        float scale = fixedScale ?? (replacingModel ? previousScale : oldBounds.size.z / raw.size.z);
         mt.localScale = Vector3.one * scale;
         Bounds scaled = LocalBounds(root, mt);
         // pés no chão (o NavMeshAgent põe a raiz no chão)

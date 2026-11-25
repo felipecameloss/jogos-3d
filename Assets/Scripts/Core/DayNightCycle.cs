@@ -27,6 +27,9 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Cor da neblina à noite (de dia usa a cor da cena).")]
     [SerializeField] Color nightFog = new(0.06f, 0.08f, 0.13f);
 
+    /// <summary>O ciclo da cena (null sem ciclo). Para quem só pergunta se é noite (vaga-lume).</summary>
+    public static DayNightCycle Instance { get; private set; }
+
     public float Phase { get; private set; }
     /// <summary>Sol abaixo do horizonte (vaga-lume só aparece à noite).</summary>
     public bool IsNight => Mathf.Sin(Phase * Mathf.PI * 2f) < 0f;
@@ -40,7 +43,7 @@ public class DayNightCycle : MonoBehaviour
     public static float Overcast;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Overcast = 0f;
+    static void ResetStatics() { Overcast = 0f; Instance = null; }
 
     Light sun;
     float dayAmbient;
@@ -61,11 +64,17 @@ public class DayNightCycle : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         sun = GetComponent<Light>();
         if (dayIntensity <= 0f) dayIntensity = sun.intensity;
         dayAmbient = RenderSettings.ambientIntensity;
         dayFog = RenderSettings.fogColor;
         RenderSettings.sun = sun; // o skybox procedural segue essa luz
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
 
     void Update()

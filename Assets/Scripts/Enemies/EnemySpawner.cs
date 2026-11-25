@@ -114,6 +114,8 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnWave(float coeff)
     {
+        // o que estava esperando créditos pode ter deixado de valer (amanheceu: vaga-lume não nasce)
+        if (pendingEntry != null && !pendingEntry.prefab.CanSpawnNow) pendingEntry = null;
         var entry = pendingEntry ?? PickEntry(coeff);
         if (entry == null) return;
         if (entry.cost > maxBankedCredits)
@@ -159,7 +161,7 @@ public class EnemySpawner : MonoBehaviour
         float total = 0f;
         foreach (var e in enemies)
         {
-            if (e.pool == null || e.weight <= 0f || coeff < e.minDifficulty) continue;
+            if (e.pool == null || e.weight <= 0f || coeff < e.minDifficulty || !e.prefab.CanSpawnNow) continue;
             candidates.Add(e);
             total += e.weight;
         }
@@ -204,7 +206,7 @@ public class EnemySpawner : MonoBehaviour
         if (dm != null) enemy.ApplyScaling(hpMult, dmgMult);
         enemy.SpeedMultiplier = Mathf.Min(1.35f, 1f + Mathf.Max(0f, coeff - 1f) * 0.08f);
 
-        if (!enemy.IsBoss && coeff >= minEliteDifficulty)
+        if (!enemy.IsBoss && enemy.CanBeElite && coeff >= minEliteDifficulty)
         {
             float chance = Mathf.Min(maxEliteChance, eliteChanceBase + (coeff - minEliteDifficulty) * eliteChancePerDifficulty);
             if (UnityEngine.Random.value < chance)

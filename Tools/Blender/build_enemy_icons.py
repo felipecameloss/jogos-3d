@@ -57,7 +57,7 @@ def load_config(script):
 def build(spec):
     if "script" in spec:
         cfg, builder = load_config(spec["script"])
-        builder(cfg)
+        builder({**cfg, **spec.get("cfg", {})})
         return
     bpy.ops.import_scene.gltf(filepath=os.path.join(ac.ROOT, spec["glb"]))
     roots = [o for o in bpy.context.scene.objects if o.parent is None]
@@ -83,11 +83,14 @@ def render_enemy(name, spec):
     ac.RESET_SCENE = False  # a cena já está vazia; o builder não pode apagar câmera/luzes depois
     scene = bpy.context.scene
     outline = icons.setup_render(scene)
+    if outline and spec.get("outline"):
+        scene.render.line_thickness = spec["outline"]
+        scene.view_layers[0].freestyle_settings.linesets[0].linestyle.thickness = spec["outline"]
     build(spec)
     bpy.context.view_layer.update()
     tris = ac.triangle_count()
     lights(scene)
-    icons.frame_camera(scene, VIEW_DIR)
+    icons.frame_camera(scene, Vector(spec["view"]).normalized() if "view" in spec else VIEW_DIR)
     path = os.path.join(OUT, f"{name}.png")
     scene.render.filepath = path
     bpy.ops.render.render(write_still=True)
