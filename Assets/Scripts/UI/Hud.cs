@@ -16,7 +16,7 @@ public class Hud : MonoBehaviour
     [Tooltip("Abaixo dessa fração a barra de vida fica vermelha.")]
     [SerializeField, Range(0f, 1f)] float lowHealth = 0.3f;
 
-    VisualElement hud, healthFill, shieldFill, items, crosshair, popup, abilitiesRow, damageFlash, focusVignette;
+    VisualElement hud, healthFill, shieldFill, items, crosshair, popup, abilitiesRow, damageFlash, focusVignette, blindFlash;
     float flashAmount;
     Label healthText, crumbs, timer, difficulty, popupName, popupDesc, prompt, stage, objectiveText, modifiers;
     VisualElement objective, objectiveBar, objectiveFill, boss, bossFill;
@@ -41,6 +41,7 @@ public class Hud : MonoBehaviour
         hud = root.Q("hud");
         focusVignette = root.Q("focus-vignette");
         damageFlash = root.Q("damage-flash");
+        blindFlash = root.Q("blind-flash");
         healthFill = root.Q("health-fill");
         shieldFill = root.Q("shield-fill");
         healthText = root.Q<Label>("health-text");
@@ -159,11 +160,14 @@ public class Hud : MonoBehaviour
         UpdateAbilities();
         flashAmount = Mathf.MoveTowards(flashAmount, 0f, Time.unscaledDeltaTime * 2.5f);
         damageFlash.style.opacity = flashAmount;
+        if (blindFlash != null) blindFlash.style.opacity = PlayerBlindness.Amount;
     }
 
     /// <summary>Borda vermelha na tela (0..1). Chamado pelo GameFeel quando o player leva dano.</summary>
     public void FlashDamage(float amount) => flashAmount = Mathf.Max(flashAmount, Mathf.Clamp01(amount));
     public float DamageFlashAmount => flashAmount;
+    /// <summary>Quanto o clarão do vaga-lume está cobrindo a tela agora (0..1, testes).</summary>
+    public float BlindFlashAmount => blindFlash != null ? blindFlash.resolvedStyle.opacity : 0f;
 
     // ---------- Itens ----------
 

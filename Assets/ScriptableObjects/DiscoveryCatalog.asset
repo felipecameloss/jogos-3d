@@ -64,3 +64,8 @@ MonoBehaviour:
     description: "Lenta e parruda. Deixa um rastro de gosma que faz voc\xEA escorregar. De perto, ergue a frente e d\xE1 um bote."
     icon: {fileID: 21300000, guid: 93240b2685e6b9f44b34d756309aed7b, type: 3}
     isBoss: 0
+  - id: Firefly
+    displayName: Vaga-lume
+    description: "S\xF3 aparece \xE0 noite. Voa em volta e carrega a luz piscando cada vez mais r\xE1pido: olhando para ele na hora do clar\xE3o, a tela fica branca. Vire a c\xE2mera!"
+    icon: {fileID: 21300000, guid: 3d01200152773bf47a60b0dae504ee23, type: 3}
+    isBoss: 0

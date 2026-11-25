@@ -39,6 +39,7 @@ ENEMIES = {
     "MantisBoss": {"script": "build_mantis.py"},
     "Grasshopper": {"script": "build_grasshopper.py"},
     "Slug": {"script": "build_slug.py"},
+    "Firefly": {"script": "build_firefly.py"},
 }
 
 

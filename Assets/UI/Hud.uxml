@@ -72,5 +72,8 @@
             <ui:Label name="prompt" text="[E] Abrir" class="prompt hidden" picking-mode="Ignore" />
             <ui:VisualElement name="abilities" class="abilities" picking-mode="Ignore" />
         </ui:VisualElement>
+
+        <!-- Clarão do vaga-lume: tela branca por um instante (por cima de tudo) -->
+        <ui:VisualElement name="blind-flash" class="blind-flash" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>
