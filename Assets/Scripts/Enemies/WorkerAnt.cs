@@ -38,6 +38,9 @@ public class WorkerAnt : EnemyBase
     protected Vector3 bodyRestPos;
     protected Quaternion bodyRestRot;
 
+    /// <summary>Operária e soldado são formigas; o cupim reaproveita a IA mas desliga isto.</summary>
+    public override bool IsAnt => true;
+
     /// <summary>Para testes/debug: quantas mordidas acertaram.</summary>
     public int BitesLanded { get; private set; }
     public bool IsWindingUp => state == State.WindUp;

@@ -38,6 +38,13 @@ public abstract class EnemyBase : MonoBehaviour
     [HideInInspector] public float StatusSpeedMultiplier = 1f;
     /// <summary>Confuso (nuvem de pólen): não ataca e anda sem rumo. Controlado por StatusEffects.</summary>
     public bool IsConfused { get; set; }
+    /// <summary>
+    /// Em fúria (apito de feromônio): esquece o player e ataca o inimigo em fúria mais perto.
+    /// Sem nenhum por perto, anda sem rumo procurando briga. Controlado por StatusEffects.
+    /// </summary>
+    public bool IsFrenzied { get; set; }
+    /// <summary>Inimigo que este está atacando na fúria (null fora dela).</summary>
+    public EnemyBase Rival { get; private set; }
 
     /// <summary>Inimigos ativos na cena (vivos ou morrendo). Para itens acharem alvos sem FindObjects.</summary>
     public static readonly List<EnemyBase> Active = new();
@@ -69,12 +76,20 @@ public abstract class EnemyBase : MonoBehaviour
     /// <summary>Chefe: não morre de uma vez para perigos que matam na hora (pisão).</summary>
     public virtual bool IsBoss => false;
 
+    /// <summary>Formiga de verdade (o apito de feromônio só mexe com elas).</summary>
+    public virtual bool IsAnt => false;
+
     public Health Health { get; private set; }
     public bool IsAlive => Health != null && Health.IsAlive;
 
     protected NavMeshAgent Agent { get; private set; }
+    /// <summary>Quem o inimigo persegue e ataca: o player, ou o rival durante a fúria.</summary>
     protected Transform Target { get; private set; }
     protected Health TargetHealth { get; private set; }
+
+    Transform player;
+    Health playerHealth;
+    float nextRivalSearchAt;
 
     Vector3 initialScale;
     float baseMaxHealth, baseAcceleration;
@@ -109,11 +124,14 @@ public abstract class EnemyBase : MonoBehaviour
         SpeedMultiplier = 1f;
         StatusSpeedMultiplier = 1f;
         IsConfused = false;
+        IsFrenzied = false;
         Agent.speed = moveSpeed * SpeedMultiplier * RunModifiers.EnemySpeedMultiplier;
         Agent.acceleration = baseAcceleration * RunModifiers.EnemySpeedMultiplier; // modificador "2x mais rápidos"
         if (!Active.Contains(this)) Active.Add(this);
         if (Agent.isOnNavMesh) Agent.isStopped = false;
-        FindTarget();
+        Rival = null;
+        FindPlayer();
+        TargetPlayer();
         discovered = false;
     }
 
@@ -131,11 +149,13 @@ public abstract class EnemyBase : MonoBehaviour
     {
         if (!IsAlive) return;
         Agent.speed = moveSpeed * TotalSpeedMultiplier;
-        if (Target == null) FindTarget();
+        if (player == null) FindPlayer();
+        if (IsFrenzied) UpdateRival();
+        else if (Rival != null || Target == null) TargetPlayer();
         TrackDiscovery();
         if (!HasValidTarget)
         {
-            if (IsConfused) Wander();
+            if (IsConfused || IsFrenzied) Wander();
             else StopMoving();
             return;
         }
@@ -166,8 +186,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     void TrackDiscovery()
     {
-        if (discovered || Target == null) return;
-        if ((Target.position - transform.position).sqrMagnitude > DiscoverDistance * DiscoverDistance) return;
+        if (discovered || player == null) return;
+        if ((player.position - transform.position).sqrMagnitude > DiscoverDistance * DiscoverDistance) return;
         discovered = true;
         DiscoveryJournal.DiscoverEnemy(JournalId);
     }
@@ -186,11 +206,44 @@ public abstract class EnemyBase : MonoBehaviour
         Target != null && (TargetHealth == null || TargetHealth.IsAlive) &&
         (RunManager.Instance == null || !RunManager.Instance.IsRunOver) && !IsConfused;
 
-    void FindTarget()
+    void FindPlayer()
     {
-        var player = GameObject.FindGameObjectWithTag("Player");
-        Target = player != null ? player.transform : null;
-        TargetHealth = player != null ? player.GetComponent<Health>() : null;
+        var p = GameObject.FindGameObjectWithTag("Player");
+        player = p != null ? p.transform : null;
+        playerHealth = p != null ? p.GetComponent<Health>() : null;
+    }
+
+    void TargetPlayer()
+    {
+        Rival = null;
+        Target = player;
+        TargetHealth = playerHealth;
+    }
+
+    // ---------- Fúria (apito de feromônio) ----------
+
+    /// <summary>
+    /// Fica no mesmo rival até ele morrer ou sair da fúria (trocar no meio da mordida faria
+    /// errar); aí procura o inimigo em fúria mais perto. Sem nenhum, fica sem alvo (anda sem rumo).
+    /// </summary>
+    void UpdateRival()
+    {
+        bool rivalOk = Rival != null && Rival.IsAlive && Rival.IsFrenzied && Rival.isActiveAndEnabled;
+        if (rivalOk && Target == Rival.transform) return;
+        if (!rivalOk && Time.time < nextRivalSearchAt && Rival == null && Target == null) return;
+        nextRivalSearchAt = Time.time + 0.25f;
+
+        EnemyBase best = null;
+        float bestSq = float.MaxValue;
+        foreach (var e in Active)
+        {
+            if (e == null || e == this || !e.IsAlive || !e.IsFrenzied || !e.isActiveAndEnabled) continue;
+            float sq = (e.transform.position - transform.position).sqrMagnitude;
+            if (sq < bestSq) { bestSq = sq; best = e; }
+        }
+        Rival = best;
+        Target = best != null ? best.transform : null;
+        TargetHealth = best != null ? best.Health : null;
     }
 
     // ---------- Ajudantes para as subclasses ----------
@@ -247,7 +300,7 @@ public abstract class EnemyBase : MonoBehaviour
         Agent.enabled = false;
         foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false; // não bloqueia tiros nem o player
         // Morto pelo player de longe (estilingue): também conta como visto
-        if (!discovered && killingBlow.Source != null && Target != null && killingBlow.Source.transform.IsChildOf(Target))
+        if (!discovered && killingBlow.Source != null && player != null && killingBlow.Source.transform.IsChildOf(player))
         {
             discovered = true;
             DiscoveryJournal.DiscoverEnemy(JournalId);

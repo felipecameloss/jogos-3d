@@ -592,8 +592,80 @@ def polen():
     obj("Polen", build, m)
 
 
+def box(bm, center, size, matrix=None):
+    """Caixa centrada em `center` com lados `size` (x, y, z), girada por `matrix`."""
+    m = Matrix.Translation(Vector(center)) @ (matrix or Matrix.Identity(4)) @ Matrix.Diagonal((*size, 1.0))
+    bmesh.ops.create_cube(bm, size=1.0, matrix=m)
+
+
+def spray_de_inseticida():
+    m = {"lata": mat("SprayCan", (0.02, 0.3, 0.08), 0.4), "rotulo": mat("SprayLabel", (1.0, 0.72, 0.02), 0.45),
+         "metal": mat("SprayMetal", (0.62, 0.64, 0.68), 0.3, 0.6), "bico": mat("SprayNozzle", (0.92, 0.92, 0.9), 0.4),
+         "proibido": mat("SprayNo", (0.85, 0.02, 0.02), 0.4), "inseto": mat("SprayBug", (0.03, 0.02, 0.02), 0.5),
+         "nevoa": mat("SprayMist", (0.72, 0.9, 0.66), 0.6)}
+    front = Vector((0.55, -1.0, 0.0)).normalized()  # lado da lata virado para a câmera
+    right = Vector((1.0, 0.55, 0.0)).normalized()   # direita da tela
+
+    def build(bm, M):
+        # lata: fundo de metal, corpo verde, faixa do rótulo amarela, ombro e válvula de metal
+        add(bm, M("metal"), cone, (0, 0, -1.08), (0, 0, -0.98), 0.4, 0.44, 16)
+        add(bm, M("lata"), cone, (0, 0, -0.98), (0, 0, 0.5), 0.44, 0.44, 16)
+        add(bm, M("rotulo"), cone, (0, 0, -0.62), (0, 0, 0.18), 0.455, 0.455, 16)
+        add(bm, M("metal"), cone, (0, 0, 0.5), (0, 0, 0.72), 0.44, 0.2, 16)
+        add(bm, M("metal"), cone, (0, 0, 0.72), (0, 0, 0.8), 0.2, 0.17, 12)
+        # botão branco com o bico apontando para a direita da tela
+        add(bm, M("bico"), cone, (0, 0, 0.8), (0, 0, 1.0), 0.16, 0.14, 12)
+        tip = Vector((0, 0, 0.92)) + right * 0.27
+        add(bm, M("bico"), cone, Vector((0, 0, 0.92)) + right * 0.1, tip, 0.05, 0.045, 8)
+        # no rótulo: placa de "proibido inseto" (inseto preto atrás de um círculo vermelho cortado)
+        face = front.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        c = Vector((0, 0, -0.22)) + front * 0.47
+        add(bm, M("inseto"), ellipsoid, c, (0.11, 0.2, 0.03), 8, 4, face)
+        add(bm, M("inseto"), ellipsoid, c + Vector((0, 0, 0.2)), (0.075, 0.075, 0.03), 6, 4, face)
+        for side in (-1, 1):
+            for dz in (-0.07, 0.03, 0.12):
+                leg0 = c + Vector((0, 0, dz)) + right * (side * 0.06) + front * 0.01
+                add(bm, M("inseto"), tube, [leg0, leg0 + right * (side * 0.16) + Vector((0, 0, 0.3 * dz))],
+                    [0.024, 0.018], 4)
+        ring_pts = [c + front * 0.02 + (right * math.cos(a) + Vector((0, 0, 1)) * math.sin(a)) * 0.32
+                    for a in [2 * math.pi * i / 20 for i in range(21)]]
+        add(bm, M("proibido"), tube, ring_pts, [0.055] * 21, 6)
+        bar = (right + Vector((0, 0, 1))).normalized() * 0.3
+        add(bm, M("proibido"), tube, [c + front * 0.05 - bar, c + front * 0.05 + bar], [0.055, 0.055], 6)
+        # jato de névoa saindo do bico
+        for k, r in ((0.1, 0.07), (0.3, 0.12), (0.58, 0.18), (0.9, 0.23), (1.12, 0.16)):
+            p = tip + right * k + Vector((0, 0, 0.16 * k)) + front * (0.05 if r > 0.2 else -0.04)
+            add(bm, M("nevoa"), ellipsoid, p, (r, r, r * 0.85), 10, 6)
+
+    obj("SprayDeInseticida", build, m, matrix=tilt(rz=-6))
+
+
+def apito_de_feromonio():
+    m = {"apito": mat("Whistle", (1.0, 0.16, 0.42), 0.35), "fenda": mat("WhistleSlot", (0.06, 0.01, 0.03), 0.6),
+         "argola": mat("WhistleRing", (1.0, 0.62, 0.08), 0.3, 0.7), "cordao": mat("WhistleCord", (0.3, 0.04, 0.45), 0.6),
+         "som": mat("WhistleSound", (1.0, 0.55, 0.82), 0.4)}
+
+    def build(bm, M):
+        # câmara redonda (eixo apontando para a câmera) e bocal reto saindo para a esquerda
+        add(bm, M("apito"), cone, (0, 0.32, 0), (0, -0.32, 0), 0.55, 0.55, 20)
+        add(bm, M("apito"), box, (-0.72, 0, 0.32), (1.05, 0.5, 0.36))
+        add(bm, M("fenda"), box, (-1.25, 0, 0.32), (0.03, 0.36, 0.14))  # boca do bocal
+        add(bm, M("fenda"), box, (0.05, 0, 0.53), (0.32, 0.4, 0.06))    # janelinha de cima
+        # argola dourada do outro lado e o cordão
+        add(bm, M("argola"), tube, ring((0.72, 0, -0.18), 0.2, 14, axis="Y"), [0.07] * 15, 6)
+        cord = [Vector(p) for p in ((0.86, 0, -0.34), (1.05, -0.05, -0.7), (0.92, -0.1, -1.05), (1.15, -0.1, -1.35))]
+        add(bm, M("cordao"), tube, cord, [0.085, 0.085, 0.08, 0.07], 6)
+        # ondas de som rosadas saindo da janelinha
+        for i, rad in enumerate((0.5, 0.8, 1.1)):
+            arc = [Vector((0.1, 0, 0.6)) + Vector((math.cos(a), 0, math.sin(a))) * rad
+                   for a in [math.radians(t) for t in range(22, 84, 8)]]
+            add(bm, M("som"), tube, arc, [0.1 - 0.012 * i] * len(arc), 6)
+
+    obj("ApitoDeFeromonio", build, m, matrix=tilt(rz=-18, rx=8))
+
+
 ITEMS = {
-    "AsaDeMosca": asa_de_mosca, "BolhaDeSabao": bolha_de_sabao, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
+    "ApitoDeFeromonio": apito_de_feromonio, "AsaDeMosca": asa_de_mosca, "BolhaDeSabao": bolha_de_sabao, "CabecaDeFosforo": cabeca_de_fosforo, "CacoDeLente": caco_de_lente,
     "CafeDerramado": cafe_derramado, "CascaDeAmendoim": casca_de_amendoim, "CascaDeSemente": casca_de_semente,
     "CascoDeTatuzinho": casco_de_tatuzinho, "ClipeDePapel": clipe_de_papel, "ColaBranca": cola_branca,
     "EspinhoDeRosa": espinho_de_rosa, "EsporoDeCogumelo": esporo_de_cogumelo, "FerraoDeAbelha": ferrao_de_abelha,
@@ -602,7 +674,8 @@ ITEMS = {
     "GotinhaDeMel": gotinha_de_mel, "GrafiteDeLapis": grafite_de_lapis, "GraoDeAcucar": grao_de_acucar,
     "Lupa": lupa, "PastilhaDeMenta": pastilha_de_menta, "PedacoDeChiclete": pedaco_de_chiclete, "PernaDeGafanhoto": perna_de_gafanhoto,
     "Polen": polen,
-    "SementeDeDenteDeLeao": semente_de_dente_de_leao, "TampaDeCaneta": tampa_de_caneta,
+    "SementeDeDenteDeLeao": semente_de_dente_de_leao, "SprayDeInseticida": spray_de_inseticida,
+    "TampaDeCaneta": tampa_de_caneta,
 }
 
 
