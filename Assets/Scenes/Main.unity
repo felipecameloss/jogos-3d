@@ -62669,6 +62669,55 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1186680671}
   m_Mesh: {fileID: 4300000, guid: a54a65167c9da9e44ad5761c1d35041e, type: 2}
+--- !u!1 &1186737286
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1186737288}
+  - component: {fileID: 1186737287}
+  m_Layer: 0
+  m_Name: MagnifierEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1186737287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186737286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c2a88f5993076b4eb156327444ba387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagnifierEvent
+  spotPrefab: {fileID: 5460993482442329516, guid: a4362e28ee92cc14d99455eae872bc44, type: 3}
+  firstDelay: {x: 45, y: 80}
+  interval: {x: 80, y: 130}
+  retryDelay: 6
+  minDaylight: 0.55
+--- !u!4 &1186737288
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186737286}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1186895691
 GameObject:
   m_ObjectHideFlags: 0
@@ -116744,3 +116793,4 @@ SceneRoots:
   - {fileID: 1720490103}
   - {fileID: 1720500103}
   - {fileID: 1278724867}
+  - {fileID: 1186737288}

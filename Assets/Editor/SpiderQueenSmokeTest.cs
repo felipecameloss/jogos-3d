@@ -37,6 +37,7 @@ public class SpiderQueenSmokeTest
         var health = playerGo.GetComponent<Health>();
         health.Invincible = true; // o teste olha a teia, não a morte
         foreach (var s in Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None)) s.enabled = false;
+        foreach (var s in Object.FindObjectsByType<StompDirector>(FindObjectsSortMode.None)) s.enabled = false;
         foreach (var e in EnemyBase.Active.ToArray()) Object.Destroy(e.gameObject);
         // Bolhas de sabão têm colisor sólido (os tiros estouram): uma no caminho segura a teia
         foreach (var s in Object.FindObjectsByType<SoapBubbleStream>(FindObjectsSortMode.None)) s.gameObject.SetActive(false);
@@ -51,16 +52,19 @@ public class SpiderQueenSmokeTest
         Assert.IsInstanceOf<MantisBoss>(spawner.BossForStage(3), "repete");
 
         // ---- Nasce: chefe na HUD (BossTracker), modelo animado, peças ligadas
-        var queen = Spawn(player, 22f);
+        // A 24 m: dentro do alcance da teia (30), fora do pulo (18). Parada, ela só cospe teia,
+        // então o teste não depende de onde o empurrão de um pulo joga o player.
+        var queen = Spawn(player, 24f);
+        queen.SpeedMultiplier = 0f;
         yield return null;
         Assert.IsTrue(queen.IsBoss);
         Assert.AreSame(queen, BossTracker.Current, "barra de chefe mostra a rainha");
         Assert.IsNotNull(queen.GetComponent<ProceduralInsectAnimator>());
         Assert.AreEqual(8, queen.GetComponent<ProceduralInsectAnimator>().LegCount, "8 pernas animadas");
 
-        // ---- Teia: de longe ela cospe o leque e o player fica preso
+        // ---- Teia: de longe ela cospe o leque e o player fica preso (15 s cobrem 3 rajadas)
         bool rooted = false;
-        for (float end = Time.time + 8f; Time.time < end && !rooted; )
+        for (float end = Time.time + 15f; Time.time < end && !rooted; )
         {
             rooted |= movement.IsRooted;
             yield return null;
