@@ -67277,6 +67277,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1276752717}
   m_Mesh: {fileID: 4300000, guid: a54a65167c9da9e44ad5761c1d35041e, type: 2}
+--- !u!1 &1278724865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1278724867}
+  - component: {fileID: 1278724866}
+  m_Layer: 0
+  m_Name: RainEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1278724866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278724865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea2310a058979b348b6ea3f88e3c786e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RainEvent
+  dropPrefab: {fileID: 6812241991155644069, guid: 9df2aef74e9b7f049afce0b3e1b51ba4, type: 3}
+  rainMaterial: {fileID: 2100000, guid: ce621026335644d45988e9e9a2c7743e, type: 2}
+  firstRainDelay: {x: 60, y: 100}
+  dryInterval: {x: 90, y: 150}
+  rainDuration: {x: 18, y: 26}
+  fadeTime: 3
+  dropInterval: {x: 0.7, y: 1.4}
+  frequencyPerPoint: 0.15
+  aimAtPlayerChance: 0.5
+  leadTime: 0.6
+  randomRadius: 14
+  maxRainParticles: 900
+  rainVolume: 0.35
+--- !u!4 &1278724867
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1278724865}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1278875619
 GameObject:
   m_ObjectHideFlags: 0
@@ -116686,3 +116743,4 @@ SceneRoots:
   - {fileID: 1781960462}
   - {fileID: 1720490103}
   - {fileID: 1720500103}
+  - {fileID: 1278724867}

@@ -34,7 +34,7 @@ public class StompDirector : MonoBehaviour
     Transform player;
     PlayerMovement playerMovement;
     float nextStomp;
-    readonly RaycastHit[] groundHits = new RaycastHit[16];
+    static readonly RaycastHit[] groundHits = new RaycastHit[16];
 
     void Awake()
     {
@@ -84,7 +84,7 @@ public class StompDirector : MonoBehaviour
 
     public HumanStomp StompAt(Vector3 target, float yaw)
     {
-        if (pool == null || !TryFindGround(target, out Vector3 ground)) return null;
+        if (pool == null || !FindGround(target, out Vector3 ground)) return null;
         var stomp = pool.Get();
         stomp.Begin(ground, yaw, pool.Release);
         StompCount++;
@@ -92,8 +92,11 @@ public class StompDirector : MonoBehaviour
         return stomp;
     }
 
-    /// <summary>Primeira superfície fixa embaixo do ponto (ignora inimigos e o player).</summary>
-    bool TryFindGround(Vector3 target, out Vector3 ground)
+    /// <summary>
+    /// Primeira superfície fixa embaixo do ponto (ignora inimigos, o player e bonecos de treino).
+    /// Compartilhada com outros perigos que caem do céu (gotas de chuva do RainEvent).
+    /// </summary>
+    public static bool FindGround(Vector3 target, out Vector3 ground)
     {
         int n = Physics.RaycastNonAlloc(target + Vector3.up * 50f, Vector3.down, groundHits, 120f, ~0, QueryTriggerInteraction.Ignore);
         float best = float.PositiveInfinity;

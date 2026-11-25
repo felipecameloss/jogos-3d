@@ -33,6 +33,15 @@ public class DayNightCycle : MonoBehaviour
     /// <summary>1 = dia claro, 0 = noite.</summary>
     public float Daylight { get; private set; } = 1f;
 
+    /// <summary>
+    /// Céu fechado (0 = limpo, 1 = tempestade): escurece o sol e puxa a luz ambiente e a
+    /// neblina para um cinza-azulado. Quem liga é o evento de chuva (RainEvent).
+    /// </summary>
+    public static float Overcast;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Overcast = 0f;
+
     Light sun;
     float dayAmbient;
     Color dayFog;
@@ -114,5 +123,17 @@ public class DayNightCycle : MonoBehaviour
         Color duskFog = new(0.86f, 0.66f, 0.54f);
         Color baseFog = Color.Lerp(nightFog, dayFog, Daylight);
         if (RenderSettings.fog) RenderSettings.fogColor = Color.Lerp(baseFog, duskFog, sunset * 0.65f);
+
+        // Chuva: sol mais fraco, céu e neblina acinzentados
+        float o = Mathf.Clamp01(Overcast);
+        if (o > 0f)
+        {
+            Color storm = new(0.36f, 0.42f, 0.5f);
+            sun.intensity *= 1f - 0.65f * o;
+            RenderSettings.ambientSkyColor = Color.Lerp(RenderSettings.ambientSkyColor, storm, 0.6f * o);
+            RenderSettings.ambientEquatorColor = Color.Lerp(RenderSettings.ambientEquatorColor, storm * 0.9f, 0.5f * o);
+            RenderSettings.ambientIntensity *= 1f - 0.3f * o;
+            if (RenderSettings.fog) RenderSettings.fogColor = Color.Lerp(RenderSettings.fogColor, storm, 0.7f * o);
+        }
     }
 }
