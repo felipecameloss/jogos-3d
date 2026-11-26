@@ -5,9 +5,9 @@ using UnityEngine.AI;
 
 /// <summary>
 /// Janela de debug (menu Jogo/Debug/Spawnar inimigos): em Play Mode, cria qualquer inimigo de
-/// Assets/Prefabs/Enemies perto do player, para ver inimigos que ainda não estão no spawner de
-/// nenhuma fase. Também força noite/dia no ciclo (o vaga-lume só aparece à noite e vai embora
-/// quando amanhece).
+/// Assets/Prefabs/Enemies perto do player (para ver inimigos fora da tabela da fase), força
+/// noite/dia no ciclo (o vaga-lume só aparece à noite) e pula direto para qualquer fase da
+/// sequência (StageSequence) com vida cheia.
 /// </summary>
 public class EnemySpawnWindow : EditorWindow
 {
@@ -53,6 +53,18 @@ public class EnemySpawnWindow : EditorWindow
             GUILayout.Label(cycle == null ? "Sem ciclo de dia/noite" : cycle.IsNight ? "Agora: noite" : "Agora: dia");
             if (GUILayout.Button("Forçar noite")) SetPhase(cycle, 0.75f);
             if (GUILayout.Button("Forçar dia")) SetPhase(cycle, 0.25f);
+        }
+
+        var sequence = StageDirector.Sequence;
+        if (sequence != null && sequence.Count > 0)
+        {
+            EditorGUILayout.Space();
+            GUILayout.Label($"Fases (agora: {(StageDirector.Current != null ? StageDirector.Current.DisplayName : "-")})", EditorStyles.boldLabel);
+            for (int i = 0; i < sequence.Count; i++)
+            {
+                var def = sequence.Stages[i];
+                if (def != null && GUILayout.Button($"Ir para a fase {i + 1}: {def.DisplayName}")) RunManager.LoadStageForDebug(i + 1);
+            }
         }
 
         EditorGUILayout.Space();

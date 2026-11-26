@@ -26,6 +26,14 @@ public class EnemySpawner : MonoBehaviour
         [Min(0)] public int extraGroupSize = 0;
         [Min(0)] public int poolPrewarm = 10;
         [NonSerialized] public ComponentPool<EnemyBase> pool;
+
+        /// <summary>Cópia sem o pool (as tabelas das fases são assets: o pool é da cena).</summary>
+        public SpawnEntry Clone()
+        {
+            var c = (SpawnEntry)MemberwiseClone();
+            c.pool = null;
+            return c;
+        }
     }
 
     [SerializeField] List<SpawnEntry> enemies = new();
@@ -77,6 +85,19 @@ public class EnemySpawner : MonoBehaviour
     SpawnEntry pendingEntry;
     Transform player;
     NavMeshPath path;
+
+    /// <summary>
+    /// Troca a tabela de inimigos (a fase tem a sua). Chamar antes do Awake do spawner
+    /// (o StageDirector roda antes) para os pools já nascerem com os inimigos certos.
+    /// </summary>
+    public void ReplaceEntries(IEnumerable<SpawnEntry> entries)
+    {
+        enemies = new List<SpawnEntry>();
+        foreach (var e in entries) if (e != null && e.prefab != null) enemies.Add(e.Clone());
+    }
+
+    /// <summary>Inimigos que esta fase pode sortear (testes/HUD).</summary>
+    public IReadOnlyList<SpawnEntry> Entries => enemies;
 
     void Awake()
     {

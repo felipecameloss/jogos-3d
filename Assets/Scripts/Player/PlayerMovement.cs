@@ -73,6 +73,11 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float Grip = 1f;
     /// <summary>No chão e escorregando (gosma).</summary>
     public bool IsSlipping => IsGrounded && Grip < 0.5f;
+    /// <summary>
+    /// Lentidão do chão (água da poça, teia: SlowZone). 1 = normal; pega na hora ao entrar e
+    /// passa aos poucos depois de sair (ainda molhado/grudento).
+    /// </summary>
+    public float SurfaceSpeedFactor { get; private set; } = 1f;
     /// <summary>Desligado = ignora o input mas a gravidade continua (morte, cutscene, menu).</summary>
     [HideInInspector] public bool InputEnabled = true;
 
@@ -167,7 +172,8 @@ public class PlayerMovement : MonoBehaviour
         // ---------- Velocidade horizontal ----------
         bool sprintKeyPressed = sprintAction != null && sprintAction.action.IsPressed();
         IsSprinting = InputEnabled && input.sqrMagnitude > 0.01f && (sprintByDefault ? !sprintKeyPressed : sprintKeyPressed);
-        float speed = (IsSprinting ? sprintSpeed : walkSpeed) * SpeedMultiplier;
+        SurfaceSpeedFactor = Mathf.Min(SlowZone.FactorAt(transform.position), Mathf.MoveTowards(SurfaceSpeedFactor, 1f, dt * 1.25f));
+        float speed = (IsSprinting ? sprintSpeed : walkSpeed) * SpeedMultiplier * SurfaceSpeedFactor;
         Vector3 targetVelocity = IsRooted ? Vector3.zero : moveDir * speed;
         float accel = acceleration * (IsGrounded ? Mathf.Clamp01(Grip) : airControl);
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetVelocity, 1f - Mathf.Exp(-accel * dt));

@@ -86,11 +86,13 @@ public class ExitPipe : Interactable
     {
         var path = new NavMeshPath();
         Vector3 origin = player != null ? player.position : Vector3.zero;
-        for (int i = 0; i < 60; i++)
+        for (int i = 0; i < 180; i++)
         {
             var c = new Vector3(UnityEngine.Random.Range(-areaSize.x, areaSize.x) * 0.5f, 0f, UnityEngine.Random.Range(-areaSize.y, areaSize.y) * 0.5f);
             if (!NavMesh.SamplePosition(c, out var hit, 3f, NavMesh.AllAreas)) continue;
             if ((hit.position - origin).sqrMagnitude < minDistanceFromPlayer * minDistanceFromPlayer) continue;
+            // o cano fura o NavMesh: num lugar apertado fecharia o caminho (túneis, corredores)
+            if (!NavClearance.Has(hit.position, i < 60 ? 5f : i < 120 ? 3.6f : 0f)) continue;
             if (!NavMesh.CalculatePath(hit.position, origin, NavMesh.AllAreas, path) || path.status != NavMeshPathStatus.PathComplete) continue;
             transform.position = hit.position;
             // Boca do cano virada para o centro do mapa

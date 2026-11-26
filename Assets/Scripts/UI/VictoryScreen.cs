@@ -33,7 +33,8 @@ public class VictoryScreen : MonoBehaviour
     {
         var rm = RunManager.Instance;
         int s = Mathf.FloorToInt(rm.RunTime);
-        doc.Q<Label>("heading").text = $"Fase {rm.Stage} concluída!";
+        var def = StageDirector.Current;
+        doc.Q<Label>("heading").text = def != null ? $"Fase {rm.Stage} concluída: {def.DisplayName}!" : $"Fase {rm.Stage} concluída!";
         doc.Q<Label>("time").text = $"{s / 60}:{s % 60:00}";
         doc.Q<Label>("difficulty").text = DifficultyManager.Instance != null ? DifficultyManager.Instance.LevelName : "—";
         doc.Q<Label>("kills").text = rm.Kills.ToString();

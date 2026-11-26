@@ -46,6 +46,7 @@ public class LadybugStationSpawner : MonoBehaviour
                 Random.Range(-areaSize.y, areaSize.y) * 0.5f);
             if (!NavMesh.SamplePosition(candidate, out var hit, 2f, NavMesh.AllAreas)) continue;
             Vector3 pos = hit.position;
+            if (!NavClearance.Has(pos, 2.2f)) continue; // fura o NavMesh: não fecha túnel/corredor estreito
             if (player != null)
             {
                 float sq = (pos - player.position).sqrMagnitude;
