@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c35a3c6b35d46f4fa71f1e25920d0ab, type: 3}
+  m_Name: Deck
+  m_EditorClassIdentifier: Assembly-CSharp::StageDefinition
+  displayName: Embaixo do deck
+  description: "Escuro e empoeirado: t\xE1buas formam corredores, a luz entra pelas frestas e as teias deixam lento."
+  useBackyard: 0
+  levelPrefab: {fileID: 4022328784171879280, guid: 14ce909f236d00e4a9d62bb22f218b36, type: 3}
+  backyardAtmosphere: 0
+  lighting: 2
+  dark: 1
+  sunTint: {r: 1, g: 0.98, b: 0.92, a: 1}
+  lightScale: 1.4
+  fogDensity: 0.02
+  fogColor: {r: 0.08, g: 0.065, b: 0.05, a: 1}
+  indoorSky: {r: 0.46, g: 0.41, b: 0.35, a: 1}
+  indoorEquator: {r: 0.37, g: 0.31, b: 0.25, a: 1}
+  indoorGround: {r: 0.2, g: 0.16, b: 0.12, a: 1}
+  humanStomps: 0
+  rain: 0
+  magnifier: 0
+  soapBubbles: 0
+  enemies:
+  - prefab: {fileID: 3684919128909508699, guid: dbe78c888c1be5e44ac63ae6f2cf8de0, type: 3}
+    cost: 16
+    weight: 0.8
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 6
+  - prefab: {fileID: 8845971033183573282, guid: f11b4e0be1054f02a1f9d249f61dc3b9, type: 3}
+    cost: 5
+    weight: 0.8
+    minDifficulty: 1
+    minGroup: 3
+    extraGroupSize: 3
+    poolPrewarm: 12
+  - prefab: {fileID: 6039749056580546238, guid: 9282357bef3c22a4f8cb75617aa6a628, type: 3}
+    cost: 12
+    weight: 0.6
+    minDifficulty: 1
+    minGroup: 2
+    extraGroupSize: 2
+    poolPrewarm: 6
+  - prefab: {fileID: 3148903459024071043, guid: ddd4e0bbc8352574796c9a791879ee03, type: 3}
+    cost: 55
+    weight: 0.35
+    minDifficulty: 1.2
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 2
+  - prefab: {fileID: 7382304403201719032, guid: e6923a8f6c5fc264c980f5147b6a3fda, type: 3}
+    cost: 8
+    weight: 0.4
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 6
+  boss: {fileID: 2029578828122097726, guid: 460f6e44bef9c0644a8fa1deda3784ce, type: 3}
+  playerLantern: 0
+  scatteredCrumbs: 0
