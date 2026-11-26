@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c35a3c6b35d46f4fa71f1e25920d0ab, type: 3}
+  m_Name: Quintal
+  m_EditorClassIdentifier: Assembly-CSharp::StageDefinition
+  displayName: Quintal
+  description: "O gramado do quintal, com o ciclo de dia e noite, o pis\xE3o, a chuva, a lupa e as bolhas."
+  useBackyard: 1
+  levelPrefab: {fileID: 0}
+  backyardAtmosphere: 1
+  lighting: 0
+  dark: 0
+  sunTint: {r: 1, g: 1, b: 1, a: 1}
+  lightScale: 1
+  fogDensity: 0
+  fogColor: {r: 0.05, g: 0.05, b: 0.06, a: 1}
+  indoorSky: {r: 0.8, g: 0.72, b: 0.6, a: 1}
+  indoorEquator: {r: 0.6, g: 0.52, b: 0.42, a: 1}
+  indoorGround: {r: 0.3, g: 0.25, b: 0.2, a: 1}
+  humanStomps: 1
+  rain: 1
+  magnifier: 1
+  soapBubbles: 1
+  enemies: []
+  boss: {fileID: 0}
+  playerLantern: 0
+  scatteredCrumbs: 0

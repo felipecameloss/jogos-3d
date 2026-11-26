@@ -27,9 +27,15 @@ public class BossSpawner : MonoBehaviour
     /// <summary>Chefe desta fase: o do rodízio pela fase atual, ou o bossPrefab.</summary>
     public EnemyBase CurrentBossPrefab => BossForStage(RunManager.Instance != null ? RunManager.Instance.Stage : 1);
 
+    EnemyBase stageBoss;
+
+    /// <summary>A fase escolheu o chefe (StageDefinition): vale no lugar do rodízio.</summary>
+    public void OverrideBoss(EnemyBase boss) => stageBoss = boss;
+
     /// <summary>Chefe de uma fase (1 = primeira).</summary>
     public EnemyBase BossForStage(int stage)
     {
+        if (stageBoss != null) return stageBoss;
         int n = bossRotation != null ? bossRotation.Count : 0;
         if (n == 0) return bossPrefab;
         var b = bossRotation[(Mathf.Max(1, stage) - 1) % n];

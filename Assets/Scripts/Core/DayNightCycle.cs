@@ -31,6 +31,15 @@ public class DayNightCycle : MonoBehaviour
     public static DayNightCycle Instance { get; private set; }
 
     public float Phase { get; private set; }
+
+    /// <summary>Hora travada (0..1; a fase "sempre noite" usa 0.75). Negativo = ciclo normal.</summary>
+    [HideInInspector] public float LockedPhase = -1f;
+    /// <summary>Multiplica a luz do sol/lua e a luz ambiente (fases escuras).</summary>
+    [HideInInspector] public float LightScale = 1f;
+    /// <summary>Tinge a luz do sol/lua (cor da fase).</summary>
+    [HideInInspector] public Color SunTint = Color.white;
+    /// <summary>Cor da neblina à noite (fases fechadas usam a cor do fundo).</summary>
+    public Color NightFog { get => nightFog; set => nightFog = value; }
     /// <summary>Sol abaixo do horizonte (vaga-lume só aparece à noite).</summary>
     public bool IsNight => Mathf.Sin(Phase * Mathf.PI * 2f) < 0f;
     /// <summary>1 = dia claro, 0 = noite.</summary>
@@ -80,7 +89,18 @@ public class DayNightCycle : MonoBehaviour
     void Update()
     {
         float time = RunManager.Instance != null ? RunManager.Instance.RunTime : Time.timeSinceLevelLoad;
-        Apply(Mathf.Repeat(startPhase + time / cycleLength, 1f));
+        Apply(LockedPhase >= 0f ? LockedPhase : Mathf.Repeat(startPhase + time / cycleLength, 1f));
+        if (LightScale != 1f || SunTint != Color.white) ApplyStageMood();
+    }
+
+    /// <summary>Escurece/tinge o que o Apply calculou (cor e escala da fase).</summary>
+    void ApplyStageMood()
+    {
+        sun.intensity *= LightScale;
+        sun.color *= SunTint;
+        RenderSettings.ambientSkyColor *= LightScale;
+        RenderSettings.ambientEquatorColor *= LightScale;
+        RenderSettings.ambientGroundColor *= LightScale;
     }
 
     void Apply(float phase)

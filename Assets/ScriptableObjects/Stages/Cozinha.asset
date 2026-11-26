@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c35a3c6b35d46f4fa71f1e25920d0ab, type: 3}
+  m_Name: Cozinha
+  m_EditorClassIdentifier: Assembly-CSharp::StageDefinition
+  displayName: Cozinha
+  description: "A fase final, dentro de casa: piso de azulejo, migalhas por todo lado e o balc\xE3o para subir (pela t\xE1bua de carne ou pulando as caixas)."
+  useBackyard: 0
+  levelPrefab: {fileID: 3037676877916816464, guid: 22f6f34554affa347a6fe539b5dffef4, type: 3}
+  backyardAtmosphere: 0
+  lighting: 2
+  dark: 0
+  sunTint: {r: 1, g: 1, b: 1, a: 1}
+  lightScale: 1
+  fogDensity: 0.01
+  fogColor: {r: 0.36, g: 0.31, b: 0.26, a: 1}
+  indoorSky: {r: 0.85, g: 0.78, b: 0.66, a: 1}
+  indoorEquator: {r: 0.62, g: 0.55, b: 0.45, a: 1}
+  indoorGround: {r: 0.34, g: 0.3, b: 0.26, a: 1}
+  humanStomps: 1
+  rain: 0
+  magnifier: 0
+  soapBubbles: 1
+  enemies:
+  - prefab: {fileID: 7382304403201719032, guid: e6923a8f6c5fc264c980f5147b6a3fda, type: 3}
+    cost: 8
+    weight: 0.8
+    minDifficulty: 1
+    minGroup: 2
+    extraGroupSize: 2
+    poolPrewarm: 12
+  - prefab: {fileID: 7296238998685897525, guid: 1b7aa9b6b1b523f40a143fc916a9a08f, type: 3}
+    cost: 24
+    weight: 0.5
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 5
+  - prefab: {fileID: 1676144172450157740, guid: 886480c2174597c47b355b4d5ca2bdf7, type: 3}
+    cost: 14
+    weight: 0.5
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 4
+  - prefab: {fileID: 1600828975492886655, guid: 8e3af4299278b6e4caea0ebdc56a57c8, type: 3}
+    cost: 16
+    weight: 0.5
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 4
+  - prefab: {fileID: 3684919128909508699, guid: dbe78c888c1be5e44ac63ae6f2cf8de0, type: 3}
+    cost: 16
+    weight: 0.5
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 4
+  - prefab: {fileID: 3148903459024071043, guid: ddd4e0bbc8352574796c9a791879ee03, type: 3}
+    cost: 55
+    weight: 0.3
+    minDifficulty: 1.2
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 2
+  - prefab: {fileID: 7466153701503279810, guid: 9099a2f0b886faa44a4b29a9c466fb9e, type: 3}
+    cost: 18
+    weight: 0.3
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 3
+  boss: {fileID: 2029578828122097726, guid: 460f6e44bef9c0644a8fa1deda3784ce, type: 3}
+  playerLantern: 0
+  scatteredCrumbs: 45

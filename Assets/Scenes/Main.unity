@@ -323,6 +323,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2045268}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &5733163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5733165}
+  - component: {fileID: 5733164}
+  m_Layer: 0
+  m_Name: StageDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &5733164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f50be5cfe6c06e74cafda173e7d8552c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageDirector
+  sequence: {fileID: 11400000, guid: 809d95ac98d0dd948bf89f4c869679cc, type: 2}
+  backyard: {fileID: 1781960460}
+  lanternModel: {fileID: 919132149155446097, guid: 0244e37b58d847d0b97e6bc35e811864, type: 3}
+--- !u!4 &5733165
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5733163}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7340252
 GameObject:
   m_ObjectHideFlags: 0
@@ -20942,6 +20989,9 @@ MonoBehaviour:
   moonColor: {r: 0.55, g: 0.65, b: 1, a: 1}
   nightAmbient: 0.35
   nightFog: {r: 0.06, g: 0.08, b: 0.13, a: 1}
+  LockedPhase: -1
+  LightScale: 1
+  SunTint: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &410239452
 GameObject:
   m_ObjectHideFlags: 0
@@ -69946,6 +69996,7 @@ MonoBehaviour:
   ExtraJumps: 0
   FloatTime: 0
   HoldJumpOverride: 0
+  Grip: 1
   InputEnabled: 1
 --- !u!143 &1325326861
 CharacterController:
@@ -116778,6 +116829,7 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 5733165}
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}

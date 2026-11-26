@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c35a3c6b35d46f4fa71f1e25920d0ab, type: 3}
+  m_Name: Formigueiro
+  m_EditorClassIdentifier: Assembly-CSharp::StageDefinition
+  displayName: Formigueiro
+  description: "T\xFAneis estreitos e quase sem luz embaixo da terra. Um vaga-lume amigo voa com voc\xEA iluminando o caminho."
+  useBackyard: 0
+  levelPrefab: {fileID: 1519696650116625827, guid: 75edb5926e33e3d40854038606a2543d, type: 3}
+  backyardAtmosphere: 0
+  lighting: 1
+  dark: 1
+  sunTint: {r: 0.8, g: 0.75, b: 0.7, a: 1}
+  lightScale: 0.6
+  fogDensity: 0.03
+  fogColor: {r: 0.04, g: 0.028, b: 0.02, a: 1}
+  indoorSky: {r: 0.8, g: 0.72, b: 0.6, a: 1}
+  indoorEquator: {r: 0.6, g: 0.52, b: 0.42, a: 1}
+  indoorGround: {r: 0.3, g: 0.25, b: 0.2, a: 1}
+  humanStomps: 0
+  rain: 0
+  magnifier: 0
+  soapBubbles: 0
+  enemies:
+  - prefab: {fileID: 7382304403201719032, guid: e6923a8f6c5fc264c980f5147b6a3fda, type: 3}
+    cost: 8
+    weight: 1
+    minDifficulty: 1
+    minGroup: 2
+    extraGroupSize: 2
+    poolPrewarm: 14
+  - prefab: {fileID: 7296238998685897525, guid: 1b7aa9b6b1b523f40a143fc916a9a08f, type: 3}
+    cost: 24
+    weight: 0.6
+    minDifficulty: 1
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 6
+  - prefab: {fileID: 8845971033183573282, guid: f11b4e0be1054f02a1f9d249f61dc3b9, type: 3}
+    cost: 5
+    weight: 0.4
+    minDifficulty: 1
+    minGroup: 3
+    extraGroupSize: 2
+    poolPrewarm: 8
+  - prefab: {fileID: 3148903459024071043, guid: ddd4e0bbc8352574796c9a791879ee03, type: 3}
+    cost: 55
+    weight: 0.3
+    minDifficulty: 1.2
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 2
+  - prefab: {fileID: 3684919128909508699, guid: dbe78c888c1be5e44ac63ae6f2cf8de0, type: 3}
+    cost: 16
+    weight: 0.3
+    minDifficulty: 1.4
+    minGroup: 1
+    extraGroupSize: 0
+    poolPrewarm: 3
+  boss: {fileID: 4340369852612086232, guid: b94b5e7e61b3dfb40a48d1d5e6834b13, type: 3}
+  playerLantern: 1
+  scatteredCrumbs: 0

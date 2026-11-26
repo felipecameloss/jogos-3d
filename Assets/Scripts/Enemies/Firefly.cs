@@ -58,8 +58,9 @@ public class Firefly : EnemyBase
     public bool IsCharging => state == State.Charge;
     public bool IsLeaving => state == State.Leave;
 
-    /// <summary>Noite agora (sem ciclo de dia/noite na cena conta como noite).</summary>
-    public static bool IsNight => DayNightCycle.Instance == null || DayNightCycle.Instance.IsNight;
+    /// <summary>Noite agora (sem ciclo de dia/noite na cena, ou numa fase escura, conta como noite).</summary>
+    public static bool IsNight => DayNightCycle.Instance == null || DayNightCycle.Instance.IsNight
+                                  || (StageDirector.Current != null && StageDirector.Current.Dark);
     public override bool CanSpawnNow => IsNight;
 
     static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");

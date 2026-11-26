@@ -178,6 +178,17 @@ public class RunManager : MonoBehaviour
     /// <summary>Run nova do zero (esquece o que vinha da fase anterior).</summary>
     public static void ClearCarryOver() => carry = null;
 
+    /// <summary>Fase que a cena vai montar ao carregar (1 numa run nova). O StageDirector lê no Awake.</summary>
+    public static int UpcomingStage => carry != null ? Mathf.Max(1, carry.stage) : 1;
+
+    /// <summary>Debug/testes: recarrega o jogo começando direto nessa fase (vida cheia, sem itens).</summary>
+    public static void LoadStageForDebug(int stage)
+    {
+        carry = new CarryOver { stage = Mathf.Max(1, stage), healthFraction = 1f };
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneLoader.GameScene);
+    }
+
     public void RestartRun()
     {
         ClearCarryOver();

@@ -139,7 +139,8 @@ public class Hud : MonoBehaviour
         {
             int s = Mathf.FloorToInt(RunManager.Instance.RunTime);
             timer.text = $"{s / 60}:{s % 60:00}";
-            stage.text = $"Fase {RunManager.Instance.Stage}";
+            var def = StageDirector.Current;
+            stage.text = def != null ? $"Fase {RunManager.Instance.Stage} · {def.DisplayName}" : $"Fase {RunManager.Instance.Stage}";
         }
         UpdateObjective();
         UpdateBoss();
