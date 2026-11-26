@@ -128,6 +128,8 @@ public class Termite : WorkerAnt
             dirtParticles = go.AddComponent<ParticleSystem>();
         }
 
+        // Criado por AddComponent ele já nasce tocando: mudar a duração assim dá erro no console
+        dirtParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         var main = dirtParticles.main;
         main.playOnAwake = false;
         main.loop = false;
