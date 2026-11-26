@@ -29,6 +29,11 @@ public static class InsectModelBinder
         ("MantisBoss", "MantisBoss"),
         ("Spider", "Spider"),
         ("SpiderQueen", "SpiderQueen"),
+        ("Grasshopper", "Grasshopper"),
+        ("Slug", "Slug"),
+        ("Firefly", "Firefly"),
+        ("Centipede", "Centipede"),
+        ("CentipedeSegment", "Centipede"),
     };
 
     const string GlowMaterials = "Assets/Art/Materials/Insects/";
@@ -42,7 +47,11 @@ public static class InsectModelBinder
         Debug.Log("[InsectModelBinder]\n" + log);
     }
 
-    public static string Apply(string prefabPath, string fbxPath)
+    /// <summary>
+    /// Troca o modelo do prefab pelo FBX. <paramref name="fixedScale"/>: escala do modelo pedida
+    /// pelo builder de um inimigo novo (senão mantém a do Model anterior ou mede pelo Visual antigo).
+    /// </summary>
+    public static string Apply(string prefabPath, string fbxPath, float? fixedScale = null)
     {
         var fbx = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
         if (fbx == null) return $"{prefabPath}: FBX não encontrado ({fbxPath})";
@@ -67,7 +76,7 @@ public static class InsectModelBinder
         mt.localRotation = Quaternion.identity;
         mt.localScale = Vector3.one;
         Bounds raw = LocalBounds(root, mt);
-        float scale = replacingModel ? previousScale : oldBounds.size.z / raw.size.z;
+        float scale = fixedScale ?? (replacingModel ? previousScale : oldBounds.size.z / raw.size.z);
         mt.localScale = Vector3.one * scale;
         Bounds scaled = LocalBounds(root, mt);
         // pés no chão (o NavMeshAgent põe a raiz no chão)
@@ -121,6 +130,41 @@ public static class InsectModelBinder
             so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha no aviso)
             so.ApplyModifiedPropertiesWithoutUndo();
             notes.Add($"fiandeira={(spinner != null)}");
+        }
+        if (root.TryGetComponent(out Grasshopper grasshopper))
+        {
+            var so = new SerializedObject(grasshopper);
+            so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (agacha nos avisos)
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+        if (root.TryGetComponent(out Slug slug))
+        {
+            var so = new SerializedObject(slug);
+            so.FindProperty("body").objectReferenceValue = model.parent; // Body externo (estica ao rastejar)
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+        if (root.TryGetComponent(out Firefly firefly))
+        {
+            var lantern = FindDeep(model, "Lantern");
+            var so = new SerializedObject(firefly);
+            so.FindProperty("body").objectReferenceValue = model.parent;
+            so.FindProperty("lantern").objectReferenceValue = lantern;
+            so.FindProperty("lanternRenderer").objectReferenceValue = lantern != null ? GlowRenderer(lantern, "FireflyLanternGlow") : null;
+            var light = root.Find("GlowLight");
+            so.FindProperty("glowLight").objectReferenceValue = light != null ? light.GetComponent<Light>() : null;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            notes.Add($"lanterna={(lantern != null)} luz={(light != null)}");
+        }
+        if (root.TryGetComponent(out Centipede centipede))
+        {
+            var head = FindDeep(model, "Head");
+            var tail = FindDeep(model, "Tail");
+            var so = new SerializedObject(centipede);
+            so.FindProperty("body").objectReferenceValue = model.parent;
+            so.FindProperty("headPart").objectReferenceValue = head;
+            so.FindProperty("tailPart").objectReferenceValue = tail;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            notes.Add($"cabeça={(head != null)} rabo={(tail != null)}");
         }
         if (root.TryGetComponent(out SpiderQueen queen))
         {

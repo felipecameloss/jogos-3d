@@ -64,6 +64,15 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float FloatTime = 0f;
     /// <summary>Segura o pulo por código, sem teclado (testes).</summary>
     [HideInInspector] public bool HoldJumpOverride;
+    /// <summary>Testes: anda como se o direcional estivesse nessa posição (null = lê o controle).</summary>
+    public Vector2? MoveInputOverride { get; set; }
+    /// <summary>
+    /// Aderência ao chão (1 = normal). A gosma da lesma baixa para quase zero: o player demora para
+    /// mudar de direção e para frear (escorrega). Quem controla é o SlimeTrail, a cada frame.
+    /// </summary>
+    [HideInInspector] public float Grip = 1f;
+    /// <summary>No chão e escorregando (gosma).</summary>
+    public bool IsSlipping => IsGrounded && Grip < 0.5f;
     /// <summary>Desligado = ignora o input mas a gravidade continua (morte, cutscene, menu).</summary>
     [HideInInspector] public bool InputEnabled = true;
 
@@ -129,7 +138,8 @@ public class PlayerMovement : MonoBehaviour
         UpdateGrounded();
 
         // ---------- Input ----------
-        Vector2 input = InputEnabled && moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
+        Vector2 input = !InputEnabled ? Vector2.zero
+            : MoveInputOverride ?? (moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero);
         input = Vector2.ClampMagnitude(input, 1f);
         if (InputEnabled && jumpAction != null && jumpAction.action.WasPressedThisFrame()) lastJumpPressedTime = Time.time;
 
@@ -159,7 +169,7 @@ public class PlayerMovement : MonoBehaviour
         IsSprinting = InputEnabled && input.sqrMagnitude > 0.01f && (sprintByDefault ? !sprintKeyPressed : sprintKeyPressed);
         float speed = (IsSprinting ? sprintSpeed : walkSpeed) * SpeedMultiplier;
         Vector3 targetVelocity = IsRooted ? Vector3.zero : moveDir * speed;
-        float accel = acceleration * (IsGrounded ? 1f : airControl);
+        float accel = acceleration * (IsGrounded ? Mathf.Clamp01(Grip) : airControl);
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, targetVelocity, 1f - Mathf.Exp(-accel * dt));
 
         // ---------- Pulo ----------

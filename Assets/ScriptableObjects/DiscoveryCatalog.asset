@@ -54,3 +54,23 @@ MonoBehaviour:
     description: "Chefe. Cospe leques de teia que prendem, invoca aranhinhas e esmaga com pulos (o c\xEDrculo vermelho marca onde cai)."
     icon: {fileID: 21300000, guid: bb7c7baaedcce434b9bad2335b7d318e, type: 3}
     isBoss: 1
+  - id: Grasshopper
+    displayName: Gafanhoto
+    description: "Fica longe e salta em cima de voc\xEA: o c\xEDrculo vermelho marca onde cai e trava no fim (d\xE1 para sair). Pousa tonto. De perto, vira de costas e d\xE1 um coice."
+    icon: {fileID: 21300000, guid: e0be6668007b86e419c76919d8dbaf38, type: 3}
+    isBoss: 0
+  - id: Slug
+    displayName: Lesma
+    description: "Lenta e parruda. Deixa um rastro de gosma que faz voc\xEA escorregar. De perto, ergue a frente e d\xE1 um bote."
+    icon: {fileID: 21300000, guid: 93240b2685e6b9f44b34d756309aed7b, type: 3}
+    isBoss: 0
+  - id: Firefly
+    displayName: Vaga-lume
+    description: "S\xF3 aparece \xE0 noite. Voa em volta e carrega a luz piscando cada vez mais r\xE1pido: olhando para ele na hora do clar\xE3o, a tela fica branca. Vire a c\xE2mera!"
+    icon: {fileID: 21300000, guid: 3d01200152773bf47a60b0dae504ee23, type: 3}
+    isBoss: 0
+  - id: Centipede
+    displayName: Centopeia
+    description: "Uma fila de segmentos seguindo a cabe\xE7a, cada um com vida pr\xF3pria. Encostar no corpo machuca e a cabe\xE7a morde. Matar um do meio parte a centopeia em duas."
+    icon: {fileID: 21300000, guid: 0bb77c5629bf80e468deb98a93b3e0f5, type: 3}
+    isBoss: 0

@@ -79,10 +79,27 @@ public abstract class EnemyBase : MonoBehaviour
     /// <summary>Formiga de verdade (o apito de feromônio só mexe com elas).</summary>
     public virtual bool IsAnt => false;
 
+    /// <summary>
+    /// Pode nascer agora? O spawner pergunta ao prefab antes de sortear (o vaga-lume só à noite).
+    /// </summary>
+    public virtual bool CanSpawnNow => true;
+
+    /// <summary>Pode virar elite (gigante/em chamas). A centopeia não: cada segmento já é um inimigo.</summary>
+    public virtual bool CanBeElite => true;
+
+    /// <summary>Multiplicador de vida da dificuldade (ApplyScaling); a centopeia repassa para os segmentos.</summary>
+    public float HealthMultiplier { get; private set; } = 1f;
+
     public Health Health { get; private set; }
-    public bool IsAlive => Health != null && Health.IsAlive;
+    /// <summary>Vivo e não indo embora (ver <see cref="Vanish"/>).</summary>
+    public bool IsAlive => Health != null && Health.IsAlive && !vanishing;
 
     protected NavMeshAgent Agent { get; private set; }
+    /// <summary>
+    /// Anda com o NavMeshAgent. Os segmentos do corpo da centopeia desligam (andam pelo rastro
+    /// da frente); defina antes do OnEnable da base.
+    /// </summary>
+    protected bool UsesAgent { get; set; } = true;
     /// <summary>Quem o inimigo persegue e ataca: o player, ou o rival durante a fúria.</summary>
     protected Transform Target { get; private set; }
     protected Health TargetHealth { get; private set; }
@@ -94,6 +111,7 @@ public abstract class EnemyBase : MonoBehaviour
     Vector3 initialScale;
     float baseMaxHealth, baseAcceleration;
     Coroutine despawnRoutine;
+    bool vanishing;
 
     protected virtual void Awake()
     {
@@ -118,7 +136,8 @@ public abstract class EnemyBase : MonoBehaviour
     /// <summary>Escala de dificuldade: aplicada pelo spawner logo depois de nascer. Volta com vida cheia.</summary>
     public void ApplyScaling(float healthMultiplier, float damageMultiplier)
     {
-        Health.SetMaxHealth(baseMaxHealth * Mathf.Max(0.01f, healthMultiplier), keepRatio: false);
+        HealthMultiplier = Mathf.Max(0.01f, healthMultiplier);
+        Health.SetMaxHealth(baseMaxHealth * HealthMultiplier, keepRatio: false);
         Health.ResetHealth();
         DamageMultiplier = Mathf.Max(0f, damageMultiplier);
     }
@@ -127,10 +146,11 @@ public abstract class EnemyBase : MonoBehaviour
     {
         // Reinício para o pool
         if (despawnRoutine != null) { StopCoroutine(despawnRoutine); despawnRoutine = null; }
+        vanishing = false;
         transform.localScale = initialScale;
         Health.ResetHealth();
         foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = true;
-        Agent.enabled = true;
+        Agent.enabled = UsesAgent;
         SpeedMultiplier = 1f;
         StatusSpeedMultiplier = 1f;
         IsConfused = false;
@@ -158,7 +178,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual void Update()
     {
         if (!IsAlive) return;
-        Agent.speed = moveSpeed * TotalSpeedMultiplier;
+        if (Agent.enabled) Agent.speed = moveSpeed * TotalSpeedMultiplier;
         if (player == null) FindPlayer();
         if (IsFrenzied) UpdateRival();
         else if (Rival != null || Target == null) TargetPlayer();
@@ -280,7 +300,7 @@ public abstract class EnemyBase : MonoBehaviour
             Agent.isStopped = true;
             Agent.ResetPath();
         }
-        Agent.velocity = Vector3.zero;
+        if (Agent.enabled) Agent.velocity = Vector3.zero;
     }
 
     /// <summary>Gira no próprio eixo para olhar o alvo. Retorna o quão alinhado está (1 = de frente).</summary>
@@ -316,6 +336,20 @@ public abstract class EnemyBase : MonoBehaviour
             DiscoveryJournal.DiscoverEnemy(JournalId);
         }
         OnAnyEnemyDied?.Invoke(this, killingBlow);
+        despawnRoutine = StartCoroutine(DespawnAfterDelay());
+    }
+
+    /// <summary>
+    /// Some sem morrer: sem migalhas, sem contar kill e sem itens "ao matar" (vaga-lume indo
+    /// embora quando amanhece). Encolhe como na morte e volta para o pool.
+    /// </summary>
+    protected void Vanish()
+    {
+        if (vanishing || !IsAlive) return;
+        vanishing = true;
+        StopMoving();
+        Agent.enabled = false;
+        foreach (var c in GetComponentsInChildren<Collider>()) c.enabled = false;
         despawnRoutine = StartCoroutine(DespawnAfterDelay());
     }
 
